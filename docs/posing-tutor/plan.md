@@ -1,6 +1,7 @@
 # Posing tutor: plan
 
-Status: proposed, waiting for the operator's checkpoint. Playbook: poteto-mode → figure-it-out.
+Status: approved at the checkpoint (NPC / IFBB Pro poses, coach debrief after every held pose, Chrome speech
+recognition plus jev). Progress photos added at the operator's request during the build. Playbook: poteto-mode → figure-it-out.
 
 ## Definition of done (falsifiable)
 
@@ -17,6 +18,9 @@ Status: proposed, waiting for the operator's checkpoint. Playbook: poteto-mode �
 7. Coach review returns a spoken and written critique through `omp -p` within about 10 s.
 8. Voice commands route through jev with confidence gating and a keyword fallback when jev is unsure or offline.
 9. Typecheck, unit tests and the tracking gate pass. The README is updated, including the corrected GPU note.
+10. **Progress photos.** Every hit pose saves its photo with the date, score, faults and landmarks. The user can
+    open a timeline per pose, compare any two dates side by side (first against latest by default), and see the
+    score trend. Photos stay on the local disk and the user can delete one photo or all of them.
 
 The operator's own body on a real webcam is the final check only the operator can run.
 
@@ -55,6 +59,7 @@ The operator's own body on a real webcam is the final check only the operator ca
 | Judge's calls | Quarter turns and the mandatory poses called in order, like prejudging | hit time and accuracy per pose |
 | Mirror | The figure copies you live, next to the target | none (exploration) |
 | Coach review | A snapshot critique by the LLM of what the camera cannot measure (lat flare, vacuum, chest up) | qualitative |
+| Progress | A timeline of saved photos per pose; side-by-side compare of two dates with the skeleton overlay; score trend | none (review) |
 
 ## Units (riskiest first; each ends in a check)
 
@@ -66,6 +71,7 @@ The operator's own body on a real webcam is the final check only the operator ca
 6. Cue scheduler and speech.
 7. Modes, one at a time, each verified with the fake camera.
 8. Coach review via omp; voice commands via jev.
+8b. Progress photos: local photo store in the API server, timeline and compare views.
 9. Docs, README correction, final verification on the real GPU.
 
 Fan-out: unit 2 (rig, model pipeline and Viewer) and unit 3 (pose domain, pure TS) touch disjoint files and

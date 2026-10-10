@@ -8,3 +8,4 @@ dist/
 !.env.example
 prototypes/
 docs/posing-tutor/shots/
+public/mediapipe/

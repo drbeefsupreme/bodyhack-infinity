@@ -16,10 +16,12 @@ separate controls so they can never secretly explain a difference attributed to 
 
 ## Run it
 
-Requirements: Node 20+ (Bun only if you want to rebuild the model).
+Requirements: Node 22.18+, which runs the TypeScript setup script directly (Bun only if you want to rebuild
+the model).
 
 ```sh
 npm install
+npm run mediapipe      # once: pose tracker WASM and model into public/mediapipe
 npm run dev            # http://localhost:5173
 ```
 
@@ -54,6 +56,17 @@ The browser never sees the keys.
 The server reads `TYPESAFE_API_KEY` from the environment, else from `.env.local` in the project
 root, else `~/git/crispy/.env.local`, else `~/.config/bodyhack-infinity/env`. Set
 `BODYHACK_COACH_MODEL` to change the coach model (default `anthropic/claude-sonnet-5`).
+
+### Pose tracking assets and debug page
+
+`npm run mediapipe` copies the MediaPipe WASM from the pinned `@mediapipe/tasks-vision` package and downloads
+the pose model, checked by SHA-256, into `public/mediapipe/` (34 MB, git-ignored). Run it again after upgrading
+the package. The tracker loads nothing from a CDN, but MediaPipe itself posts usage metrics to
+`odml.pa.googleapis.com` about once a minute (see the privacy notice in the package README).
+
+`/posing-debug.html` runs the live loop on the camera or on a dropped image or video file: landmarks over the
+frame, the metrics, the called pose's score and faults, the cue scheduler's events and the spoken cues. Add
+`?pose=<id>` to call another pose (default `frontDoubleBiceps`).
 
 ## What you can do
 
@@ -182,10 +195,13 @@ Key findings that shaped the app:
 src/                 React app, Three.js viewer, shader, content
   content/           terms, comparisons, quiz, presets, generated sources
   three/             Viewer (A/B scissor rendering), skin shader, model loader, control mapping
+  posing/            pose domain, tracker, smoothing, cue scheduler, speech, debug page
 scripts/model/       SDF anatomy, field, mesher, morph baking (Bun)
 scripts/content/     source extraction from research reports
 research/            research reports, asset survey, region screenshots from the modeling agents
 docs/                modeling notes and verification screenshots
 public/model*        baked models; public/fallback: no-WebGL images
+public/mediapipe/    MediaPipe WASM and pose model (npm run mediapipe, git-ignored)
 shot.html            render harness used for verification
+posing-debug.html    tracking and cue debug page
 ```

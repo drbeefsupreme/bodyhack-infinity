@@ -9,7 +9,13 @@ export default defineConfig({
   base: './',
   plugins: [react(), bodyhackApi(root)],
   build: {
-    rollupOptions: { input: { main: resolve(root, 'index.html'), shot: resolve(root, 'shot.html') } },
+    rollupOptions: {
+      input: {
+        main: resolve(root, 'index.html'),
+        shot: resolve(root, 'shot.html'),
+        posingDebug: resolve(root, 'posing-debug.html'),
+      },
+    },
     chunkSizeWarningLimit: 1500,
   },
   server: { host: true },
