@@ -57,6 +57,13 @@ The server reads `TYPESAFE_API_KEY` from the environment, else from `.env.local`
 root, else `~/git/crispy/.env.local`, else `~/.config/bodyhack-infinity/env`. Set
 `BODYHACK_COACH_MODEL` to change the coach model (default `anthropic/claude-sonnet-5`).
 
+The API serves body photos, runs `omp` on your login and uses the jev key, so only this computer can call it.
+The app pages are still served to the network, so the explorer works over Tailscale, but every `/api/*` request
+from another address, or with a `Host` other than `localhost`, `127.0.0.1` or `[::1]`, gets 403. Cross-origin
+requests and `POST` requests without `Content-Type: application/json` also get 403. To use the tutor from another
+machine, start the server with `BODYHACK_API_ALLOW_REMOTE=1`. This lifts the address and `Host` rules. The
+cross-origin rules stay.
+
 ### Pose tracking assets and debug page
 
 `npm run mediapipe` copies the MediaPipe WASM from the pinned `@mediapipe/tasks-vision` package and downloads
@@ -204,4 +211,32 @@ public/model*        baked models; public/fallback: no-WebGL images
 public/mediapipe/    MediaPipe WASM and pose model (npm run mediapipe, git-ignored)
 shot.html            render harness used for verification
 posing-debug.html    tracking and cue debug page
+```
+
+## Progress photos
+
+The Posing Tutor saves a photo every time you hit a pose, with the date, the score, the corrections and the
+tracked landmarks. The progress view (`src/posing/progress/ProgressView.tsx`) shows a timeline per pose, a
+side-by-side or onion-skin compare of two dates (first against latest by default) with an optional skeleton
+overlay, and the score trend. Until the tutor mounts it, open it at `/progress-dev.html` on the dev server.
+
+Photos stay on this computer. The local API stores them in `$BODYHACK_DATA_DIR/photos`, else in
+`~/.local/share/bodyhack-infinity/photos` (directory mode 0700, files 0600): one JPEG or WebP and one JSON
+sidecar per photo. The server makes the photo ids (UUIDs), so a request can never name a path.
+
+| Endpoint | Does |
+|---|---|
+| `POST /api/photos` | saves `{ pose, imageDataUrl, score, faults: [{ metric, side?, cue }], landmarks?, mode?, note? }` (JPEG or WebP data URL, body at most 8 MB) → `{ photo }` |
+| `GET /api/photos?pose=<id>` | metadata, newest first (every pose without `pose`) → `{ photos }` |
+| `GET /api/photos/<id>/image` | the image, as `image/jpeg` or `image/webp` |
+| `DELETE /api/photos/<id>` | deletes one photo |
+| `DELETE /api/photos?pose=<id>` or `?all=1` | deletes every photo of one pose, or every photo → `{ deleted }` |
+
+To check the views without a camera, seed a scratch directory with a fake history (3 poses on 6 dates,
+rendered by `shot.html` in headless Chrome, landmarks from MediaPipe). The script refuses the real data
+directory and needs the dev server and `npm run mediapipe`:
+
+```sh
+BODYHACK_DATA_DIR=/tmp/bodyhack-seed npm run dev -- --port 5351
+BODYHACK_DATA_DIR=/tmp/bodyhack-seed bun scripts/seed-progress.ts --app http://localhost:5351
 ```

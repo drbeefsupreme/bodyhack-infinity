@@ -2,21 +2,25 @@ import { accessSync, constants } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { delimiter, join } from 'node:path';
 import type { Connect, Plugin } from 'vite';
+import type { PhotoImageType } from '../src/posing/progress/types.ts';
+import { apiRefusal } from './access.ts';
 import { runCoach } from './coach.ts';
 import { chooseIntent } from './jev.ts';
+import { CONTENT_TYPE, deletePhoto, deletePhotos, listPhotos, photosDir, readPhotoImage, savePhoto } from './photos.ts';
 import { typesafeKey } from './secrets.ts';
-import { parseCoachRequest, parseIntentRequest } from './validate.ts';
+import { parseCoachRequest, parseIntentRequest, parsePhotoId, parsePhotoRequest, parsePoseId } from './validate.ts';
 
 const MAX_BODY_BYTES = 8 * 1024 * 1024;
+const PHOTO_ROUTE = /^(GET|DELETE) \/api\/photos\/([^/]+)(\/image)?$/;
 
-interface Reply {
-  status: number;
-  body: object;
-}
+type Reply = { status: number; body: object } | { status: number; image: { type: PhotoImageType; bytes: Buffer } };
 
-/** Local API for both `vite` (dev) and `vite preview`. `root` is the project root, where `.env.local` lives. */
+/**
+ * Local API for both `vite` (dev) and `vite preview`. `root` is the project root, where `.env.local` lives.
+ * Only loopback callers on a local Host reach it, unless BODYHACK_API_ALLOW_REMOTE=1 (server/access.ts).
+ */
 export function bodyhackApi(root: string): Plugin {
-  const handle = apiMiddleware(root);
+  const handle = apiMiddleware(root, photosDir(), process.env.BODYHACK_API_ALLOW_REMOTE === '1');
   return {
     name: 'bodyhack-api',
     configureServer(server) {
@@ -28,16 +32,31 @@ export function bodyhackApi(root: string): Plugin {
   };
 }
 
-function apiMiddleware(root: string): Connect.NextHandleFunction {
+function apiMiddleware(root: string, photos: string, allowRemote: boolean): Connect.NextHandleFunction {
   return (req, res, next) => {
-    const path = (req.url ?? '').split('?')[0];
+    const [path, search = ''] = (req.url ?? '').split('?');
     if (!path.startsWith('/api/')) {
       next();
       return;
     }
     const route = `${req.method} ${path}`;
+    const refusal = apiRefusal(
+      {
+        method: req.method,
+        remoteAddress: req.socket.remoteAddress,
+        host: req.headers.host,
+        origin: req.headers.origin,
+        contentType: req.headers['content-type'],
+      },
+      allowRemote,
+    );
+    if (refusal) {
+      console.warn(`[api] ${route} from ${req.socket.remoteAddress} refused: ${refusal}`);
+      send(res, { status: 403, body: { error: refusal } });
+      return;
+    }
     const started = performance.now();
-    handle(root, route, req)
+    handle(root, photos, route, new URLSearchParams(search), req)
       .catch((err: unknown): Reply => {
         console.error(`[api] ${route} failed:`, err instanceof Error ? err.message : err);
         return { status: 500, body: { error: 'internal error' } };
@@ -49,7 +68,7 @@ function apiMiddleware(root: string): Connect.NextHandleFunction {
   };
 }
 
-async function handle(root: string, route: string, req: IncomingMessage): Promise<Reply> {
+async function handle(root: string, photos: string, route: string, query: URLSearchParams, req: IncomingMessage): Promise<Reply> {
   switch (route) {
     case 'GET /api/health':
       return { status: 200, body: { ok: true, omp: onPath('omp'), jev: typesafeKey(root) !== null } };
@@ -79,8 +98,45 @@ async function handle(root: string, route: string, req: IncomingMessage): Promis
       }
     }
     default:
-      return { status: 404, body: { error: `no route ${route}` } };
+      return (await handlePhotos(photos, route, query, req)) ?? { status: 404, body: { error: `no route ${route}` } };
   }
+}
+
+/** Progress photos in `dir`; null when the route is not a photo route. */
+async function handlePhotos(dir: string, route: string, query: URLSearchParams, req: IncomingMessage): Promise<Reply | null> {
+  switch (route) {
+    case 'GET /api/photos': {
+      const raw = query.get('pose');
+      if (raw === null) return { status: 200, body: { photos: await listPhotos(dir) } };
+      const pose = parsePoseId(raw);
+      if (!pose) return { status: 400, body: { error: 'pose must be one of the pose ids' } };
+      return { status: 200, body: { photos: await listPhotos(dir, pose) } };
+    }
+    case 'POST /api/photos': {
+      const raw = await readJson(req);
+      if ('status' in raw) return raw;
+      const parsed = parsePhotoRequest(raw.json);
+      if (!parsed.ok) return { status: 400, body: { error: parsed.error } };
+      return { status: 201, body: { photo: await savePhoto(dir, parsed.value) } };
+    }
+    case 'DELETE /api/photos': {
+      if (query.get('all') === '1') return { status: 200, body: { deleted: await deletePhotos(dir, 'all') } };
+      const pose = parsePoseId(query.get('pose'));
+      if (!pose) return { status: 400, body: { error: 'give pose=<pose id> or all=1' } };
+      return { status: 200, body: { deleted: await deletePhotos(dir, { pose }) } };
+    }
+  }
+  const match = PHOTO_ROUTE.exec(route);
+  if (!match) return null;
+  const [, method, rawId, image] = match;
+  const id = parsePhotoId(rawId);
+  const missing: Reply = { status: 404, body: { error: 'no such photo' } };
+  if (method === 'GET' && image) {
+    const found = id && (await readPhotoImage(dir, id));
+    return found ? { status: 200, image: found } : missing;
+  }
+  if (method === 'DELETE' && !image) return id && (await deletePhoto(dir, id)) ? { status: 200, body: { deleted: 1 } } : missing;
+  return null;
 }
 
 function failure(status: number, route: string, err: unknown): Reply {
@@ -113,13 +169,20 @@ async function readJson(req: IncomingMessage): Promise<{ json: unknown } | Reply
   }
 }
 
-function send(res: ServerResponse, { status, body }: Reply): void {
-  res.statusCode = status;
+function send(res: ServerResponse, reply: Reply): void {
+  res.statusCode = reply.status;
+  if ('image' in reply) {
+    res.setHeader('content-type', CONTENT_TYPE[reply.image.type]);
+    res.setHeader('cache-control', 'private, max-age=86400, immutable');
+    res.setHeader('x-content-type-options', 'nosniff');
+    res.end(reply.image.bytes);
+    return;
+  }
   res.setHeader('content-type', 'application/json; charset=utf-8');
   res.setHeader('cache-control', 'no-store');
   // A rejected oversized body is left unread, so the connection cannot be reused.
-  if (status === 413) res.setHeader('connection', 'close');
-  res.end(JSON.stringify(body));
+  if (reply.status === 413) res.setHeader('connection', 'close');
+  res.end(JSON.stringify(reply.body));
 }
 
 function onPath(bin: string): boolean {
