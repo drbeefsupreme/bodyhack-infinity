@@ -191,10 +191,12 @@ Key findings that shaped the app:
 - **Artifacts**: at high softness, small slivers can appear in tight creases (armpit, crotch,
   gluteal fold, inside the elbow) where the soft-tissue morph fills a gap. Striations can show
   slight moiré where many lines converge near a tendon.
-- **Performance**: frame time scales with triangle count. On the only GPU available for testing
-  (a remote Intel UHD 620 driven by headless Chromium) the detailed mesh took ~280 ms per frame
-  and the lite mesh ~140 ms; the app switches to the lite mesh automatically when the first
-  frame is slow. Desktop GPUs were not available for testing.
+- **Performance**: frame time scales with triangle count. The ~280 ms (detailed mesh) and ~140 ms
+  (lite mesh) per frame noted earlier came from the automated test browser, which renders on the CPU
+  with SwiftShader; its WebGL renderer string was spoofed to read "Intel UHD 620". They are not GPU
+  numbers. On the development machine's Radeon RX 7900 XTX, the tutor kept up with a 15 fps fake
+  camera, with MediaPipe pose detection at about 7 ms per frame. The app still switches to the lite
+  mesh when the first frame is slow.
 
 ## Project layout
 
@@ -246,9 +248,21 @@ Run it with `npm run dev`, then `npm run mediapipe` once for the pose model. Set
 commands, coach debrief, coach model) are on the tutor home; the coach model defaults to the server's
 (`BODYHACK_COACH_MODEL` or `anthropic/claude-sonnet-5`, reported by `/api/health`).
 
-**Known risk.** Right after a continuous turn to the back, MediaPipe can read a side view for a few seconds.
-The tutor smooths facing (300 ms hysteresis), ignores 300 ms dropouts during a hold, and starts a fresh detection
-when a call changes the facing; on the fake-camera clip the back pose then settles in 0 to 2.5 s.
+**Known limits.**
+- Pass bands come from 26 competition photos (1 to 3 per pose), so they are estimates. They are not yet tuned
+  on webcam video of real users.
+- One camera sees only 2D. Depth (elbows forward), lat flare, vacuum and chest lift are left to the coach debrief.
+  Side poses read worse than front and back poses, because the far arm is hidden.
+- On back views, MediaPipe reads a false 9 to 18 degree twist on the figure. Real users may hear "Square your
+  shoulders" when they are already square.
+- Right after a continuous turn to the back, MediaPipe can read a side view for a few seconds. The tutor smooths
+  facing (300 ms hysteresis), ignores 300 ms dropouts during a hold, and starts a fresh detection when a call
+  changes the facing. On the fake-camera clip, the back pose then settles in 0 to 2.5 s.
+- Automated tests used fake cameras and injected voice phrases. A real webcam and a real microphone are not yet
+  tested.
+
+`npm run gate` renders the figure in every pose, runs the frames through the real tracker and scoring, and fails
+when a pose misses its own score or a known fault is not the top correction (`docs/posing-tutor/gate-report.md`).
 
 ## Progress photos
 
