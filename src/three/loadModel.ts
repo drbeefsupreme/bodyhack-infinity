@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import type { RigManifest } from './rig';
 
 export interface ChunkMeta {
   name: string; type: 'f32' | 'i16' | 'u32' | 'u8' | 'i8'; size: number; normalized: boolean; scale: number; offset: number; byteLength: number;
@@ -7,6 +8,7 @@ export interface ModelMeta {
   pose: string; vertexCount: number; indexCount: number; h: number;
   targets: { name: string; posScale: number; nrmScale: number }[];
   chunks: ChunkMeta[]; regions: string[]; parts: string[]; aoTargets: string[];
+  rig: RigManifest;
 }
 export interface LoadedModel { geometry: THREE.BufferGeometry; meta: ModelMeta; targetIndex: Record<string, number> }
 
@@ -16,6 +18,7 @@ export async function loadModel(base: string, pose: string, onProgress?: (f: num
   const metaRes = await fetch(`${base}/${pose}.json`);
   if (!metaRes.ok) throw new Error(`Model metadata failed to load (${metaRes.status})`);
   const meta = (await metaRes.json()) as ModelMeta;
+  if (!meta.rig) throw new Error('The model has no skeleton; rebuild it with npm run model');
   const res = await fetch(`${base}/${pose}.bin`);
   if (!res.ok || !res.body) throw new Error(`Model data failed to load (${res.status})`);
   const total = Number(res.headers.get('content-length')) || 0;

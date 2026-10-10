@@ -11,6 +11,8 @@ export interface SkinUniforms {
   uTrunksColor: { value: THREE.Color };
   uAoStrength: { value: number };
   uMorph: { value: number[] };    // AO morph weights (mirrors morph influences)
+  uBoneR: { value: Float32Array }; // per-bone skinning dual quaternions (Rig.skin): real parts
+  uBoneD: { value: Float32Array }; // and dual parts, [x, y, z, w] per bone
 }
 
 export const REGION_COUNT = 21;
@@ -32,7 +34,41 @@ float bbNoise(vec3 p) {
 }
 `;
 
-export function createSkinMaterial(): { material: THREE.MeshPhysicalMaterial; uniforms: SkinUniforms } {
+/** Dual-quaternion skinning: the four bone transforms of a vertex, blended and applied after morphing. */
+function skinPars(bones: number): string {
+  return /* glsl */ `
+attribute vec4 aBone;
+attribute vec4 aBoneW;
+uniform vec4 uBoneR[${bones}];
+uniform vec4 uBoneD[${bones}];
+vec4 bbDqR;
+vec4 bbDqD;
+void bbBlendBones() {
+  vec4 r0 = uBoneR[int(aBone.x)];
+  bbDqR = vec4(0.0);
+  bbDqD = vec4(0.0);
+  for (int k = 0; k < 4; k++) {
+    int b = int(aBone[k]);
+    vec4 r = uBoneR[b];
+    // q and -q are the same rotation: align every bone with the strongest one before summing.
+    float w = dot(r0, r) < 0.0 ? -aBoneW[k] : aBoneW[k];
+    bbDqR += r * w;
+    bbDqD += uBoneD[b] * w;
+  }
+  float l = length(bbDqR);
+  bbDqR /= l;
+  bbDqD /= l;
+}
+vec3 bbRotate(vec3 v) { return v + 2.0 * cross(bbDqR.xyz, cross(bbDqR.xyz, v) + bbDqR.w * v); }
+vec3 bbSkin(vec3 p) { return bbRotate(p) + 2.0 * (bbDqR.w * bbDqD.xyz - bbDqD.w * bbDqR.xyz + cross(bbDqR.xyz, bbDqD.xyz)); }
+`;
+}
+
+/**
+ * Skin material for one figure, plus the matching shadow depth material. Both share the bone uniforms;
+ * identity bone transforms show the mesh exactly as baked.
+ */
+export function createSkinMaterial(bones: number): { material: THREE.MeshPhysicalMaterial; depth: THREE.MeshDepthMaterial; uniforms: SkinUniforms } {
   const material = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color('#c99a7c'),
     roughness: 0.52,
@@ -54,7 +90,10 @@ export function createSkinMaterial(): { material: THREE.MeshPhysicalMaterial; un
     uTrunksColor: { value: new THREE.Color('#1d2a44') },
     uAoStrength: { value: 1 },
     uMorph: { value: new Array(12).fill(0) },
+    uBoneR: { value: new Float32Array(bones * 4).map((_, i) => (i % 4 === 3 ? 1 : 0)) },
+    uBoneD: { value: new Float32Array(bones * 4) },
   };
+  const pars = skinPars(bones);
   material.onBeforeCompile = (shader) => {
     Object.assign(shader.uniforms, uniforms);
     shader.vertexShader = shader.vertexShader
@@ -74,9 +113,13 @@ varying float vAcross;
 varying vec4 vMus;
 varying vec4 vMisc;
 varying float vTrunks;
-varying float vAo;`)
+varying float vAo;
+${pars}`)
+      .replace('#include <skinbase_vertex>', 'bbBlendBones();')
+      .replace('#include <skinnormal_vertex>', 'vec3 bbRestNormal = objectNormal;\nobjectNormal = bbRotate(objectNormal);')
+      .replace('#include <skinning_vertex>', 'transformed = bbSkin(transformed);')
       .replace('#include <morphtarget_vertex>', /* glsl */ `#include <morphtarget_vertex>
-transformed += objectNormal * 0.0016 * smoothstep(-0.001, 0.001, aTrunks * 0.1);
+transformed += bbRestNormal * 0.0016 * smoothstep(-0.001, 0.001, aTrunks * 0.1);
 vObjPos = transformed;
 vFiber = aFiber;
 vAcross = aAcross;
@@ -190,5 +233,14 @@ reflectedLight.indirectSpecular *= mix(1.0, bbAo, 0.7);
 reflectedLight.directDiffuse *= mix(1.0, bbAo, 0.45);`);
   };
   material.customProgramCacheKey = () => 'bb-skin-v2';
-  return { material, uniforms };
+  const depth = new THREE.MeshDepthMaterial();
+  depth.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, { uBoneR: uniforms.uBoneR, uBoneD: uniforms.uBoneD });
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', `#include <common>\n${pars}`)
+      .replace('#include <skinbase_vertex>', 'bbBlendBones();')
+      .replace('#include <skinning_vertex>', 'transformed = bbSkin(transformed);');
+  };
+  depth.customProgramCacheKey = () => 'bb-skin-depth';
+  return { material, depth, uniforms };
 }
