@@ -113,7 +113,7 @@ export const FIGURE_POSES: Record<PoseId, FigurePose> = {
     bones: both({
       scap: [r(Y, -8)],
       upperarm: [r(HUM, 75), r(Z, 26), r(X, -13)],
-      forearm: [r(ELB, 102)],
+      forearm: [r(ELB, 90)],
       hand: [r(ELB, 20)],
       thigh: [r(X, -2.5), r(Y, 25)],
       shin: [r(X, 5)],
@@ -124,8 +124,8 @@ export const FIGURE_POSES: Record<PoseId, FigurePose> = {
     yaw: 90,
     bones: {
       // chest turned about 30° toward the judges, face to the judges
-      lumbar: [r(Y, 12)],
-      chest: [r(Y, 20)],
+      lumbar: [r(Y, 18)],
+      chest: [r(Y, 30)],
       neck: [r(Y, 30)],
       head: [r(Y, 30)],
       // near arm bent across the body; the far hand holds its wrist
@@ -169,8 +169,8 @@ export const FIGURE_POSES: Record<PoseId, FigurePose> = {
     bones: {
       ...both({
         scap: [r(Y, -10)],
-        upperarm: [r(HUM, 75), r(Z, 20.5), r(X, -8)],
-        forearm: [r(ELB, 102)],
+        upperarm: [r(HUM, 100), r(Z, 20.5), r(X, -8)],
+        forearm: [r(ELB, 88)],
         hand: [r(ELB, 20)],
       }),
       // the calf not shown in the back double biceps: right heel raised
@@ -185,8 +185,8 @@ export const FIGURE_POSES: Record<PoseId, FigurePose> = {
   sideTriceps: {
     yaw: 90,
     bones: {
-      lumbar: [r(Y, 10)],
-      chest: [r(Y, 22)],
+      lumbar: [r(Y, 12)],
+      chest: [r(Y, 27)],
       neck: [r(Y, 30)],
       head: [r(Y, 30)],
       // near arm straight down against the side; the far arm reaches behind the back toward it
@@ -209,8 +209,9 @@ export const FIGURE_POSES: Record<PoseId, FigurePose> = {
     bones: {
       ...both({
         scap: [r(Z, 18)],
-        upperarm: [r(HUM, -90), r(Z, 110)],
-        forearm: [r(ELB, 100)],
+        // turned out far enough that the forearms pass behind the head, not over it
+        upperarm: [r(HUM, -160), r(Z, 115)],
+        forearm: [r(ELB, 115)],
       }),
       // crunch the trunk slightly, head up
       lumbar: [r(X, 6)],

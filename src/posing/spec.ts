@@ -1,4 +1,4 @@
-import { SIDE_VIEW_HIP_WIDTH } from './metrics';
+import { MIN_VISIBILITY, SIDE_VIEW_HIP_WIDTH } from './metrics';
 import type { Band, BodySide, Check, Cue, Facing, MetricId, MetricSide, PoseId, PoseSpec } from './types';
 
 // Targets, bands, cues and build-up steps come from docs/posing-tutor/pose-spec.md (NPC / IFBB Pro conventions).
@@ -603,8 +603,9 @@ const backLatSpread: PoseSpec = {
       high: cue('Put your hands on your waist.', 'ESTIMATE'),
     }),
     // Hands on the waist hide from behind: the reference wrists read 0.09..0.26. Where a wrist does show, the
-    // elbow and forearm still have to put it on the waist.
-    ...eachSide('wristVis', { band: band(0.15, 0, 0.4), weight: 1, high: cue('Put your hands on your waist.', 'S1') }),
+    // elbow and forearm still have to put it on the waist. The band ends at the app's hidden cut, MIN_VISIBILITY
+    // (tracking gate: the figure's hidden wrists read 0.44..0.57).
+    ...eachSide('wristVis', { band: band(0.15, 0, MIN_VISIBILITY), weight: 1, high: cue('Put your hands on your waist.', 'S1') }),
     ...eachSide('elbowFlex', {
       band: band(97, 79, 113),
       weight: 1,
@@ -662,7 +663,8 @@ const sideTricepsChecks: readonly Check[] = [
     },
     'near',
   ),
-  check('wristVis', { band: band(0.02, 0, 0.3), weight: 1.5, high: cue('Reach behind and grab your wrist.', 'S1') }, 'far'),
+  // The rear hand hides behind the back. The band ends at the app's hidden cut, MIN_VISIBILITY.
+  check('wristVis', { band: band(0.02, 0, MIN_VISIBILITY), weight: 1.5, high: cue('Reach behind and grab your wrist.', 'S1') }, 'far'),
   check(
     'kneeFlex',
     {
@@ -778,7 +780,9 @@ const absAndThighs: PoseSpec = {
     check('elbowSpan', { band: atLeast(1.55, 1.3), weight: 2, low: cue('Open your elbows wide.', 'S6') }),
     ...eachSide('abduction', { band: band(155, 130, 180), weight: 1.5, low: cue('Lift your elbows higher.', 'ESTIMATE') }),
     ...eachSide('elbowHeight', { band: atLeast(0.35, 0.2), weight: 1.5, low: cue('Lift your elbows higher.', 'ESTIMATE') }),
-    ...eachSide('wristVis', { band: band(0.02, 0, 0.3), weight: 1, high: cue('Put both hands behind your head.', 'S1') }),
+    // The app calls a landmark hidden below MIN_VISIBILITY everywhere, so the hands-behind-head check uses the same
+    // cut; the reference photos read 0.00..0.02, well inside it.
+    ...eachSide('wristVis', { band: band(0.02, 0, MIN_VISIBILITY), weight: 1, high: cue('Put both hands behind your head.', 'S1') }),
     check('stanceRatio', {
       band: band(0.35, 0.2, 1.2),
       weight: 0.5,

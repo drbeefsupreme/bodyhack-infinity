@@ -6,18 +6,19 @@ import type { Band, Check, CheckResult, Cue, Facing, Metrics, PoseId, PoseScore,
 export const MIN_MEASURED_WEIGHT = 0.5;
 
 /**
- * Distance outside a band at which a check scores 0: one band width. An open side counts as the closed side
- * mirrored about the target, so `atLeast(2.35, 2.15)` falls to 0 at 1.75.
+ * Distance outside a band at which a check scores 0: half a band width. An open side counts as the closed side
+ * mirrored about the target, so `atLeast(2.35, 2.15)` falls to 0 at 1.95. With a full band width, both elbows
+ * dropped 30° in the front double biceps still scored 88, a hit (docs/posing-tutor/gate-report.md).
  */
 function falloffWidth({ target, min, max }: Band): number {
   const below = Number.isFinite(min) ? target - min : max - target;
   const above = Number.isFinite(max) ? max - target : target - min;
-  return below + above;
+  return (below + above) / 2;
 }
 
 /**
- * 1 at the band edge, 0 at one band width out, a smoothstep between. Its slope is 0 at the edge, so landmark
- * jitter around a band edge does not make the score flicker.
+ * 1 at the band edge, 0 at half a band width out, a smoothstep between. Its slope is 0 at the edge, and the band
+ * interior is flat, so landmark jitter around a band edge does not make the score flicker.
  */
 function falloff(distance: number, band: Band): number {
   const t = Math.min(1, distance / falloffWidth(band));

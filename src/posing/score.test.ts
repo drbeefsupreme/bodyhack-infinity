@@ -49,7 +49,7 @@ describe('scoreCall on hand-built poses', () => {
 
   it('puts "Raise your elbows to shoulder height." first when both arms drop 30 degrees', () => {
     const { result } = call('frontDoubleBiceps', BODIES.frontDoubleBicepsElbowsDropped);
-    expect(result.score).toBeCloseTo(82.78, 2);
+    expect(result.score).toBeCloseTo(55.93, 2);
     expect(result.faults.map((f) => faultCue(f)?.text)).toEqual([
       'Raise your elbows to shoulder height.',
       'Raise your elbows to shoulder height.',
@@ -102,9 +102,9 @@ describe('scoreCall on hand-built poses', () => {
 describe('scorePose', () => {
   const at = (band: Band, stanceRatio: number) => scorePose(spec([band, 1]), { stanceRatio }, 'front').score;
 
-  it('falls from 100 at the band edge to 0 at one band width outside it, as a smoothstep', () => {
+  it('falls from 100 at the band edge to 0 at half a band width outside it, as a smoothstep', () => {
     const band: Band = { target: 10, min: 0, max: 20 };
-    expect([at(band, 20), at(band, 25), at(band, 30), at(band, 40), at(band, 45), at(band, -10)]).toEqual([
+    expect([at(band, 20), at(band, 22.5), at(band, 25), at(band, 30), at(band, 35), at(band, -5)]).toEqual([
       100,
       84.375,
       50,
@@ -116,12 +116,12 @@ describe('scorePose', () => {
 
   it('mirrors the closed side of an open band to set its width', () => {
     const band: Band = { target: 2.35, min: 2.15, max: Infinity };
-    expect([at(band, 9), at(band, 1.95), at(band, 1.75)]).toEqual([100, expect.closeTo(50, 9), expect.closeTo(0, 9)]);
+    expect([at(band, 9), at(band, 2.05), at(band, 1.95)]).toEqual([100, expect.closeTo(50, 9), expect.closeTo(0, 9)]);
   });
 
   it('orders faults by the points they cost, weight times the score lost', () => {
     const twoChecks = spec([{ target: 1, min: 0, max: 2 }, 2], [{ target: 1, min: 0, max: 2 }, 1]);
-    const metrics: Metrics = { stanceRatio: 2.5, wristGap: 3 };
+    const metrics: Metrics = { stanceRatio: 2.25, wristGap: 2.5 };
     const { faults, score } = scorePose(twoChecks, metrics, 'front');
     expect(faults.map((f) => faultCue(f)?.text)).toEqual(['high 1', 'high 0']);
     expect(score).toBeCloseTo((100 * 2 * 0.84375) / 3 + (100 * 0.5) / 3, 9);
@@ -163,18 +163,14 @@ describe('the 26 reference photos', () => {
       ids.filter((id) => id !== ref.pose && (scoreRef(ref, id).result.score ?? 0) >= 60),
     ]);
     expect(confused.filter(([, others]) => others.length > 0)).toEqual([
-      ['ifbb_bb_front', ['frontLatSpread', 'mostMuscular']],
+      ['ifbb_bb_front', ['frontLatSpread']],
       ['ifbb_cp_front', ['frontLatSpread', 'mostMuscular']],
       ['ifbb_cp_qt_leftside', ['sideTriceps']],
-      ['ifbb_cp_qt_rightside', ['sideTriceps']],
       ['ifbb_cp_back', ['backLatSpread']],
       ['ifbb_bb_fls', ['relaxedFront', 'mostMuscular']],
       ['wnbf_fls', ['relaxedFront', 'mostMuscular']],
-      ['ifbb_cp_sc', ['quarterTurnRightSide']],
       ['ifbb_bb_bls', ['relaxedBack']],
-      ['wnbf_bls', ['relaxedBack']],
-      ['ifbb_bb_st', ['quarterTurnRightSide']],
-      ['ifbb_cp_st', ['quarterTurnRightSide', 'sideChest']],
+      ['ifbb_cp_st', ['quarterTurnRightSide']],
       ['wnbf_st', ['quarterTurnLeftSide', 'sideChest']],
       ['wnbf_mm_hips', ['relaxedFront', 'frontLatSpread']],
     ]);

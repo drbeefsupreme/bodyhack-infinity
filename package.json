@@ -12,6 +12,7 @@
     "model:lite": "bun scripts/model/build.ts --h 0.005 --out public/model-lite",
     "sources": "bun scripts/content/extract-sources.ts",
     "mediapipe": "node scripts/fetch-mediapipe.ts",
+    "gate": "node scripts/gate.ts",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json && tsc -p server/tsconfig.json"
   },
   "dependencies": {
