@@ -1,4 +1,6 @@
 import type { BoneName, BPt, V3 } from './types';
+import type { BoneKey, FigurePose, LimbBone, MidBone } from '../../src/posing/types';
+import type { RigManifest } from '../../src/three/rig';
 
 /** Rest-pose joint positions for the LEFT side (+X) and the midline. */
 export const JOINTS: Record<BoneName, V3> = {
@@ -109,3 +111,41 @@ export const POSES: Record<string, Pose> = {
   // A few degrees of abduction keep the inner arm clear of the lat, so soft-tissue morphs do not fuse them.
   relaxed: { upperarm: [0, 0, 1, 4] },
 };
+
+// ---------------------------------------------------------------- skinning rig
+
+const MID_BONES: readonly MidBone[] = ['pelvis', 'lumbar', 'chest', 'neck', 'head'];
+const LIMB_BONES: readonly LimbBone[] = ['scap', 'upperarm', 'forearm', 'hand', 'thigh', 'shin', 'foot'];
+
+/** Skinning bones in skin-index order: the midline, then the left limbs, then the right limbs. */
+export const SKIN_BONES: readonly { key: BoneKey; bone: BoneName; side: 1 | -1 }[] = [
+  ...MID_BONES.map((bone) => ({ key: bone, bone, side: 1 as const })),
+  ...LIMB_BONES.map((bone) => ({ key: `${bone}L` as const, bone, side: 1 as const })),
+  ...LIMB_BONES.map((bone) => ({ key: `${bone}R` as const, bone, side: -1 as const })),
+];
+
+/** Skin index of a bone on one side; midline bones ignore the side. */
+export function skinSlot(bone: BoneName, side: 1 | -1): number {
+  const s = SIDED[bone] ? side : 1;
+  return SKIN_BONES.findIndex((b) => b.bone === bone && b.side === s);
+}
+
+/** Heel and toe-tip points of the left sole (rest pose). The rig keeps the lowest one on the floor. */
+const SOLE: V3[] = [[0.134, 0, -0.075], [0.135, 0, 0.185]];
+
+/** The skeleton for the runtime rig (src/three/rig.ts); the build pose becomes its bind pose. */
+export function rigManifest(poseName: string): RigManifest {
+  const pose = POSES[poseName] ?? {};
+  const bones: FigurePose['bones'] = {};
+  for (const s of SKIN_BONES) {
+    const aa = pose[s.bone];
+    if (aa) bones[s.key] = [s.side === 1 ? aa : [aa[0], -aa[1], -aa[2], aa[3]]];
+  }
+  return {
+    bones: SKIN_BONES.map((s) => s.key),
+    parent: SKIN_BONES.map((s) => { const p = PARENT[s.bone]; return p ? skinSlot(p, s.side) : -1; }),
+    joints: SKIN_BONES.map(({ bone, side }) => [JOINTS[bone][0] * side, JOINTS[bone][1], JOINTS[bone][2]]),
+    contacts: ([1, -1] as const).flatMap((side) => SOLE.map((p) => ({ bone: skinSlot('foot', side), p: [p[0] * side, p[1], p[2]] as V3 }))),
+    bind: { yaw: 0, bones },
+  };
+}

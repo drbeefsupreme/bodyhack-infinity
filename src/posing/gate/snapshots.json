@@ -1,0 +1,1496 @@
+[
+ {
+  "label": "baseline",
+  "note": "Before any change: the committed figure poses, scorer and spec (commit d0a99b9), with the current harness and fault set.",
+  "run": {
+   "at": "2026-10-10T20:23:43.965Z",
+   "backend": {
+    "renderer": "ANGLE (AMD, Vulkan 1.4.335 (AMD Radeon RX 7900 XTX (RADV NAVI31) (0x0000744C)), radv)",
+    "software": false,
+    "delegate": "GPU"
+   },
+   "size": [
+    1280,
+    720
+   ],
+   "frames": 10,
+   "calibrated": true,
+   "poses": [
+    {
+     "id": "relaxedFront",
+     "pose": "relaxedFront",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 100,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 28.516697123886676,
+      "frontLatSpread": 65.44239023904166,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 71.01704640166936
+     },
+     "topCue": null
+    },
+    {
+     "id": "quarterTurnLeftSide",
+     "pose": "quarterTurnLeftSide",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 98.43455861561188,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 47.2147444965248,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 65.10966973022363,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Let your arms hang naturally."
+    },
+    {
+     "id": "relaxedBack",
+     "pose": "relaxedBack",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 99.7450041187751,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 18.27421214325203,
+      "backLatSpread": 66.48608233590735,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Square your shoulders to the back wall."
+    },
+    {
+     "id": "quarterTurnRightSide",
+     "pose": "quarterTurnRightSide",
+     "detected": 10,
+     "facing": "rightSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": 100,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 43.61813083816496,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 68.25165461045015,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": null
+    },
+    {
+     "id": "frontDoubleBiceps",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 40.648555617137966,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 100,
+      "frontLatSpread": 51.21951219512195,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 55.50621139101776,
+      "mostMuscular": 34.48275862068966
+     },
+     "topCue": null
+    },
+    {
+     "id": "frontLatSpread",
+     "pose": "frontLatSpread",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 67.74193548387096,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 41.1391362493897,
+      "frontLatSpread": 99.10886699818667,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 79.85139727800069
+     },
+     "topCue": "Put your hands on your lower waist."
+    },
+    {
+     "id": "sideChest",
+     "pose": "sideChest",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 65.37791242899753,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 97.07963631364468,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 50.04345770767594,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Turn your chest toward the camera."
+    },
+    {
+     "id": "backDoubleBiceps",
+     "pose": "backDoubleBiceps",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 46.96660049388477,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 99.53326557066396,
+      "backLatSpread": 45.06075897503722,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Drop your shoulders, spread your back."
+    },
+    {
+     "id": "backLatSpread",
+     "pose": "backLatSpread",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 68.58484127906473,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 32.4066691561078,
+      "backLatSpread": 88.15907400962021,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Put your hands on your waist."
+    },
+    {
+     "id": "sideTriceps",
+     "pose": "sideTriceps",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 85.73853109066246,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 69.06284700147336,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 94.02249740640741,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Reach behind and grab your wrist."
+    },
+    {
+     "id": "absAndThighs",
+     "pose": "absAndThighs",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 36.193860029099355,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 43.36169380853579,
+      "frontLatSpread": 40.680009669816926,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 83.79611340781531,
+      "mostMuscular": 65.42430970560292
+     },
+     "topCue": "Put both hands behind your head."
+    },
+    {
+     "id": "mostMuscular",
+     "pose": "mostMuscular",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 53.661090828213595,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 30.921255699938417,
+      "frontLatSpread": 61.387086587270055,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 32.68923099900092,
+      "mostMuscular": 100
+     },
+     "topCue": null
+    }
+   ],
+   "faults": [
+    {
+     "id": "fdbElbowsDropped",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 60.04508576666421,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 87.8774839441574,
+      "frontLatSpread": 73.67852976513163,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 41.782698942308514
+     },
+     "topCue": "Raise your elbows to shoulder height.",
+     "label": "Front double biceps, both elbows dropped 30°",
+     "expectedCue": "Raise your elbows to shoulder height."
+    },
+    {
+     "id": "fdbFistsLow",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 39.45748745327164,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 83.27868479726641,
+      "frontLatSpread": 31.70731707317073,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 51.2749085266125,
+      "mostMuscular": 29.003020047951765
+     },
+     "topCue": "Ease your fists away from your head.",
+     "label": "Front double biceps, upper arms turned in 65° so the forearms tip toward the camera and the fists sit low",
+     "expectedCue": "Bring your fists up to your ears."
+    },
+    {
+     "id": "flsElbowsIn",
+     "pose": "frontLatSpread",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 67.74193548387096,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 35.47803792152122,
+      "frontLatSpread": 91.63803513523388,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 92.7191226846107
+     },
+     "topCue": "Spread your lats wider.",
+     "label": "Front lat spread, both elbows swung 50° forward and in, hands kept on the waist",
+     "expectedCue": "Spread your lats wider."
+    },
+    {
+     "id": "bdbLeftArmLow",
+     "pose": "backDoubleBiceps",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 50.76766837045041,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 89.53576027589838,
+      "backLatSpread": 53.282505964766145,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Lift your elbows above your shoulders.",
+     "label": "Back double biceps, left arm dropped 35°",
+     "expectedCue": "Lift your elbows above your shoulders."
+    }
+   ],
+   "references": [
+    {
+     "id": "ifbb_bb_front",
+     "pose": "relaxedFront",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_front",
+     "pose": "relaxedFront",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_qt_leftside",
+     "pose": "quarterTurnLeftSide",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_qt_rightside",
+     "pose": "quarterTurnRightSide",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_back",
+     "pose": "relaxedBack",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_fls",
+     "pose": "frontLatSpread",
+     "score": 100
+    },
+    {
+     "id": "wnbf_fls",
+     "pose": "frontLatSpread",
+     "score": 99.99867155604568
+    },
+    {
+     "id": "ifbb_bb_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "wnbf_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_bls",
+     "pose": "backLatSpread",
+     "score": 100
+    },
+    {
+     "id": "wnbf_bls",
+     "pose": "backLatSpread",
+     "score": 94.90380952993176
+    },
+    {
+     "id": "ifbb_bb_st",
+     "pose": "sideTriceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_st",
+     "pose": "sideTriceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_st",
+     "pose": "sideTriceps",
+     "score": 99.92296410659316
+    },
+    {
+     "id": "ifbb_bb_at",
+     "pose": "absAndThighs",
+     "score": null
+    },
+    {
+     "id": "ifbb_cp_at",
+     "pose": "absAndThighs",
+     "score": 100
+    },
+    {
+     "id": "wnbf_at",
+     "pose": "absAndThighs",
+     "score": 100
+    },
+    {
+     "id": "wnbf_mm_hips",
+     "pose": "mostMuscular",
+     "score": 100
+    },
+    {
+     "id": "wnbf_mm_crab",
+     "pose": "mostMuscular",
+     "score": 100
+    }
+   ]
+  }
+ },
+ {
+  "label": "falloff",
+  "note": "Scorer change only: score.ts falls to 0 at half a band width instead of one (option (a), step 1). The worst-check cap of step 2 was not needed: the 30° elbow drop fell from 88 to 66. Reference photo wnbf_bls falls from 94.9 to 91.7; accepted.",
+  "run": {
+   "at": "2026-10-10T20:23:48.036Z",
+   "backend": {
+    "renderer": "ANGLE (AMD, Vulkan 1.4.335 (AMD Radeon RX 7900 XTX (RADV NAVI31) (0x0000744C)), radv)",
+    "software": false,
+    "delegate": "GPU"
+   },
+   "size": [
+    1280,
+    720
+   ],
+   "frames": 10,
+   "calibrated": true,
+   "poses": [
+    {
+     "id": "relaxedFront",
+     "pose": "relaxedFront",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 100,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 22.008549610357363,
+      "frontLatSpread": 59.60139692208696,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 63.55283715923785
+     },
+     "topCue": null
+    },
+    {
+     "id": "quarterTurnLeftSide",
+     "pose": "quarterTurnLeftSide",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 95.64591548930372,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 40.59928965517307,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 55.67915365081163,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Let your arms hang naturally."
+    },
+    {
+     "id": "relaxedBack",
+     "pose": "relaxedBack",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 99.07589778497481,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 14.93832690721365,
+      "backLatSpread": 65.7682339576144,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Square your shoulders to the back wall."
+    },
+    {
+     "id": "quarterTurnRightSide",
+     "pose": "quarterTurnRightSide",
+     "detected": 10,
+     "facing": "rightSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": 100,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 33.65593802122841,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 62.57933273044674,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": null
+    },
+    {
+     "id": "frontDoubleBiceps",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 37.17543785812832,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 100,
+      "frontLatSpread": 51.21951219512195,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 34.52477569262602,
+      "mostMuscular": 34.48275862068966
+     },
+     "topCue": null
+    },
+    {
+     "id": "frontLatSpread",
+     "pose": "frontLatSpread",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 67.74193548387096,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 37.4322183327008,
+      "frontLatSpread": 96.7214284223733,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 61.82030111098175
+     },
+     "topCue": "Put your hands on your lower waist."
+    },
+    {
+     "id": "sideChest",
+     "pose": "sideChest",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 60.83733924889438,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 92.31432855691068,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 42.88559842945817,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Turn your chest toward the camera."
+    },
+    {
+     "id": "backDoubleBiceps",
+     "pose": "backDoubleBiceps",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 43.08651771748984,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 98.35285960725564,
+      "backLatSpread": 42.79222018564801,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Drop your shoulders, spread your back."
+    },
+    {
+     "id": "backLatSpread",
+     "pose": "backLatSpread",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 65.1132406717382,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 26.20565578260736,
+      "backLatSpread": 84.4667665967617,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Put your hands on your waist."
+    },
+    {
+     "id": "sideTriceps",
+     "pose": "sideTriceps",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 80.7356192510999,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 62.92375089264964,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 84.66394026853304,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Reach behind and grab your wrist."
+    },
+    {
+     "id": "absAndThighs",
+     "pose": "absAndThighs",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 29.253712080942705,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 38.54767969689351,
+      "frontLatSpread": 36.07286670245291,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 83.33333333333333,
+      "mostMuscular": 65.16341538170008
+     },
+     "topCue": "Put both hands behind your head."
+    },
+    {
+     "id": "mostMuscular",
+     "pose": "mostMuscular",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 41.935483870967744,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 26.714676545880724,
+      "frontLatSpread": 49.55042951501399,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 30.981806334422835,
+      "mostMuscular": 100
+     },
+     "topCue": null
+    }
+   ],
+   "faults": [
+    {
+     "id": "fdbElbowsDropped",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 56.96605576289145,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 65.65671376635612,
+      "frontLatSpread": 69.25832759175773,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 34.03681638229766
+     },
+     "topCue": "Raise your elbows to shoulder height.",
+     "label": "Front double biceps, both elbows dropped 30°",
+     "expectedCue": "Raise your elbows to shoulder height."
+    },
+    {
+     "id": "fdbFistsLow",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 32.34491010560867,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 69.88652203503891,
+      "frontLatSpread": 31.70731707317073,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.49075788564866,
+      "mostMuscular": 22.351016274954205
+     },
+     "topCue": "Bring your fists up to your ears.",
+     "label": "Front double biceps, upper arms turned in 65° so the forearms tip toward the camera and the fists sit low",
+     "expectedCue": "Bring your fists up to your ears."
+    },
+    {
+     "id": "flsElbowsIn",
+     "pose": "frontLatSpread",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 67.74193548387096,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 33.333333333333336,
+      "frontLatSpread": 82.7432014454147,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 78.72857195353802
+     },
+     "topCue": "Spread your lats wider.",
+     "label": "Front lat spread, both elbows swung 50° forward and in, hands kept on the waist",
+     "expectedCue": "Spread your lats wider."
+    },
+    {
+     "id": "bdbLeftArmLow",
+     "pose": "backDoubleBiceps",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 41.159382473536795,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 79.26166600378545,
+      "backLatSpread": 45.414531000422244,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Lift your elbows above your shoulders.",
+     "label": "Back double biceps, left arm dropped 35°",
+     "expectedCue": "Lift your elbows above your shoulders."
+    }
+   ],
+   "references": [
+    {
+     "id": "ifbb_bb_front",
+     "pose": "relaxedFront",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_front",
+     "pose": "relaxedFront",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_qt_leftside",
+     "pose": "quarterTurnLeftSide",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_qt_rightside",
+     "pose": "quarterTurnRightSide",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_back",
+     "pose": "relaxedBack",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_fls",
+     "pose": "frontLatSpread",
+     "score": 100
+    },
+    {
+     "id": "wnbf_fls",
+     "pose": "frontLatSpread",
+     "score": 99.99473215782159
+    },
+    {
+     "id": "ifbb_bb_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "wnbf_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_bls",
+     "pose": "backLatSpread",
+     "score": 100
+    },
+    {
+     "id": "wnbf_bls",
+     "pose": "backLatSpread",
+     "score": 91.66666666666667
+    },
+    {
+     "id": "ifbb_bb_st",
+     "pose": "sideTriceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_st",
+     "pose": "sideTriceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_st",
+     "pose": "sideTriceps",
+     "score": 99.70699024693363
+    },
+    {
+     "id": "ifbb_bb_at",
+     "pose": "absAndThighs",
+     "score": null
+    },
+    {
+     "id": "ifbb_cp_at",
+     "pose": "absAndThighs",
+     "score": 100
+    },
+    {
+     "id": "wnbf_at",
+     "pose": "absAndThighs",
+     "score": 100
+    },
+    {
+     "id": "wnbf_mm_hips",
+     "pose": "mostMuscular",
+     "score": 100
+    },
+    {
+     "id": "wnbf_mm_crab",
+     "pose": "mostMuscular",
+     "score": 100
+    }
+   ]
+  }
+ },
+ {
+  "label": "hiddenWrists",
+  "note": "Plus spec.ts: the hidden-wrist bands (abs and thighs, back lat spread, side triceps rear hand) end at MIN_VISIBILITY (0.5), the cut the app uses for hidden everywhere. The figure's hidden wrists read 0.44 to 0.57; the photos read 0.00 to 0.26.",
+  "run": {
+   "at": "2026-10-10T20:23:52.029Z",
+   "backend": {
+    "renderer": "ANGLE (AMD, Vulkan 1.4.335 (AMD Radeon RX 7900 XTX (RADV NAVI31) (0x0000744C)), radv)",
+    "software": false,
+    "delegate": "GPU"
+   },
+   "size": [
+    1280,
+    720
+   ],
+   "frames": 10,
+   "calibrated": true,
+   "poses": [
+    {
+     "id": "relaxedFront",
+     "pose": "relaxedFront",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 100,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 22.008549610357363,
+      "frontLatSpread": 59.60139692208696,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 63.55283715923785
+     },
+     "topCue": null
+    },
+    {
+     "id": "quarterTurnLeftSide",
+     "pose": "quarterTurnLeftSide",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 95.64591548930372,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 40.59928965517307,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 55.942525381288036,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Let your arms hang naturally."
+    },
+    {
+     "id": "relaxedBack",
+     "pose": "relaxedBack",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 99.07589778497481,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 14.93832690721365,
+      "backLatSpread": 65.7682339576144,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Square your shoulders to the back wall."
+    },
+    {
+     "id": "quarterTurnRightSide",
+     "pose": "quarterTurnRightSide",
+     "detected": 10,
+     "facing": "rightSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": 100,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 33.65593802122841,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 68.11635322375892,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": null
+    },
+    {
+     "id": "frontDoubleBiceps",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 37.17543785812832,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 100,
+      "frontLatSpread": 51.21951219512195,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 34.52477569262602,
+      "mostMuscular": 34.48275862068966
+     },
+     "topCue": null
+    },
+    {
+     "id": "frontLatSpread",
+     "pose": "frontLatSpread",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 67.74193548387096,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 37.4322183327008,
+      "frontLatSpread": 96.7214284223733,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 61.82030111098175
+     },
+     "topCue": "Put your hands on your lower waist."
+    },
+    {
+     "id": "sideChest",
+     "pose": "sideChest",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 60.83733924889438,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 92.31432855691068,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 45.164581286614734,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Turn your chest toward the camera."
+    },
+    {
+     "id": "backDoubleBiceps",
+     "pose": "backDoubleBiceps",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 43.08651771748984,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 98.35285960725564,
+      "backLatSpread": 43.82839306221612,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Drop your shoulders, spread your back."
+    },
+    {
+     "id": "backLatSpread",
+     "pose": "backLatSpread",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 65.1132406717382,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 26.20565578260736,
+      "backLatSpread": 84.93178223642698,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Put your hands on your waist."
+    },
+    {
+     "id": "sideTriceps",
+     "pose": "sideTriceps",
+     "detected": 10,
+     "facing": "leftSide",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": 80.7356192510999,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": 62.92375089264964,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": 95.48055551784401,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Twist your chest toward the camera."
+    },
+    {
+     "id": "absAndThighs",
+     "pose": "absAndThighs",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 29.253712080942705,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 38.54767969689351,
+      "frontLatSpread": 36.07286670245291,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 90.55465520535287,
+      "mostMuscular": 65.16341538170008
+     },
+     "topCue": "Put both hands behind your head."
+    },
+    {
+     "id": "mostMuscular",
+     "pose": "mostMuscular",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 41.935483870967744,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 26.714676545880724,
+      "frontLatSpread": 49.55042951501399,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 32.59035470595559,
+      "mostMuscular": 100
+     },
+     "topCue": null
+    }
+   ],
+   "faults": [
+    {
+     "id": "fdbElbowsDropped",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 56.96605576289145,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 65.65671376635612,
+      "frontLatSpread": 69.25832759175773,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 34.03681638229766
+     },
+     "topCue": "Raise your elbows to shoulder height.",
+     "label": "Front double biceps, both elbows dropped 30°",
+     "expectedCue": "Raise your elbows to shoulder height."
+    },
+    {
+     "id": "fdbFistsLow",
+     "pose": "frontDoubleBiceps",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 32.34491010560867,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 69.88652203503891,
+      "frontLatSpread": 31.70731707317073,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.49075788564866,
+      "mostMuscular": 22.351016274954205
+     },
+     "topCue": "Bring your fists up to your ears.",
+     "label": "Front double biceps, upper arms turned in 65° so the forearms tip toward the camera and the fists sit low",
+     "expectedCue": "Bring your fists up to your ears."
+    },
+    {
+     "id": "flsElbowsIn",
+     "pose": "frontLatSpread",
+     "detected": 10,
+     "facing": "front",
+     "scores": {
+      "relaxedFront": 67.74193548387096,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": null,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": 33.333333333333336,
+      "frontLatSpread": 82.7432014454147,
+      "sideChest": null,
+      "backDoubleBiceps": null,
+      "backLatSpread": null,
+      "sideTriceps": null,
+      "absAndThighs": 33.333333333333336,
+      "mostMuscular": 78.72857195353802
+     },
+     "topCue": "Spread your lats wider.",
+     "label": "Front lat spread, both elbows swung 50° forward and in, hands kept on the waist",
+     "expectedCue": "Spread your lats wider."
+    },
+    {
+     "id": "bdbLeftArmLow",
+     "pose": "backDoubleBiceps",
+     "detected": 10,
+     "facing": "back",
+     "scores": {
+      "relaxedFront": null,
+      "quarterTurnLeftSide": null,
+      "relaxedBack": 41.159382473536795,
+      "quarterTurnRightSide": null,
+      "frontDoubleBiceps": null,
+      "frontLatSpread": null,
+      "sideChest": null,
+      "backDoubleBiceps": 79.26166600378545,
+      "backLatSpread": 45.414531000422244,
+      "sideTriceps": null,
+      "absAndThighs": null,
+      "mostMuscular": null
+     },
+     "topCue": "Lift your elbows above your shoulders.",
+     "label": "Back double biceps, left arm dropped 35°",
+     "expectedCue": "Lift your elbows above your shoulders."
+    }
+   ],
+   "references": [
+    {
+     "id": "ifbb_bb_front",
+     "pose": "relaxedFront",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_front",
+     "pose": "relaxedFront",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_qt_leftside",
+     "pose": "quarterTurnLeftSide",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_qt_rightside",
+     "pose": "quarterTurnRightSide",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_back",
+     "pose": "relaxedBack",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_fdb",
+     "pose": "frontDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_fls",
+     "pose": "frontLatSpread",
+     "score": 100
+    },
+    {
+     "id": "wnbf_fls",
+     "pose": "frontLatSpread",
+     "score": 99.99473215782159
+    },
+    {
+     "id": "ifbb_bb_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "wnbf_sc",
+     "pose": "sideChest",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_bdb",
+     "pose": "backDoubleBiceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_bb_bls",
+     "pose": "backLatSpread",
+     "score": 100
+    },
+    {
+     "id": "wnbf_bls",
+     "pose": "backLatSpread",
+     "score": 91.66666666666667
+    },
+    {
+     "id": "ifbb_bb_st",
+     "pose": "sideTriceps",
+     "score": 100
+    },
+    {
+     "id": "ifbb_cp_st",
+     "pose": "sideTriceps",
+     "score": 100
+    },
+    {
+     "id": "wnbf_st",
+     "pose": "sideTriceps",
+     "score": 99.70699024693363
+    },
+    {
+     "id": "ifbb_bb_at",
+     "pose": "absAndThighs",
+     "score": null
+    },
+    {
+     "id": "ifbb_cp_at",
+     "pose": "absAndThighs",
+     "score": 100
+    },
+    {
+     "id": "wnbf_at",
+     "pose": "absAndThighs",
+     "score": 100
+    },
+    {
+     "id": "wnbf_mm_hips",
+     "pose": "mostMuscular",
+     "score": 100
+    },
+    {
+     "id": "wnbf_mm_crab",
+     "pose": "mostMuscular",
+     "score": 100
+    }
+   ]
+  }
+ }
+]

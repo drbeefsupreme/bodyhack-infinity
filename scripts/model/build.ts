@@ -1,11 +1,12 @@
-// Builds the figure mesh, morph targets and anatomy attributes from the procedural field.
+// Builds the figure mesh, morph targets, anatomy attributes and skin weights from the procedural field.
 // Usage: bun scripts/model/build.ts [--h 0.0035] [--pose relaxed] [--out public/model] [--targets none|a,b] [--workers N]
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { cpus } from 'node:os';
 import { Field, type VeinPath } from './field';
 import { ANATOMY } from './anatomy';
 import { BASE_STATE, REGIONS, type FieldState, type V3 } from './types';
-import { POSES, solvePose, posePt } from './skeleton';
+import { POSES, solvePose, posePt, rigManifest } from './skeleton';
+import { bakeSkinWeights } from './skinWeights';
 import type { Job, JobResult } from './worker';
 
 const args = new Map<string, string>();
@@ -392,6 +393,8 @@ const info = { fiber: new Float32Array(NV * 3), across: new Float32Array(NV), mu
   await Promise.all(jobs);
 }
 log('anatomy attributes');
+const skin = bakeSkinWeights(base, pos, adjStart, adjList, H);
+log(`skin weights (${skin.filled} vertices without a nearby part took their neighbors' weights)`);
 
 // Vein proximity (for subtle color), trunks signed distance.
 const veinProx = new Float32Array(NV);
@@ -466,6 +469,8 @@ const targetMeta = targets.map((t) => {
   chunks.push({ name: `morph:${t.name}:normal`, data: q8s(t.dn, ns), type: 'i8', size: 3, scale: ns });
   return { name: t.name, posScale: ps, nrmScale: ns };
 });
+chunks.push({ name: 'aBone', data: skin.index, type: 'u8', size: 4 });
+chunks.push({ name: 'aBoneW', data: skin.weight, type: 'u8', size: 4, normalized: true });
 
 let offset = 0;
 const layout = chunks.map((c) => {
@@ -480,7 +485,7 @@ writeFileSync(`${OUT}/${POSE}.bin`, buf);
 const parts = Array.from({ length: base.parts.length }, (_, i) => base.partName(i));
 writeFileSync(`${OUT}/${POSE}.json`, JSON.stringify({
   pose: POSE, vertexCount: NV, indexCount: index.length, h: H, targets: targetMeta, chunks: layout, regions: REGIONS, parts,
-  aoTargets: targets.map((t) => t.name), generated: new Date().toISOString(),
+  aoTargets: targets.map((t) => t.name), rig: rigManifest(POSE), generated: new Date().toISOString(),
 }, null, 1));
 log(`wrote ${OUT}/${POSE}.bin (${(offset / 1e6).toFixed(1)} MB)`);
 for (const w of workers) w.terminate();

@@ -413,3 +413,69 @@ input[type="range"] { accent-color: var(--accent); width: 100%; }
 .now-showing.stacked strong { font-size: 1.25rem; display: block; line-height: 1.15; }
 .now-showing.stacked span { color: var(--warn); }
 .hud-title { white-space: nowrap; }
+
+/* ==========================================================================
+   Shell: Bodyhack Infinity branding and the module switch (src/Shell.tsx)
+   ========================================================================== */
+.shell { display: flex; flex-direction: column; height: 100%; }
+.shell-bar {
+  display: flex; align-items: center; gap: 18px; padding: 8px 18px; flex-wrap: wrap;
+  background: linear-gradient(90deg, #170e1d, #0a0c14 45%, #0a0c14 70%, #1b100a);
+  border-bottom: 1px solid var(--border);
+  box-shadow: inset 0 -2px 0 rgba(255, 122, 69, 0.22);
+}
+.shell-brand { display: flex; align-items: center; gap: 10px; }
+.shell-mark {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px;
+  font-size: 1.7rem; font-weight: 700; line-height: 1; color: #1a0b03;
+  background: linear-gradient(160deg, #ffd9b8, #ff9a5c 55%, #ff5c74);
+  box-shadow: 0 3px 0 #7a2a12, 0 0 18px rgba(255, 122, 69, 0.4);
+}
+.shell-brand h1 { font-size: 2rem; background: linear-gradient(90deg, #fff, #ffd9b8 55%, #ff9a5c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.shell-modules { display: flex; gap: 6px; margin-left: auto; }
+.shell-module-tab {
+  display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); background: var(--surface);
+  padding: 7px 14px; border-radius: 12px; font-family: var(--display); font-size: 1.2rem; letter-spacing: 0.06em; color: var(--muted);
+  box-shadow: 0 3px 0 #05070c; transition: transform 0.12s, background 0.2s, color 0.2s;
+}
+.shell-module-tab:hover { color: var(--fg); transform: translateY(-1px); }
+.shell-module-tab[aria-current="page"] {
+  background: linear-gradient(180deg, #ffb27a, #ff7a45); color: #1a0b03; border-color: #ffc59e;
+  box-shadow: 0 3px 0 #7a2a12, 0 0 22px rgba(255, 122, 69, 0.45);
+}
+.shell-tab-short { display: none; }
+.shell-module { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.shell-module > * { flex: 1; min-height: 0; }
+.shell-module > .app { height: auto; }
+
+.tutor-card {
+  max-width: 560px; text-align: center; padding: 28px 30px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--panel); box-shadow: 0 6px 0 #05070c, 0 0 40px rgba(255, 122, 69, 0.12);
+}
+.tutor-card h2 { margin-top: 14px; }
+.tutor-card p { margin: 12px 0 0; }
+.tutor-badge {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--warn);
+  background: rgba(255, 210, 63, 0.1); border: 1px solid rgba(255, 210, 63, 0.35);
+}
+
+@media (max-width: 900px) {
+  .shell { height: auto; min-height: 100%; }
+  .shell-module { display: block; }
+  .shell-bar { gap: 10px; padding: 8px 12px; }
+  .shell-brand h1 { font-size: 1.5rem; }
+  .shell-mark { width: 34px; height: 34px; font-size: 1.4rem; }
+  .shell-tab-long { display: none; }
+  .shell-tab-short { display: inline; }
+  .shell-module-tab { font-size: 1.05rem; padding: 6px 10px; }
+}
+@media (max-width: 520px) {
+  .shell-bar { flex-wrap: nowrap; gap: 8px; padding: 8px 10px; }
+  .shell-brand { gap: 8px; min-width: 0; }
+  .shell-brand h1 { font-size: 1.25rem; white-space: nowrap; }
+  .shell-mark { width: 30px; height: 30px; font-size: 1.2rem; border-radius: 10px; }
+  .shell-modules { gap: 4px; }
+  .shell-module-tab { font-size: 1rem; padding: 5px 8px; }
+  .shell-module-tab svg { display: none; }
+}

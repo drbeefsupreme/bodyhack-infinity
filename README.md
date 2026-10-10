@@ -1,4 +1,8 @@
-# Bodybuilding Appearance Explorer
+# Bodyhack Infinity
+
+Two modules in one app: the **Appearance Explorer** (below) and the **Posing Tutor** (see
+[Posing Tutor](#posing-tutor)). Open a module with the switch at the top, or with `?module=explorer` or
+`?module=posing` in the URL.
 
 An interactive 3D playground for the words bodybuilders use to describe how muscles look —
 *full, flat, spilled over, dry, crispy, separated, striated, vascular, mature* — and what is and
@@ -12,10 +16,12 @@ separate controls so they can never secretly explain a difference attributed to 
 
 ## Run it
 
-Requirements: Node 20+ (Bun only if you want to rebuild the model).
+Requirements: Node 22.18+, which runs the TypeScript setup script directly (Bun only if you want to rebuild
+the model).
 
 ```sh
 npm install
+npm run mediapipe      # once: pose tracker WASM and model into public/mediapipe
 npm run dev            # http://localhost:5173
 ```
 
@@ -33,8 +39,41 @@ The baked model files are already in `public/model` and `public/model-lite`. To 
 npm run model && npm run model:lite
 ```
 
-Other scripts: `npm test` (content integrity and mapping tests), `npm run typecheck`,
+Other scripts: `npm test` (content integrity, mapping and local API tests), `npm run typecheck`,
 `npm run sources` (re-extract the verified source lists from `research/*.md`).
+
+### Local API
+
+`npm run dev` and `npm run preview` also serve a small JSON API from `server/` (a Vite plugin).
+The browser never sees the keys.
+
+| Endpoint | Needs | Does |
+|---|---|---|
+| `GET /api/health` | nothing | `{ ok, omp, jev }`: whether `omp` is on `PATH` and a jev key is set |
+| `POST /api/intent` | `TYPESAFE_API_KEY` | picks a voice command: `{ heard, options }` → `{ choice, confidence, probabilities }` |
+| `POST /api/coach` | `omp` on `PATH`, logged in | coach debrief of a snapshot via `omp -p`: `{ pose, summary, imageDataUrl?, model? }` → `{ cues, note, model, ms }` |
+
+The server reads `TYPESAFE_API_KEY` from the environment, else from `.env.local` in the project
+root, else `~/git/crispy/.env.local`, else `~/.config/bodyhack-infinity/env`. Set
+`BODYHACK_COACH_MODEL` to change the coach model (default `anthropic/claude-sonnet-5`).
+
+The API serves body photos, runs `omp` on your login and uses the jev key, so only this computer can call it.
+The app pages are still served to the network, so the explorer works over Tailscale, but every `/api/*` request
+from another address, or with a `Host` other than `localhost`, `127.0.0.1` or `[::1]`, gets 403. Cross-origin
+requests and `POST` requests without `Content-Type: application/json` also get 403. To use the tutor from another
+machine, start the server with `BODYHACK_API_ALLOW_REMOTE=1`. This lifts the address and `Host` rules. The
+cross-origin rules stay.
+
+### Pose tracking assets and debug page
+
+`npm run mediapipe` copies the MediaPipe WASM from the pinned `@mediapipe/tasks-vision` package and downloads
+the pose model, checked by SHA-256, into `public/mediapipe/` (34 MB, git-ignored). Run it again after upgrading
+the package. The tracker loads nothing from a CDN, but MediaPipe itself posts usage metrics to
+`odml.pa.googleapis.com` about once a minute (see the privacy notice in the package README).
+
+`/posing-debug.html` runs the live loop on the camera or on a dropped image or video file: landmarks over the
+frame, the metrics, the called pose's score and faults, the cue scheduler's events and the spoken cues. Add
+`?pose=<id>` to call another pose (default `frontDoubleBiceps`).
 
 ## What you can do
 
@@ -152,10 +191,12 @@ Key findings that shaped the app:
 - **Artifacts**: at high softness, small slivers can appear in tight creases (armpit, crotch,
   gluteal fold, inside the elbow) where the soft-tissue morph fills a gap. Striations can show
   slight moiré where many lines converge near a tendon.
-- **Performance**: frame time scales with triangle count. On the only GPU available for testing
-  (a remote Intel UHD 620 driven by headless Chromium) the detailed mesh took ~280 ms per frame
-  and the lite mesh ~140 ms; the app switches to the lite mesh automatically when the first
-  frame is slow. Desktop GPUs were not available for testing.
+- **Performance**: frame time scales with triangle count. The ~280 ms (detailed mesh) and ~140 ms
+  (lite mesh) per frame noted earlier came from the automated test browser, which renders on the CPU
+  with SwiftShader; its WebGL renderer string was spoofed to read "Intel UHD 620". They are not GPU
+  numbers. On the development machine's Radeon RX 7900 XTX, the tutor kept up with a 15 fps fake
+  camera, with MediaPipe pose detection at about 7 ms per frame. The app still switches to the lite
+  mesh when the first frame is slow.
 
 ## Project layout
 
@@ -163,10 +204,91 @@ Key findings that shaped the app:
 src/                 React app, Three.js viewer, shader, content
   content/           terms, comparisons, quiz, presets, generated sources
   three/             Viewer (A/B scissor rendering), skin shader, model loader, control mapping
+  posing/            pose domain, tracker, smoothing, facing hysteresis, cue scheduler, speech, debug page
+    modes/           practice modes as pure reducers (Learn, Hold, Judge's calls, Mirror), voice commands, settings
+    ui/              tutor screens: home, live drill engine, figure view, settings
 scripts/model/       SDF anatomy, field, mesher, morph baking (Bun)
 scripts/content/     source extraction from research reports
 research/            research reports, asset survey, region screenshots from the modeling agents
 docs/                modeling notes and verification screenshots
 public/model*        baked models; public/fallback: no-WebGL images
+public/mediapipe/    MediaPipe WASM and pose model (npm run mediapipe, git-ignored)
 shot.html            render harness used for verification
+posing-debug.html    tracking and cue debug page
+```
+
+## Posing Tutor
+
+Open `?module=posing`. Pick a pose (the 12 NPC / IFBB Pro prejudging poses), then a mode:
+
+| Mode | What happens |
+|---|---|
+| Learn a pose | The build-up steps one at a time, spoken; say "next" or press Space. Then free correction until the pose is hit. |
+| Hold drill | Hit the pose and hold it 10, 20 or 30 s. The hold restarts if the score stays under the line for more than 1 s. Result: mean score and steadiness (standard deviation in points). |
+| Judge's calls | Prejudging order: the quarter turns, then the 8 mandatories, each called like a head judge, 25 s per call. Summary per call with score and time; personal bests in `localStorage`. |
+| Mirror | The figure copies you live (2D retarget of arm and leg angles). No score. |
+| Progress | Your saved photos per pose (below). |
+
+Each session starts with a relaxed-front calibration (skippable). Keys: Space next, S skip, R repeat, W what's
+wrong, P pause, Esc stop. At every hit the tutor saves a photo (`/api/photos`) and, with the coach debrief on,
+asks the coach model through `omp` (`/api/coach`, about 7 s); the next pose never waits for it.
+
+**Voice commands.** Chrome speech recognition hears a phrase (paused while the tutor speaks); jev picks next,
+repeat, what's wrong, pause, resume, stop, skip or other. The tutor acts at confidence 0.7 or more, else a
+keyword table decides; when `/api/intent` fails (503 without `TYPESAFE_API_KEY`), keywords only. Tests can inject
+a phrase with `window.__tutorHeard('next one please')`.
+
+**Privacy.** `index.html` sets `connect-src 'self'`, so the page talks only to its own server; this blocks
+MediaPipe's usage metrics to `odml.pa.googleapis.com`. What leaves the computer: with the coach debrief on (the
+default), the photo of each hit pose and its scores go to the coach model through omp; your speech goes to Google
+through Chrome's recognition; the cue text goes to Google if the chosen voice is a network voice; the recognized
+command text goes to jev. The video and the landmarks stay here. The saved photos are stored only here; turn off
+the coach debrief in Settings if no photo should leave the computer.
+
+Run it with `npm run dev`, then `npm run mediapipe` once for the pose model. Settings (voice, mute, voice
+commands, coach debrief, coach model) are on the tutor home; the coach model defaults to the server's
+(`BODYHACK_COACH_MODEL` or `anthropic/claude-sonnet-5`, reported by `/api/health`).
+
+**Known limits.**
+- Pass bands come from 26 competition photos (1 to 3 per pose), so they are estimates. They are not yet tuned
+  on webcam video of real users.
+- One camera sees only 2D. Depth (elbows forward), lat flare, vacuum and chest lift are left to the coach debrief.
+  Side poses read worse than front and back poses, because the far arm is hidden.
+- On back views, MediaPipe reads a false 9 to 18 degree twist on the figure. Real users may hear "Square your
+  shoulders" when they are already square.
+- Right after a continuous turn to the back, MediaPipe can read a side view for a few seconds. The tutor smooths
+  facing (300 ms hysteresis), ignores 300 ms dropouts during a hold, and starts a fresh detection when a call
+  changes the facing. On the fake-camera clip, the back pose then settles in 0 to 2.5 s.
+- Automated tests used fake cameras and injected voice phrases. A real webcam and a real microphone are not yet
+  tested.
+
+`npm run gate` renders the figure in every pose, runs the frames through the real tracker and scoring, and fails
+when a pose misses its own score or a known fault is not the top correction (`docs/posing-tutor/gate-report.md`).
+
+## Progress photos
+
+The Posing Tutor saves a photo every time you hit a pose, with the date, the score, the corrections and the
+tracked landmarks. The progress view (`src/posing/progress/ProgressView.tsx`) shows a timeline per pose, a
+side-by-side or onion-skin compare of two dates (first against latest by default) with an optional skeleton
+overlay, and the score trend. The tutor's Progress card opens it; `/progress-dev.html` still shows it alone.
+
+Photos stay on this computer. The local API stores them in `$BODYHACK_DATA_DIR/photos`, else in
+`~/.local/share/bodyhack-infinity/photos` (directory mode 0700, files 0600): one JPEG or WebP and one JSON
+sidecar per photo. The server makes the photo ids (UUIDs), so a request can never name a path.
+
+| Endpoint | Does |
+|---|---|
+| `POST /api/photos` | saves `{ pose, imageDataUrl, score, faults: [{ metric, side?, cue }], landmarks?, mode?, note? }` (JPEG or WebP data URL, body at most 8 MB) → `{ photo }` |
+| `GET /api/photos?pose=<id>` | metadata, newest first (every pose without `pose`) → `{ photos }` |
+| `GET /api/photos/<id>/image` | the image, as `image/jpeg` or `image/webp` |
+| `DELETE /api/photos/<id>` | deletes one photo |
+| `DELETE /api/photos?pose=<id>` or `?all=1` | deletes every photo of one pose, or every photo → `{ deleted }` |
+
+To check the views without a camera, seed a scratch directory with a fake history (3 poses on 6 dates,
+rendered by `shot.html` in headless Chrome, landmarks from MediaPipe). The script refuses the real data
+directory and needs the dev server and `npm run mediapipe`:
+
+```sh
+BODYHACK_DATA_DIR=/tmp/bodyhack-seed npm run dev -- --port 5351
+BODYHACK_DATA_DIR=/tmp/bodyhack-seed bun scripts/seed-progress.ts --app http://localhost:5351
 ```

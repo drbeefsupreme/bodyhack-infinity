@@ -1,11 +1,12 @@
 // Signed distance field of the figure, built from anatomical primitives.
 // The field is evaluated for one FieldState (one morph target) at a time.
 
-import { POSES, solvePose, posePt, applyDir } from './skeleton';
+import { POSES, solvePose, posePt, applyDir, JOINTS, skinSlot } from './skeleton';
 import type { Anatomy, FieldState, V3, MuscleDef, CoreDef } from './types';
 import { REGIONS } from './types';
 
 const KIND_SPINDLE = 0, KIND_CONE = 1, KIND_ELL = 2, KIND_LOFT = 3;
+const LOFT_SLOTS = [skinSlot('pelvis', 1), skinSlot('lumbar', 1), skinSlot('chest', 1)];
 
 interface Prim {
   kind: number;
@@ -20,6 +21,8 @@ interface Prim {
   bundle: number; head: number;
   // ellipsoid: center (ax..), inverse rotation rows, radii
   m: number[]; rx: number; ry: number; rz: number;
+  // skinning: skin slots of the control points and their parameter t along the primitive
+  cs: number[]; ct: number[];
 }
 
 interface Part {
@@ -80,7 +83,7 @@ function blankPrim(): Prim {
   return {
     kind: 0, neg: false, ax: 0, ay: 0, az: 0, bx: 0, by: 0, bz: 0, ra: 0, rb: 0,
     sw: new Float64Array(0), n: 0, ws: 1, r0: 0, rp: 0, r1: 0, tp: 0.5, b: 2, dr: 1,
-    bundle: 0, head: 0, m: [1, 0, 0, 0, 1, 0, 0, 0, 1], rx: 1, ry: 1, rz: 1,
+    bundle: 0, head: 0, m: [1, 0, 0, 0, 1, 0, 0, 0, 1], rx: 1, ry: 1, rz: 1, cs: [], ct: [],
   };
 }
 
@@ -306,6 +309,9 @@ export class Field {
         p.rp = bd.rp * sizeBelly * fullScale * stretch;
         p.tp = bd.tp; p.b = bulge; p.dr = bd.dr * drScale;
         p.bundle = bi; p.head = hid;
+        // Control point k sits at resampled index 5k (smoothPath), so its t is stored there.
+        p.cs = bd.pts.map((q) => skinSlot(q.bone, side));
+        p.ct = bd.pts.map((_, k) => sw[(bd.pts.length >= 3 ? k * 5 : k) * 10 + 9]);
         part.prims.push(p);
         const rmax = Math.max(p.r0, p.rp, p.r1);
         for (const q of pts) for (let c = 0; c < 3; c++) {
@@ -330,6 +336,7 @@ export class Field {
           const a = posePt(xf, cp.a, side), b = posePt(xf, cp.b, side);
           p.ax = a[0]; p.ay = a[1]; p.az = a[2]; p.bx = b[0]; p.by = b[1]; p.bz = b[2];
           p.ra = cp.ra; p.rb = cp.rb;
+          p.cs = [skinSlot(cp.a.bone, side), skinSlot(cp.b.bone, side)]; p.ct = [0, 1];
           const r = Math.max(cp.ra, cp.rb);
           if (!p.neg) for (const q of [a, b]) for (let k = 0; k < 3; k++) {
             part.min[k] = Math.min(part.min[k], q[k] - r); part.max[k] = Math.max(part.max[k], q[k] + r);
@@ -355,6 +362,7 @@ export class Field {
           const cols: V3[] = [0, 1, 2].map((j) => applyDir(bx, [R[j], R[3 + j], R[6 + j]]));
           p.m = [cols[0][0], cols[0][1], cols[0][2], cols[1][0], cols[1][1], cols[1][2], cols[2][0], cols[2][1], cols[2][2]];
           p.rx = cp.r[0]; p.ry = cp.r[1]; p.rz = cp.r[2];
+          p.cs = [skinSlot(cp.c.bone, side)]; p.ct = [0];
           const r = Math.max(...cp.r);
           if (!p.neg) for (let k = 0; k < 3; k++) {
             part.min[k] = Math.min(part.min[k], c0[k] - r); part.max[k] = Math.max(part.max[k], c0[k] + r);
@@ -615,6 +623,62 @@ export class Field {
     res.stri = part.stri * belly * border;
     res.grain = part.grain * Math.pow(belly, 0.5) * border;
     return res;
+  }
+
+  // scratch for skin weights: primitive distances, then their fiber parameters
+  private skinScratch = new Float64Array(0);
+
+  /**
+   * Skin weights at a point, one per SKIN_BONES slot: the bones of the nearest anatomy primitives.
+   * Muscle bundles blend the bones of their control points along the fiber, cones along their axis;
+   * ellipsoids carry one bone and the torso loft blends pelvis, lumbar and chest by height. Parts and
+   * primitives blend by soft-argmin on distance (4 mm). Returns false when no part is near.
+   */
+  boneWeights(x: number, y: number, z: number, out: Float64Array): boolean {
+    out.fill(0);
+    const c = this.cellOf(x, y, z);
+    if (c < 0 || this.cells[c].length === 0) return false;
+    const list = this.cells[c], pd = this.pd;
+    let dmin = 1e9;
+    for (let i = 0; i < list.length; i++) { pd[i] = this.partDist(this.parts[list[i]], x, y, z); dmin = Math.min(dmin, pd[i]); }
+    for (let i = 0; i < list.length; i++) {
+      const wPart = Math.exp(-(pd[i] - dmin) / 0.004);
+      if (wPart < 1e-3) continue;
+      const prims = this.parts[list[i]].prims, n = prims.length;
+      if (this.skinScratch.length < 2 * n) this.skinScratch = new Float64Array(2 * n);
+      const ds = this.skinScratch;
+      let pmin = 1e9;
+      for (let k = 0; k < n; k++) {
+        ds[k] = prims[k].neg ? 1e9 : evalPrim(prims[k], x, y, z);
+        ds[n + k] = lastT;
+        pmin = Math.min(pmin, ds[k]);
+      }
+      for (let k = 0; k < n; k++) {
+        const p = prims[k];
+        const w = wPart * Math.exp(-(ds[k] - pmin) / 0.004);
+        if (w < 1e-4) continue;
+        if (p.kind === KIND_LOFT) {
+          const sl = Math.min(1, Math.max(0, (y - JOINTS.lumbar[1] + 0.04) / 0.08));
+          const sc = Math.min(1, Math.max(0, (y - JOINTS.chest[1] + 0.04) / 0.08));
+          out[LOFT_SLOTS[0]] += w * (1 - sl);
+          out[LOFT_SLOTS[1]] += w * (sl - sc);
+          out[LOFT_SLOTS[2]] += w * sc;
+          continue;
+        }
+        if (p.cs.length === 1) { out[p.cs[0]] += w; continue; }
+        const t = ds[n + k];
+        let j = 0;
+        while (j < p.ct.length - 2 && t > p.ct[j + 1]) j++;
+        const u = Math.min(1, Math.max(0, (t - p.ct[j]) / Math.max(1e-6, p.ct[j + 1] - p.ct[j])));
+        out[p.cs[j]] += w * (1 - u);
+        out[p.cs[j + 1]] += w * u;
+      }
+    }
+    let s = 0;
+    for (let i = 0; i < out.length; i++) s += out[i];
+    if (s <= 0) return false;
+    for (let i = 0; i < out.length; i++) out[i] /= s;
+    return true;
   }
 
   partName(i: number): string { return i >= 0 ? this.parts[i].name : ''; }

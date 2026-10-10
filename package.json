@@ -11,11 +11,14 @@
     "model": "bun scripts/model/build.ts --h 0.0035 --out public/model",
     "model:lite": "bun scripts/model/build.ts --h 0.005 --out public/model-lite",
     "sources": "bun scripts/content/extract-sources.ts",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json"
+    "mediapipe": "node scripts/fetch-mediapipe.ts",
+    "gate": "node scripts/gate.ts",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json && tsc -p server/tsconfig.json"
   },
   "dependencies": {
     "@fontsource-variable/outfit": "^5.3.0",
     "@fontsource/bebas-neue": "^5.3.0",
+    "@mediapipe/tasks-vision": "1.1.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "three": "^0.186.1"

@@ -3,3 +3,9 @@ dist/
 *.log
 .DS_Store
 .local/
+.env
+.env.*
+!.env.example
+prototypes/
+docs/posing-tutor/shots/
+public/mediapipe/

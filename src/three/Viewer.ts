@@ -5,6 +5,8 @@ import { loadModel, type LoadedModel } from './loadModel';
 import { createSkinMaterial, REGION_COUNT, type SkinUniforms } from './skinMaterial';
 import { type Appearance, NEUTRAL, TARGET_ORDER, toRenderParams, APPEARANCE_KEYS } from './appearance';
 import { skinAlbedo, type Presentation } from './skin';
+import { Rig, type PoseState } from './rig';
+import type { FigurePose } from '../posing/types';
 
 export type Side = 'A' | 'B';
 export type LightingMode = 'neutral' | 'stage';
@@ -12,12 +14,16 @@ export type ViewName = 'front' | 'back' | 'left' | 'right' | 'threeQuarter';
 export type FocusName =
   | 'full' | 'shoulders' | 'chest' | 'arms' | 'forearms' | 'abs' | 'back' | 'lowerback' | 'glutes' | 'quads' | 'hamstrings' | 'calves';
 
+/** A pose transition of one figure: `cur` moves from `from` to `to` over `dur` seconds. */
+interface PoseMotion { from: PoseState; to: PoseState; cur: PoseState; t: number; dur: number }
+
 interface FigureSlot {
   mesh: THREE.Mesh;
   material: THREE.MeshPhysicalMaterial;
   uniforms: SkinUniforms;
   current: Appearance;
   target: Appearance;
+  pose: PoseMotion;
 }
 
 interface CamShot { target: THREE.Vector3; dir: THREE.Vector3; dist: number }
@@ -50,6 +56,7 @@ export class Viewer {
   readonly controls: OrbitControls;
   private slots: Record<Side, FigureSlot> | null = null;
   private model: LoadedModel | null = null;
+  private rig: Rig | null = null;
   private compare = false;
   private lights: { neutral: THREE.Light[]; stage: THREE.Light[] } = { neutral: [], stage: [] };
   private lightMix: Record<Side, number> = { A: 0, B: 0 }; // 0 neutral, 1 stage
@@ -179,18 +186,22 @@ export class Viewer {
     this.renderer.toneMappingExposure = 1.0 + 0.1 * m;
   }
 
-  async load(pose = 'relaxed', onProgress?: (f: number) => void) {
-    this.model = await loadModel(this.modelBase, pose, onProgress);
+  async load(bake = 'relaxed', onProgress?: (f: number) => void) {
+    this.model = await loadModel(this.modelBase, bake, onProgress);
+    const rig = new Rig(this.model.meta.rig);
+    this.rig = rig;
     const geo = this.model.geometry;
     const make = (): FigureSlot => {
-      const { material, uniforms } = createSkinMaterial();
+      const { material, depth, uniforms } = createSkinMaterial(rig.bones.length);
       const mesh = new THREE.Mesh(geo, material);
+      mesh.customDepthMaterial = depth;
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       mesh.frustumCulled = false;
       if (this.model!.meta.targets.length) mesh.morphTargetInfluences = new Array(this.model!.meta.targets.length).fill(0);
       this.scene.add(mesh);
-      return { mesh, material, uniforms, current: { ...NEUTRAL }, target: { ...NEUTRAL } };
+      const pose = { from: rig.bind, to: rig.bind, cur: { yaw: rig.bind.yaw, q: rig.bind.q.slice() }, t: 1, dur: 1 };
+      return { mesh, material, uniforms, current: { ...NEUTRAL }, target: { ...NEUTRAL }, pose };
     };
     this.slots = { A: make(), B: make() };
     this.slots.B.mesh.visible = false;
@@ -210,6 +221,27 @@ export class Viewer {
   }
 
   getAppearance(side: Side): Appearance | null { return this.slots ? { ...this.slots[side].current } : null; }
+
+  /** Poses one figure. It moves there smoothly unless `instant` is set or motion is reduced. */
+  setPose(side: Side, pose: FigurePose, opts: { instant?: boolean } = {}) {
+    if (!this.slots || !this.rig) return;
+    const s = this.slots[side], m = s.pose;
+    m.from = { yaw: m.cur.yaw, q: m.cur.q.slice() };
+    m.to = this.rig.compile(pose);
+    const angle = this.rig.maxAngle(m.from, m.to);
+    // About 0.6 s for a small change, 1.2 s for a half turn.
+    m.dur = 0.45 + 0.25 * angle;
+    m.t = opts.instant || this.reducedMotion || angle < 1e-4 ? 1 : 0;
+    if (m.t === 1) this.applyPose(this.rig, s);
+    this.needsRender = true;
+  }
+
+  private applyPose(rig: Rig, s: FigureSlot) {
+    const m = s.pose, e = m.t * m.t * (3 - 2 * m.t);
+    rig.blend(m.from, m.to, e, m.cur);
+    rig.skin(m.cur, s.uniforms.uBoneR.value, s.uniforms.uBoneD.value);
+    this.shadowDirty = true;
+  }
 
   setCompare(on: boolean) {
     this.compare = on;
@@ -357,6 +389,11 @@ export class Viewer {
         if (Math.abs(d) > 1e-4) { s.current[key] += d * k; changed = true; } else s.current[key] = s.target[key];
       }
       if (changed) { this.applySlot(s); moving = true; this.shadowDirty = true; }
+      if (this.rig && s.pose.t < 1) {
+        s.pose.t = Math.min(1, s.pose.t + dt / s.pose.dur);
+        this.applyPose(this.rig, s);
+        moving = true;
+      }
     }
     for (const s of ['A', 'B'] as Side[]) {
       const d = this.lightTarget[s] - this.lightMix[s];

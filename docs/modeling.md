@@ -42,10 +42,30 @@ No openly licensed asset combined a bodybuilder physique with muscle segmentatio
 5. **Mapping** — `src/three/appearance.ts` maps the eight illustrative controls onto target
    influences and shader strengths. Fat and smoothing deliberately hide grooves, striations,
    grain and veins (a modeling choice, stated in the UI).
+6. **Rig** — the build also bakes skin weights: up to four of the 19 bones per vertex
+   (`scripts/model/skinWeights.ts`). Each vertex takes the bones of its nearest muscle bundle or
+   core primitive (`Field.boneWeights`: bundles blend the bones of their control points along the
+   fiber, cones along their axis, the torso loft blends pelvis, lumbar and chest by height), smoothed
+   over the surface (about 16 mm at every resolution) and quantized to `aBone` / `aBoneW` (u8 x 4
+   each, about 8 bytes per vertex). The manifest's `rig` holds the bone order, parents, rest joints,
+   sole contact points and the bind pose (`skeleton.ts` `rigManifest`). At runtime
+   `src/three/rig.ts` runs forward kinematics on a `FigurePose` (axis-angles in world-rest axes,
+   child after parent, `yaw` turns the whole body, the lowest sole point stays on the floor) and
+   writes one dual quaternion per bone; `skinMaterial.ts` blends them in the vertex shader after
+   the morph targets (dual-quaternion skinning, positions and normals, shadow pass included).
+   Identity bone transforms leave the baked mesh untouched, so the Appearance Explorer is unchanged.
+   `Viewer.setPose(side, pose, { instant })` slerps each bone to the new pose (0.5..1.2 s; instant with
+   reduced motion). The poses live in `src/posing/figurePoses.ts`.
 
-Two resolutions ship: `public/model` (3.5 mm grid, ~286k vertices, 37 MB) and
-`public/model-lite` (5 mm, ~140k vertices, 18 MB). The app picks lite on small screens and
+Two resolutions ship: `public/model` (3.5 mm grid, ~286k vertices, 39 MB) and
+`public/model-lite` (5 mm, ~140k vertices, 19 MB). The app picks lite on small screens and
 switches to it once if the first frame of the detailed mesh is slow.
+
+Known rig artifacts: the morph targets are solved in the relaxed pose, so at high body fat the
+armpit crease opens into dark slivers when the arms rise (front double biceps, abdominals and
+thighs); the armpit and inner-thigh skin stretches when arms or legs move far from the bind pose;
+thin ankle tendons stand off the skin when the foot turns against the shin; poses do not flex
+muscles (no biceps peak); the gripping hand in the side chest and side triceps is approximate.
 
 ## Building
 
@@ -65,11 +85,12 @@ screenshots). With the dev server running (`npm run dev`):
 /shot.html?model=model&view=front&focus=full&a={"bodyFat":0.05,"separation":1,"striations":1}
 ```
 
-Parameters: `model` (folder under `public/`), `view` (`front|back|left|right|threeQuarter`),
+Parameters: `model` (folder under `public/`), `pose` (a `PoseId`, e.g. `frontDoubleBiceps`), `view`
+(`front|back|left|right|threeQuarter`),
 `focus` (`full|shoulders|chest|arms|forearms|abs|back|lowerback|glutes|quads|hamstrings|calves`),
 `a` / `b` (appearance JSON; `b` enables the A/B split), `light` (`neutral|stage`), `hl`
-(regions to highlight), `dist` (camera distance multiplier). The page sets
-`window.__ready = true` after rendering.
+(regions to highlight), `dist` (camera distance multiplier), `orbit` (camera turn about the
+vertical axis in degrees). The page sets `window.__ready = true` after rendering.
 
 Appearance keys (illustrative; 0..1 unless noted): `size` (-1..1), `fullness` (-1..1), `bodyFat`,
 `smoothness`, `separation`, `striations`, `vascularity`, `detail`.

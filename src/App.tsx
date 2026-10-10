@@ -192,10 +192,6 @@ export function App() {
     <div className="app" data-mode={mode} data-motion={reducedMotion ? 'reduced' : 'full'}>
       <a className="skip" href="#panel">Skip to explanations</a>
       <header className="topbar">
-        <div className="brand">
-          <span className="kicker">Bodybuilding</span>
-          <h1 className="display">Appearance Explorer</h1>
-        </div>
         <nav className="modes" aria-label="Mode">
           {MODES.map(({ id, label, Icon }) => (
             <button key={id} type="button" className="mode" aria-pressed={mode === id} onClick={() => setMode(id)}>
