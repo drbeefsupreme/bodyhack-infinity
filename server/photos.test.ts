@@ -1,4 +1,4 @@
-import { mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
@@ -57,6 +57,13 @@ describe('photo store', () => {
     const names = (await readdir(dir)).sort();
     expect(names).toEqual([`${photo.id}.jpg`, `${photo.id}.json`]);
     for (const name of names) expect((await stat(join(dir, name))).mode & 0o777).toBe(0o600);
+  });
+
+  it('tightens an existing directory that is open to others to 0700', async () => {
+    await mkdir(dir, { recursive: true, mode: 0o755 });
+    await chmod(dir, 0o755);
+    await savePhoto(dir, input());
+    expect((await stat(dir)).mode & 0o777).toBe(0o700);
   });
 
   it('lists nothing for a directory that does not exist yet', async () => {

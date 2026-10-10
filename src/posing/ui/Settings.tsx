@@ -81,8 +81,9 @@ export function Settings({ settings, onSettings, speech, health }: Props) {
             goes to Google to be spoken.
           </li>
           <li>
-            <b>Stays here:</b> the camera video, the tracked landmarks and your progress photos. The page cannot send data
-            to any other server.
+            <b>Stays here:</b> the camera video and the tracked landmarks. Your progress photos are stored only here, but
+            with the coach debrief on, each hit photo is also sent to the coach. The page cannot send data to any other
+            server.
           </li>
         </ul>
       </details>

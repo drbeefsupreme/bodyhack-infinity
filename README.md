@@ -239,10 +239,11 @@ keyword table decides; when `/api/intent` fails (503 without `TYPESAFE_API_KEY`)
 a phrase with `window.__tutorHeard('next one please')`.
 
 **Privacy.** `index.html` sets `connect-src 'self'`, so the page talks only to its own server; this blocks
-MediaPipe's usage metrics to `odml.pa.googleapis.com`. What leaves the computer: the hit photo and its scores
-(to the coach model through omp), your speech (to Google, by Chrome's recognition), the cue text (to Google if the
-chosen voice is a network voice) and the recognized command text (to jev). The video, the landmarks and the
-photos stay here.
+MediaPipe's usage metrics to `odml.pa.googleapis.com`. What leaves the computer: with the coach debrief on (the
+default), the photo of each hit pose and its scores go to the coach model through omp; your speech goes to Google
+through Chrome's recognition; the cue text goes to Google if the chosen voice is a network voice; the recognized
+command text goes to jev. The video and the landmarks stay here. The saved photos are stored only here; turn off
+the coach debrief in Settings if no photo should leave the computer.
 
 Run it with `npm run dev`, then `npm run mediapipe` once for the pose model. Settings (voice, mute, voice
 commands, coach debrief, coach model) are on the tutor home; the coach model defaults to the server's

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { PoseLandmarks } from '../src/posing/landmarks.ts';
@@ -52,6 +52,7 @@ async function writeAtomic(path: string, data: string | Buffer): Promise<void> {
 
 export async function savePhoto(dir: string, input: PhotoInput, takenAt = new Date()): Promise<PhotoMeta> {
   await mkdir(dir, { recursive: true, mode: 0o700 });
+  await chmod(dir, 0o700);
   const id = randomUUID() as PhotoId;
   const { image, ...fields } = input;
   const meta: PhotoMeta = { id, ...fields, takenAt: takenAt.toISOString(), image: image.type };
