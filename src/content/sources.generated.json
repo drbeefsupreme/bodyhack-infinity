@@ -1,0 +1,3080 @@
+[
+ {
+  "id": "fw-1",
+  "title": "Peak week recommendations for bodybuilders: an evidence based approach",
+  "authors": "Escalante G, Stevenson SW, Barakat C, Aragon AA, Schoenfeld BJ",
+  "year": "2021",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8201693/",
+  "kind": "academic",
+  "supports": "Defines \"dryness\" and \"fullness\"; flatness from excessive dehydration; links between readiness checks and fluid measures \"has not been studied\"; water/sodium practices not shown effective or safe."
+ },
+ {
+  "id": "fw-2",
+  "title": "Peak Week Carbohydrate Manipulation Practices in Physique Athletes: A Narrative Review",
+  "authors": "Homer KA, Cross MR, Helms ER",
+  "year": "2024",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10787737/",
+  "kind": "academic",
+  "supports": "Calls \"spilling over\" an athletes' theory; no data link measured changes to visual changes; ICW/ECW are not the same as intramuscular/subcutaneous water."
+ },
+ {
+  "id": "fw-3",
+  "title": "Nutritional Recommendations for Physique Athletes",
+  "authors": "Roberts BM, Helms ER, Trexler ET, Fitschen PJ",
+  "year": "2020",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7052702/",
+  "kind": "academic",
+  "supports": "Peak-week goal; smoothness \"typically the result of excess body fat or loading too many carbohydrates\" (stated as anecdotal opinion); sodium removal does not remove extracellular fluid."
+ },
+ {
+  "id": "fw-4",
+  "title": "Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation",
+  "authors": "Helms ER, Aragon AA, Fitschen PJ",
+  "year": "2014",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4033492/",
+  "kind": "academic",
+  "supports": "Effect of dehydration and electrolyte manipulation on appearance \"has not been studied\"; girth may miss subtle visual changes."
+ },
+ {
+  "id": "fw-5",
+  "title": "Nutritional Peak Week and Competition Day Strategies of Competitive Natural Bodybuilders",
+  "authors": "Chappell AJ, Simper TN",
+  "year": "2018",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6315482/",
+  "kind": "academic",
+  "supports": "Strategy proportions (n = 81); \"spilling over\" idea sourced to coaching books; pump-up 30–60 min before stage."
+ },
+ {
+  "id": "fw-6",
+  "title": "Do Bodybuilders Use Evidence-Based Nutrition Strategies to Manipulate Physique? Mitchell L, Hackett D, Gifford J, Estermann F, O'Connor H",
+  "authors": "",
+  "year": "2017",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5969027/",
+  "kind": "academic",
+  "supports": "Depletion/loading \"did not produce significant changes in appearance\"; dehydrated muscles \"look smaller\"."
+ },
+ {
+  "id": "fw-7",
+  "title": "An examination of the associations between nutritional peaking strategies in physique sport and competitor characteristics",
+  "authors": "Homer KA, Cross MR, Helms ER",
+  "year": "2024",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11251432/",
+  "kind": "academic",
+  "supports": "Strategy proportions (n = 160); \"PW strategies lack experimental evidence\"."
+ },
+ {
+  "id": "fw-8",
+  "title": "Nutrition, Training, Supplementation, and Performance-Enhancing Drug Practices of Male and Female Physique Athletes Peaking for Competition",
+  "authors": "Escalante G, Barakat C, Tinsley GM, Schoenfeld BJ",
+  "year": "2023",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/37184967/",
+  "kind": "academic",
+  "supports": "Water substantially reduced in the final 3 days; safer practices need research."
+ },
+ {
+  "id": "fw-9",
+  "title": "Training Considerations for the Bodybuilding Peak Week",
+  "authors": "Stevenson SW",
+  "year": "2026",
+  "url": "https://www.ovid.com/jnls/nsca-scj/fulltext/10.1519/ssc.0000000000000938~training-considerations-for-the-bodybuilding-peak-week",
+  "kind": "academic",
+  "supports": "Post-exercise inflammation \"could blur muscle definition on stage\" (a claim, not data)."
+ },
+ {
+  "id": "fw-10",
+  "title": "Carbohydrate Loading Practice in Bodybuilders: Effects on Muscle Thickness, Photo Silhouette Scores, Mood States and Gastrointestinal Symptoms",
+  "authors": "de Moraes WMAM, de Almeida FN, Dos Santos LEA, Cavalcante KDG, Santos HO, Navalta JW, Prestes J",
+  "year": "2019",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6873117/",
+  "kind": "academic",
+  "supports": "Arm thickness about +3% in loaders; blinded judges' silhouette scores rose only in loaders; no significant group-by-time interaction."
+ },
+ {
+  "id": "fw-11",
+  "title": "Effects of carbohydrate loading and weight-lifting on muscle girth",
+  "authors": "Balon TW, Horowitz JF, Fitzsimmons KM",
+  "year": "1992",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/1299502/",
+  "kind": "academic",
+  "supports": "No effect on muscle girth."
+ },
+ {
+  "id": "fw-12",
+  "title": "Effect of glycogen loading on skeletal muscle cross-sectional area and T2 relaxation time",
+  "authors": "Nygren AT, Karlsson M, Norman B, Kaijser L",
+  "year": "2001",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/11903130/",
+  "kind": "academic",
+  "supports": "Thigh cross-sectional area +3.5% with glycogen loading."
+ },
+ {
+  "id": "fw-13",
+  "title": "The effect of a bodybuilding carbohydrate-loading protocol on anthropometry: Preliminary findings from a randomized crossover trial",
+  "authors": "Homer KA, Jukic I, Cross MR, Helms ER",
+  "year": "2024",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/39154549/",
+  "kind": "academic",
+  "supports": "Thickness +2.9% after loading; changes may not exceed measurement error."
+ },
+ {
+  "id": "fw-14",
+  "title": "Can Bodybuilding Peak Week Manipulations Favorably Affect Muscle Size, Subcutaneous Thickness, and Related Body Composition Variables? A Case Study",
+  "authors": "Barakat C, Escalante G, Stevenson SW, Bradshaw JT, Barsuhn A, Tinsley GM, Walters J",
+  "year": "2022",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9321665/",
+  "kind": "academic",
+  "supports": "Summed muscle thickness +3.15%; summed subcutaneous thickness −10% from 3 days out; arm girth unchanged; error may equal the changes; cites ~62% dehydrated on competition day."
+ },
+ {
+  "id": "fw-15",
+  "title": "Changes in body composition, diet, and strength of bodybuilders during the 12 weeks prior to competition",
+  "authors": "Bamman MM, Hunter GR, Newton LE, Roney RK, Khaled MA",
+  "year": "1993",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/8035587/",
+  "kind": "academic",
+  "supports": "Over 12 weeks, ultrasound skin thickness at the biceps decreased with no change in biceps thickness."
+ },
+ {
+  "id": "fw-16",
+  "title": "Segmental extracellular and intracellular water distribution and muscle glycogen after 72-h carbohydrate loading using spectroscopic techniques",
+  "authors": "Shiose K, Yamada Y, Motonaga K, Sagayama H, Higaki Y, Tanaka H, Takahashi H",
+  "year": "2016",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/27231310/",
+  "kind": "academic",
+  "supports": "2.7–4 g water per g glycogen; loading raised ICW, not ECW."
+ },
+ {
+  "id": "fw-17",
+  "title": "Relationship between muscle water and glycogen recovery after prolonged exercise in the heat in humans",
+  "authors": "Fernández-Elías VE, Ortega JF, Nelson RK, Mora-Rodriguez R",
+  "year": "2015",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/25911631/",
+  "kind": "academic",
+  "supports": "About 3 g of water stored per g of glycogen."
+ },
+ {
+  "id": "fw-18",
+  "title": "Ultrasound Does Not Detect Acute Changes in Glycogen in Vastus Lateralis of Man",
+  "authors": "Routledge HE, Bradley WJ, Shepherd SO, Cocks M, Erskine RM, Close GL, Morton JP",
+  "year": "2019",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/31169793/",
+  "kind": "academic",
+  "supports": "Ultrasound is \"not valid to measure muscle glycogen\" in the normal range."
+ },
+ {
+  "id": "fw-19",
+  "title": "Changes in Intra-to-Extra-Cellular Water Ratio and Bioelectrical Parameters from Day-Before to Day-Of Competition in Bodybuilders: A Pilot Study",
+  "authors": "Nunes JP, Araújo JPM, Ribeiro AS, Campa F, Schoenfeld BJ, Cyrino ES, Trindade MCC",
+  "year": "2022",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8880471/",
+  "kind": "academic",
+  "supports": "Single-frequency BIA: ICW up, ECW down on show day; subcutaneous water not measured."
+ },
+ {
+  "id": "fw-20",
+  "title": "Skeletal muscle volume following dehydration induced by exercise in heat",
+  "authors": "Hackney KJ, Cook SB, Fairchild TJ, Ploutz-Snyder LL",
+  "year": "2012",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23849266/",
+  "kind": "academic",
+  "supports": "Knee-extensor volume −3.9% and −5.9% with 3% and 5% body-water loss; arms and delts unchanged."
+ },
+ {
+  "id": "fw-21",
+  "title": "Influence of passive, diet-based, hydration on muscle quantity assessment",
+  "authors": "Viken JS, Nettum V, Paulsen G, Seynnes O",
+  "year": "2025",
+  "url": "https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2025.1724047/full",
+  "kind": "academic",
+  "supports": "Small hydration changes did not change thigh muscle volume or cross-sectional area."
+ },
+ {
+  "id": "fw-22",
+  "title": "Ultrasound Measurements of Subcutaneous Fat Thickness Are Robust Against Hydration Changes",
+  "authors": "Wagner DR, Cotter JD",
+  "year": "2021",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/33508779/",
+  "kind": "academic",
+  "supports": "±2% body-mass hydration changes did not change ultrasound fat thickness."
+ },
+ {
+  "id": "fw-23",
+  "title": "Investigating the impact of dehydration and hydration on In-Vivo hip soft tissue biomechanics",
+  "authors": "Khorami F, Foroutan Y, Sparrey CJ",
+  "year": "2025",
+  "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0328054",
+  "kind": "academic",
+  "supports": "Mild dehydration: hip soft tissue about 7% thinner, skin thinner in nearly all; fat thicker in some."
+ },
+ {
+  "id": "fw-24",
+  "title": "Classification of Hydration in Clinical Conditions: Indirect and Direct Approaches Using Bioimpedance",
+  "authors": "Lukaski HC, Vega Diaz N, Talluri A, Nescolarde L",
+  "year": "2019",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6521329/",
+  "kind": "academic",
+  "supports": "Edema not detectable until interstitial fluid rises about 30% (4–5 kg); BIA precision suits group comparisons, not individual monitoring."
+ },
+ {
+  "id": "fw-25",
+  "title": "The rational clinical examination",
+  "authors": "Is this patient hypovolemic? McGee S, Abernethy WB 3rd, Simel DL",
+  "year": "1999",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/10086438/",
+  "kind": "academic",
+  "supports": "Poor skin turgor has no proven diagnostic value in adults."
+ },
+ {
+  "id": "fw-26",
+  "title": "High dietary sodium chloride consumption may not induce body fluid retention in humans",
+  "authors": "Heer M, Baisch F, Kropp J, Gerzer R, Drummer C",
+  "year": "2000",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/10751219/",
+  "kind": "academic",
+  "supports": "High salt shifted fluid from the interstitial space into the blood; total body water did not rise."
+ },
+ {
+  "id": "fw-27",
+  "title": "High-carbohydrate diet: antinatriuretic and blood pressure response in normal men",
+  "authors": "Affarah HB, Hall WD, Heymsfield SB, Kutner M, Wells JO, Tuttle EP Jr",
+  "year": "1986",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/3529916/",
+  "kind": "academic",
+  "supports": "High-carbohydrate feeding promotes short-lived sodium retention."
+ },
+ {
+  "id": "fw-28",
+  "title": "Resistance exercise-induced fluid shifts: change in active muscle size and plasma volume",
+  "authors": "Ploutz-Snyder LL, Convertino VA, Dudley GA",
+  "year": "1995",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/7573553/",
+  "kind": "academic",
+  "supports": "Vasti +10% and adductors +5% right after squats; plasma volume −22%."
+ },
+ {
+  "id": "fw-29",
+  "title": "Water and ion shifts in skeletal muscle of humans with intense dynamic knee extension",
+  "authors": "Sjøgaard G, Adams RP, Saltin B",
+  "year": "1985",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/3970234/",
+  "kind": "academic",
+  "supports": "At maximal effort, the largest water gain was intracellular."
+ },
+ {
+  "id": "fw-30",
+  "title": "Time kinetics of acute changes in muscle architecture in response to resistance exercise",
+  "authors": "Csapo R, Alegre LM, Baron R",
+  "year": "2011",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/21411367/",
+  "kind": "academic",
+  "supports": "Thickness about +7%; recovery within 30 min."
+ },
+ {
+  "id": "fw-31",
+  "title": "Time course and regional heterogeneity of hamstring muscle thickness after maximal concentric exercise in men and women",
+  "authors": "Sahinis C, Pavlidis K, Kellis E",
+  "year": "2026",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13380580/",
+  "kind": "academic",
+  "supports": "Peak +10.4% right after exercise or at 5 min; toward baseline by 15–30 min."
+ },
+ {
+  "id": "fw-32",
+  "title": "Interval-induced metabolic perturbation determines tissue fluid shifts into skeletal muscle",
+  "authors": "Mandić M, Forsgren MF, Romu T, Widholm P, Sundblad P, Gustafsson T, Rullman E",
+  "year": "2021",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8077120/",
+  "kind": "academic",
+  "supports": "Quadriceps volume +12% at 8 min; still higher at 30 min."
+ },
+ {
+  "id": "fw-33",
+  "title": "Low-Load × High-Load Resistance Exercise: Greater Cell Swelling After a Training Session",
+  "authors": "Agentilho GI, de Lucena EGP, Teixeira LFM, Boas VV, Ribeiro IC, Barroso R, Schoenfeld BJ, Uchida MC",
+  "year": "2023",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10446953/",
+  "kind": "academic",
+  "supports": "Elbow-flexor thickness +18.9% (low load) and +11.5% (high load)."
+ },
+ {
+  "id": "fw-34",
+  "title": "Time Course Change in Muscle Swelling: High-Intensity vs",
+  "authors": "Blood Flow Restriction Exercise. Freitas EDS, et al",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/28965344/",
+  "kind": "academic",
+  "supports": "Thickness raised at 30 min, and at 60 min after high-intensity work."
+ },
+ {
+  "id": "fw-35",
+  "title": "The Muscle Pump: Potential Mechanisms and Applications for Enhancing Hypertrophic Adaptations",
+  "authors": "Schoenfeld BJ, Contreras B",
+  "year": "2014",
+  "url": "https://www.ovid.com/jnls/nsca-scj/fulltext/10.1097/ssc.0000000000000021~the-muscle-pump-potential-mechanisms-and-applications-for",
+  "kind": "academic",
+  "supports": "\"Cellular swelling, often referred to as 'the pump'\"."
+ },
+ {
+  "id": "fw-36",
+  "title": "Concomitant changes in cross-sectional area and water content in skeletal muscle after resistance exercise",
+  "authors": "Kristiansen MS, Uhrbrand A, Hansen M, et al",
+  "year": "2014",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/24330190/",
+  "kind": "academic",
+  "supports": "Delayed swelling: quadriceps area raised at 4 h and 52 h after strenuous work."
+ },
+ {
+  "id": "fw-37",
+  "title": "Changes in indicators of inflammation after eccentric exercise of the elbow flexors",
+  "authors": "Nosaka K, Clarkson PM",
+  "year": "1996",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/8871903/",
+  "kind": "academic",
+  "supports": "Damage swelling peaks days later and lasts weeks on MRI."
+ },
+ {
+  "id": "fw-38",
+  "title": "Decreased compliance in the deep and superficial conduit veins of the upper arm during prolonged cycling exercise",
+  "authors": "Oue A, Sato K, Yoneya M, Sadamoto T",
+  "year": "2017",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5408284/",
+  "kind": "academic",
+  "supports": "Heat and prolonged exercise widen the superficial arm vein."
+ },
+ {
+  "id": "fw-39",
+  "title": "Where is the sun? Sun J, Perona P",
+  "authors": "",
+  "year": "1998",
+  "url": "https://www.nature.com/articles/nn0798_183",
+  "kind": "academic",
+  "supports": "Assumed light direction is above and shifted to the left."
+ },
+ {
+  "id": "fw-40",
+  "title": "The human visual system's assumption that light comes from above is weak",
+  "authors": "Morgenstern Y, Murray RF, Harris LR",
+  "year": "2011",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3145687/",
+  "kind": "academic",
+  "supports": "Visible lighting cues override the prior."
+ },
+ {
+  "id": "fw-41",
+  "title": "Light source dependence in shape from shading",
+  "authors": "Christou CG, Koenderink JJ",
+  "year": "1997",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/9205707/",
+  "kind": "academic",
+  "supports": "Perceived shape is biased by light direction."
+ },
+ {
+  "id": "fw-42",
+  "title": "Perception of surface curvature and direction of illumination from patterns of shading",
+  "authors": "Todd JT, Mingolla E",
+  "year": "1983",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/6224894/",
+  "kind": "academic",
+  "supports": "Shininess enhances perceived curvature."
+ },
+ {
+  "id": "fw-43",
+  "title": "Specular reflections and the perception of shape",
+  "authors": "Fleming RW, Torralba A, Adelson EH",
+  "year": "2004",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/15493971/",
+  "kind": "academic",
+  "supports": "Specular reflections give reliable shape information."
+ },
+ {
+  "id": "fw-44",
+  "title": "Specular image structure modulates the perception of three-dimensional shape",
+  "authors": "Mooney SW, Anderson BL",
+  "year": "2014",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/25455034/",
+  "kind": "academic",
+  "supports": "Gloss can distort perceived shape."
+ },
+ {
+  "id": "fw-45",
+  "title": "Fact or wishful thinking? Biased expectations in \"I think I look better when I'm tanned\"",
+  "authors": "Banerjee SC, Campo S, Greene K",
+  "year": "2008",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/18067464/",
+  "kind": "academic",
+  "supports": "Male raters saw a dark-tanned woman as thinner."
+ },
+ {
+  "id": "fw-46",
+  "title": "The abuse of diuretics as performance-enhancing drugs and masking agents in sport doping: pharmacology, toxicology and analysis",
+  "authors": "Cadwallader AB, de la Torre X, Tieri A, Botrè F",
+  "year": "2010",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2962812/",
+  "kind": "academic",
+  "supports": "Bodybuilders use diuretics to \"accentuate muscle definition\"; electrolyte loss and arrhythmia risks."
+ },
+ {
+  "id": "fw-47",
+  "title": "Life-Threatening Hypokalemic Paralysis in a Young Bodybuilder",
+  "authors": "Cheung KKT, So WY, Kong APS, Ma RCW, Chow FCC",
+  "year": "2014",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3934379/",
+  "kind": "academic",
+  "supports": "Paralysis after peak-week carbohydrate loading with salt and fluid restriction."
+ },
+ {
+  "id": "fw-48",
+  "title": "IFBB Rules, Men's Bodybuilding, 2026 edition",
+  "authors": "International Fitness & Bodybuilding Federation (IFBB)",
+  "year": "2025",
+  "url": "https://ifbb.com/wp-content/uploads/2025/07/Mens-Bodybuilding-Rules-2026-1.pdf",
+  "kind": "rulebook",
+  "supports": "\"Full, peaked development\"; oil in moderation; natural tan; condition can change between prejudging and finals."
+ },
+ {
+  "id": "fw-49",
+  "title": "IFBB Rules, Men's Physique, 2024 edition",
+  "authors": "IFBB",
+  "year": "2024",
+  "url": "https://ifbb.com/wp-content/uploads/2025/04/Mens-Physique-2024.pdf",
+  "kind": "rulebook",
+  "supports": "\"Too dry\" is marked down; a \"softer\" and \"smoother\" look is wanted; smooth skin tone."
+ },
+ {
+  "id": "fw-50",
+  "title": "IFBB General Rules, 2024 edition",
+  "authors": "IFBB",
+  "year": "2024",
+  "url": "https://ifbb.com/wp-content/uploads/2024/08/01-IFBB-General-Rules-2024-edition-1.pdf",
+  "kind": "rulebook",
+  "supports": "Even stage lighting, no shadowed area, 4,500–5,000 lux."
+ },
+ {
+  "id": "fw-51",
+  "title": "Pro Competition Rules",
+  "authors": "IFBB Pro League. Web page (modified 2026)",
+  "year": "2026",
+  "url": "https://www.ifbbpro.com/rules",
+  "kind": "rulebook",
+  "supports": "Oils and tanning products only in moderation; natural tan."
+ },
+ {
+  "id": "fw-52",
+  "title": "2025 Updated Official WNBF Judging Rules (judges' slides)",
+  "authors": "WNBF (posted by WNBF Norway)",
+  "year": "2025",
+  "url": "https://wnbf.no/documents/2025%20Updated%20Official%20WNBF%20Judging%20Rules%20EDITED.pdf",
+  "kind": "rulebook",
+  "supports": "Avoid \"be dryer\"; Classic \"muscles flat\" is a fault; accommodate imperfect lighting; smooth transitions."
+ },
+ {
+  "id": "fw-53",
+  "title": "Men's Bodybuilding",
+  "authors": "OCB (Organization of Competitive Bodybuilders). Web page (modified 2026)",
+  "year": "2026",
+  "url": "https://ocbonline.com/mens-bodybuilding/",
+  "kind": "rulebook",
+  "supports": "Faults include \"less shapely muscularity due to muscle glycogen depletion\"; even spray tan."
+ },
+ {
+  "id": "fw-54",
+  "title": "Male Categories",
+  "authors": "INBA/PNBA (NaturalBodybuilding.com). Web page (no date)",
+  "year": "",
+  "url": "https://naturalbodybuilding.com/categories/male-categories",
+  "kind": "rulebook",
+  "supports": "Detail \"without sacrificing muscle fullness\"; extreme \"dryness\" is discouraged."
+ },
+ {
+  "id": "fw-55",
+  "title": "Bodybuilding Guidelines",
+  "authors": "ANBF. Web page (modified 2026)",
+  "year": "2026",
+  "url": "https://anbfnatural.com/bodybuilding-guidelines/",
+  "kind": "rulebook",
+  "supports": "Physique should be \"full, round, and muscular rather than stringy, flat, depleted, or emaciated\"."
+ },
+ {
+  "id": "fw-56",
+  "title": "How to Execute a Successful Peak Week",
+  "authors": "Sue Bush, Alex Bush (Physique Development)",
+  "year": "2021",
+  "url": "https://physiquedevelopment.com/how-to-execute-a-successful-peak-week/",
+  "kind": "coach",
+  "supports": "Definitions of flat, full, and spill; \"It's tough to spill if you are truly in shape.\""
+ },
+ {
+  "id": "fw-57",
+  "title": "Spilled or flat: How to carb load for a physique show",
+  "authors": "\"Coach Eric\" (Unlocked Fitness and Nutrition)",
+  "year": "2022",
+  "url": "https://www.unlockedfitnessandnutrition.com/post/spilled-or-flat-how-to-carb-load-for-a-physique-show",
+  "kind": "coach",
+  "supports": "Flat \"stringy and soft\"; spilled \"soft and bloated\"; anecdotal hot spots; \"I cannot find a scientific reference\"."
+ },
+ {
+  "id": "fw-58",
+  "title": "Peaking for Bodybuilding",
+  "authors": "RP Strength (author not shown)",
+  "year": "2016",
+  "url": "https://rpstrength.com/blogs/articles/peaking-for-bodybuilding",
+  "kind": "coach",
+  "supports": "Sodium \"spills over\" into the subcutaneous space; sleep and stress blamed for water under the skin."
+ },
+ {
+  "id": "fw-59",
+  "title": "Perfect Peaking 'Peak Week' – Coaching Interview",
+  "authors": "Steve Hall with Jonathon Potter (Revive Stronger)",
+  "year": "2015",
+  "url": "https://revivestronger.com/perfect-peaking/",
+  "kind": "coach",
+  "supports": "\"Spilling over\" means watery or bloated; pump-up 10 or 30 min before stage; \"very little scientific data on peaking\"."
+ },
+ {
+  "id": "fw-60",
+  "title": "Stop Messing Up Your Peak Week",
+  "authors": "Akash Vaghela (RNT Fitness)",
+  "year": "2017",
+  "url": "https://www.rntfitness.co.uk/stop-fking-up-your-peak-week",
+  "kind": "coach",
+  "supports": "\"If you think it's water, it's not, that's just body fat!\"; water in the lower body."
+ },
+ {
+  "id": "fw-61",
+  "title": "Peaking for Drug-Free Bodybuilding with Dr",
+  "authors": "Eric Helms. The MASS Team (Stronger by Science)",
+  "year": "2023",
+  "url": "https://www.strongerbyscience.com/peaking-bodybuilding/",
+  "kind": "coach",
+  "supports": "A dehydrated competitor can look flat; a dieter is \"arguably already depleted\"."
+ },
+ {
+  "id": "fw-62",
+  "title": "Consistent Peaking – Part 2",
+  "authors": "Jeff Alberts (3D Muscle Journey). Page dated 2025",
+  "year": "2025",
+  "url": "https://www.3dmusclejourney.com/blog/consistent-peaking-part-2",
+  "kind": "coach",
+  "supports": "Full but \"slightly 'spilled over'\"; pump makes you look \"bigger, harder and more vascular\"."
+ },
+ {
+  "id": "fw-63",
+  "title": "Flat vs Full",
+  "authors": "Vaughan Wilson (Prep Coach UK). Year not shown",
+  "year": "",
+  "url": "https://www.prepcoachuk.com/articles/flat-vs-full",
+  "kind": "coach",
+  "supports": "Flat and full refer to muscle glycogen stores."
+ },
+ {
+  "id": "fw-64",
+  "title": "Why Do I Look Flat After a Workout? Dylan Wolf (Generation Iron)",
+  "authors": "",
+  "year": "2026",
+  "url": "https://generationiron.com/why-do-i-look-flat-after-a-workout/",
+  "kind": "publication",
+  "supports": "Flat = smaller, less round, less vascular; \"the opposite of the 'pump'\"."
+ },
+ {
+  "id": "fw-65",
+  "title": "Hany Rambod on Big Ramy's 2022 Olympia 5th Place Finish: 'His Physique Looked Faded/Watery'",
+  "authors": "Doug Murray (Fitness Volt)",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/hany-rambod-big-ramy-faded/",
+  "kind": "coach",
+  "supports": "\"Flat\" and \"a bit watery\" used together."
+ },
+ {
+  "id": "fw-66",
+  "title": "Judge Steve Weinberger on Big Ramy Losing His Title",
+  "authors": "Doug Murray (Fitness Volt)",
+  "year": "2022",
+  "url": "https://fitnessvolt.com/judge-steve-weinberger-on-big-ramy-2022-olympia/",
+  "kind": "publication",
+  "supports": "\"Big and full\" then \"started to flatten out\" during posing."
+ },
+ {
+  "id": "fw-67",
+  "title": "Five Back Stage Bodybuilding Mishaps to Avoid",
+  "authors": "John Jewett (Animal Pak)",
+  "year": "2018",
+  "url": "https://www.animalpak.com/blogs/fitness-bodybuilding/five-back-stage-bodybuilding-mishaps-to-avoid",
+  "kind": "coach",
+  "supports": "Pump-up 5–10 min before stage; no shine \"looked really flat\"; light tan looks soft."
+ },
+ {
+  "id": "fw-68",
+  "title": "Bodybuilding Contest Day",
+  "authors": "ExRx.net (no author or date shown)",
+  "year": "",
+  "url": "https://exrx.net/Bodybuilding/CompetitionDay",
+  "kind": "publication",
+  "supports": "\"Avoid over pumping\"; avoid pumping quads and abs; apply oil lightly."
+ },
+ {
+  "id": "fw-69",
+  "title": "Why Do Bodybuilders Use Spray Tan for Competitions? Jake Dickson (BarBend)",
+  "authors": "",
+  "year": "2024",
+  "url": "https://barbend.com/news/why-do-bodybuilders-use-spray-tan/",
+  "kind": "publication",
+  "supports": "Sharp light on dark skin gives a \"harder\" look."
+ },
+ {
+  "id": "fw-70",
+  "title": "How Coach Hany Rambod Helps Bodybuilders \"Dry Out\" Before Competition",
+  "authors": "Phil Blechman (BarBend)",
+  "year": "2023",
+  "url": "https://barbend.com/news/how-hany-rambod-helps-bodybuilders-dry-out-before-competition/",
+  "kind": "publication",
+  "supports": "\"A dry, hard, grainy physique\"; \"The leaner you are, the dryer you get\"; diuretics \"sometimes dangerous\"."
+ },
+ {
+  "id": "fw-71",
+  "title": "What Is Muscle Maturity, Anyway? Jake Dickson (BarBend)",
+  "authors": "",
+  "year": "2024",
+  "url": "https://barbend.com/muscle-maturity/",
+  "kind": "publication",
+  "supports": "Dryness linked to maturity and thin skin."
+ },
+ {
+  "id": "fw-72",
+  "title": "James Hollingshead: The 2022 Mr",
+  "authors": "Olympia Backstage Was Poorly Lit, 'Cold' And Too Crowded. Doug Murray (Fitness Volt)",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/james-hollingshead-2022-olympia/",
+  "kind": "publication",
+  "supports": "Fans blamed backstage conditions for athletes \"coming in off or watery\"."
+ },
+ {
+  "id": "fw-73",
+  "title": "Chapter 10 – Bodybuilding Show Day Guide",
+  "authors": "Center Podium (NPC show promoter). Updated 2025",
+  "year": "2025",
+  "url": "https://centerpodium.com/contest-prep/chapter-8-showtime/",
+  "kind": "publication",
+  "supports": "\"When you get cold, you will go flat\" (claim without evidence)."
+ },
+ {
+  "id": "fw-74",
+  "title": "The Judging Perspective",
+  "authors": "Jennie Laurent (MuscleSport Magazine)",
+  "year": "2015",
+  "url": "https://www.musclesportmag.com/2015/12/29/the-judging-perspective/",
+  "kind": "coach",
+  "supports": "Over-dieted: \"lost muscle size ... very lean and not full\"."
+ },
+ {
+  "id": "fw-75",
+  "title": "Spill Over – How is it manifested? IntenseMuscle forum (Skip's Round Table)",
+  "authors": "",
+  "year": "2006",
+  "url": "https://www.intensemuscle.com/forum/main-forums/skip-s-round-table-romper-room/20481-spill-over-how-is-it-manifested",
+  "kind": "forum",
+  "supports": "Coach Ken \"Skip\" Hill: \"you were just fat\"; spillover used \"when there is no understanding as to what went wrong\"."
+ },
+ {
+  "id": "fw-76",
+  "title": "Pre-Contest Pumping Up? T Nation forum",
+  "authors": "",
+  "year": "2008",
+  "url": "https://t-nation.com/t/pre-contest-pumping-up/102909",
+  "kind": "forum",
+  "supports": "Coach Christian Thibaudeau: too much pumping \"might actually flatten you out\"; legs and arms lose separation."
+ },
+ {
+  "id": "fw-77",
+  "title": "Why is it that sometimes my muscles look flat? EliteFitness forum",
+  "authors": "",
+  "year": "2002",
+  "url": "https://www.elitefitness.com/forum/threads/why-is-it-that-sometimes-my-muscles-look-flat.185328/",
+  "kind": "forum",
+  "supports": "Lay use of \"depleted\", \"flat\", \"full\", and \"bloated\" as one set."
+ },
+ {
+  "id": "dv-1",
+  "title": "NPC Worldwide Rules",
+  "authors": "NPC Worldwide / IFBB Professional League",
+  "year": "2026",
+  "url": "https://www.ifbbpro.com/npc-worldwide/rules/",
+  "kind": "rulebook",
+  "supports": "Figure: \"separation but no visible striations\"; Women's Physique lists industry terms (\"ripped, shredded, peeled, striated, dry, diced, hard, vascular, grainy\"); Fit Model: core \"not too detailed or separated\", no visible glute tie-in."
+ },
+ {
+  "id": "dv-2",
+  "title": "Judge's Table: Know the Score",
+  "authors": "Michael Berg; answers by NPC judges Steve Weinberger and Sandy Williamson (Muscle & Fitness / FLEX)",
+  "year": "2017",
+  "url": "https://www.muscleandfitness.com/flexonline/ifbb/judges-table-know-score/",
+  "kind": "coach",
+  "supports": "Judge: \"deep, clean separation between the individual muscles, and smaller lines, or striations, across the muscle belly itself\"."
+ },
+ {
+  "id": "dv-3",
+  "title": "Abdominal etching: differential liposuction to detail abdominal musculature",
+  "authors": "Mentz HA 3rd, Gilliland MD, Patronella CK (Aesthetic Plast Surg)",
+  "year": "1993",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/8273529",
+  "kind": "academic",
+  "supports": "Abdominal relief = linea alba, linea semilunaris, tendinous intersections; superficial fat removal deepens these \"natural grooves\"."
+ },
+ {
+  "id": "dv-4",
+  "title": "VASER-assisted high-definition liposculpture",
+  "authors": "Hoyos AE, Millard JA (Aesthet Surg J)",
+  "year": "2007",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/19341688",
+  "kind": "academic",
+  "supports": "Fat removal between and over muscle groups defines \"the 3-dimensional surface musculature\"."
+ },
+ {
+  "id": "dv-5",
+  "title": "How Bodybuilders Work to Look Super Shredded",
+  "authors": "Trevor Thieme, CSCS (Men's Health)",
+  "year": "2020",
+  "url": "https://www.menshealth.com/fitness/a35082080/what-is-striated-muscle/",
+  "kind": "publication",
+  "supports": "Attributes striations to very low body fat (claims 2–5%); calls high-rep striation training \"a myth\"."
+ },
+ {
+  "id": "dv-6",
+  "title": "How Bodybuilding is Judged, Different Divisions, and Scoring",
+  "authors": "Peter Marino (BarBend)",
+  "year": "2024",
+  "url": "https://barbend.com/news/how-bodybuilding-is-judged/",
+  "kind": "publication",
+  "supports": "\"Separation and striations (visible muscle fibers that ripple when flexed)\"; claim that competitors drain water \"from between their muscles and skin\"."
+ },
+ {
+  "id": "dv-7",
+  "title": "Anatomy and Physiology 2e, 10.2 Skeletal Muscle",
+  "authors": "Betts JG, Young KA, Wise JA, et al. (OpenStax)",
+  "year": "2022",
+  "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/10-2-skeletal-muscle",
+  "kind": "academic",
+  "supports": "Fascicles are bundled by perimysium; microscopic striations come from ~2 µm sarcomeres; the lats fuse into a lower-back aponeurosis."
+ },
+ {
+  "id": "dv-8",
+  "title": "8b. Muscles and Fasciæ of the Thigh",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/8b-the-muscles-and-fasci-of-the-thigh",
+  "kind": "academic",
+  "supports": "Appendix A: gluteal, thigh, hamstring muscles. Gluteus maximus \"remarkably coarse … large bundles separated by fibrous septa\"; rectus femoris surface fibers \"bipenniform\"."
+ },
+ {
+  "id": "dv-9",
+  "title": "Muscle-fiber pennation angles are greater in hypertrophied than in normal muscles",
+  "authors": "Kawakami Y, Abe T, Fukunaga T (J Appl Physiol)",
+  "year": "1993",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/8365975",
+  "kind": "academic",
+  "supports": "Bodybuilders' triceps had larger fiber angles; angle rose with muscle thickness."
+ },
+ {
+  "id": "dv-10",
+  "title": "Vein visualization: patient characteristic factors and efficacy of a new infrared vein finder technology",
+  "authors": "Chiao FB, Resta-Flarer F, Lesser J, et al. (Br J Anaesth 110:966–71)",
+  "year": "2013",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23384732",
+  "kind": "academic",
+  "supports": "384 subjects: obesity and darker skin linked to fewer veins visible by eye."
+ },
+ {
+  "id": "dv-11",
+  "title": "Vein Pattern Locating Technology for Cannulation: A Review of the Low-Cost Vein Finder Prototypes Utilizing near Infrared (NIR) Light to Improve Peripheral Subcutaneous Vein Selection for Phlebotomy",
+  "authors": "Pan CT, Francisco MD, Yen CK, Wang SY, Shiue YL (Sensors 19:",
+  "year": "2019",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6719195/",
+  "kind": "academic",
+  "supports": "Skin tone, obesity, and dehydration affect vein visibility; dehydration, hypotension, and vasoconstriction make cannulation harder."
+ },
+ {
+  "id": "dv-12",
+  "title": "Why do veins appear blue? A new look at an old question",
+  "authors": "Kienle A, Lilge L, Vitkin IA, Patterson MS, Wilson BC, Hibst R, Steiner R (Applied Optics 35:",
+  "year": "1996",
+  "url": "https://opg.optica.org/ao/abstract.cfm?uri=ao-35-7-1151",
+  "kind": "academic",
+  "supports": "Vessel color depends on skin scattering and absorption, blood oxygenation, vessel diameter and depth, and perception."
+ },
+ {
+  "id": "dv-13",
+  "title": "Local warming and insertion of peripheral venous cannulas: single blinded prospective randomised controlled trial and single blinded randomised crossover trial",
+  "authors": "Lenhardt R, Seybold T, Kimberger O, Stoiser B, Sessler DI (BMJ 325:409)",
+  "year": "2002",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC119431/",
+  "kind": "academic",
+  "supports": "Warming raised vein visibility scores and vein size; tapping, tourniquets, fist clenching, and a hanging arm increase prominence; fear causes vasoconstriction."
+ },
+ {
+  "id": "dv-14",
+  "title": "Revealing Maximal Diameter of Upper Limb Superficial Vein with an Elevated Environmental Temperature",
+  "authors": "Irfan H, Ooi GS, Kyin MM, Ho P (Int J Chronic Dis)",
+  "year": "2016",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5002475/",
+  "kind": "academic",
+  "supports": "Warming from 26 °C to 43 °C enlarged cephalic and basilic veins in 13 healthy adults (wrist cephalic 2.8 → 3.4 mm)."
+ },
+ {
+  "id": "dv-15",
+  "title": "Decreased compliance in the deep and superficial conduit veins of the upper arm during prolonged cycling exercise",
+  "authors": "Oue A, Sato K, Yoneya M, Sadamoto T (Physiol Rep 5:e",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/28438985",
+  "kind": "academic",
+  "supports": "Prolonged cycling (core +1.1 °C) and passive heat enlarged the basilic vein; a cold pressor test made arm veins smaller."
+ },
+ {
+  "id": "dv-16",
+  "title": "Basic Human Anatomy ch. 7",
+  "authors": "O'Rahilly et al. (Dartmouth)",
+  "year": "2008",
+  "url": "https://humananatomy.host.dartmouth.edu/BHA/public_html/part_2/chapter_7.html",
+  "kind": "academic",
+  "supports": "Appendix B: upper-limb veins, variability, visibility. Superficial veins are \"highly variable\"; fist clenching fills forearm veins and makes them prominent."
+ },
+ {
+  "id": "dv-17",
+  "title": "Patterns of the superficial veins of the cubital fossa",
+  "authors": "Yammine K, Erić M (Phlebology)",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/27343223/",
+  "kind": "academic",
+  "supports": "Appendix B: elbow pattern frequencies. Meta-analysis (9,924 arms): elbow vein patterns differ by sex and population."
+ },
+ {
+  "id": "dv-18",
+  "title": "Blood volume: its adaptation to endurance training",
+  "authors": "Convertino VA (Med Sci Sports Exerc 23:",
+  "year": "1991",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/1798375",
+  "kind": "academic",
+  "supports": "Endurance training expands plasma and blood volume."
+ },
+ {
+  "id": "dv-19",
+  "title": "Peak week recommendations for bodybuilders: an evidence based approach",
+  "authors": "Escalante G, Stevenson SW, Barakat C, Aragon AA, Schoenfeld BJ (BMC Sports Sci Med Rehabil 13:68)",
+  "year": "2021",
+  "url": "https://link.springer.com/article/10.1186/s13102-021-00296-y",
+  "kind": "academic",
+  "supports": "Peak-week goals include minimal \"subcutaneous water\" to look \"dry\"; evidence is scarce; the link between visual readiness checks and measured fluid \"has not been studied\"; diuretic misuse reported."
+ },
+ {
+  "id": "dv-20",
+  "title": "Difficult intravenous access (DIVA) in the adult population: an umbrella review",
+  "authors": "Torné-Ruiz A, Delgado M, Moreno S, Corral-Núñez A, Cemeli T, Roca J (BMJ Open 16:e",
+  "year": "2026",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13288886/",
+  "kind": "academic",
+  "supports": "Risk factors for hard-to-find veins include obesity, venous invisibility, oedema, and hypovolaemia."
+ },
+ {
+  "id": "dv-21",
+  "title": "Lower-Back-Attack Workout",
+  "authors": "Bryan Haycock, PhD (Muscle & Fitness / FLEX)",
+  "year": "2017",
+  "url": "https://www.muscleandfitness.com/flexonline/training/lower-back-attack-workout/",
+  "kind": "coach",
+  "supports": "Erector spinae \"meet the origin of the lats to create the 'Christmas tree' shape at the lower back when doing a rear lat spread\"."
+ },
+ {
+  "id": "dv-22",
+  "title": "Why Mr. Olympia Dorian Yates Thinks the Barbell Row Is the Best Back Exercise",
+  "authors": "Jake Dickson, quoting Dorian Yates (BarBend)",
+  "year": "2025",
+  "url": "https://barbend.com/news/barbell-row-best-back-exercise-dorian-yates/",
+  "kind": "publication",
+  "supports": "Yates: \"The 'Christmas tree' look is greatly due to genetics\"; credits back extensions for his erector spinae."
+ },
+ {
+  "id": "dv-23",
+  "title": "7a. Muscles Connecting the Upper Extremity to the Vertebral Column",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/7-the-fascia-and-muscles-of-the-upper-extremity-a-the-muscles-connecting-the-upper-extremity-to-the-vertebral-column",
+  "kind": "academic",
+  "supports": "Appendix A: trapezius, latissimus dorsi."
+ },
+ {
+  "id": "dv-24",
+  "title": "6a. Deep Muscles of the Back",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/6-the-fasci-and-muscles-of-the-trunk-a-the-deep-muscles-of-the-back",
+  "kind": "academic",
+  "supports": "Appendix A: thoracolumbar fascia, erector spinae."
+ },
+ {
+  "id": "dv-25",
+  "title": "Surface Anatomy of the Back",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/3-surface-anatomy-of-the-back",
+  "kind": "academic",
+  "supports": "Appendix A: erector ridges, spinal furrow."
+ },
+ {
+  "id": "dv-26",
+  "title": "Thoracolumbar fascia",
+  "authors": "Onome Okpe (Kenhub)",
+  "year": "2022",
+  "url": "https://www.kenhub.com/en/library/anatomy/thoracolumbar-fascia",
+  "kind": "academic",
+  "supports": "Appendix A: secondary source; roughly diamond shape."
+ },
+ {
+  "id": "dv-27",
+  "title": "Women's Physique posing criteria",
+  "authors": "USBF Bodybuilding, n.d",
+  "year": "",
+  "url": "https://www.usbfbodybuilding.com/womens-physique",
+  "kind": "rulebook",
+  "supports": "Conditioning = \"differentiation between adjacent muscles\"; asks for separation, \"ab cuts\", \"cuts between delts, biceps and triceps\"; not \"overly feathered\"."
+ },
+ {
+  "id": "dv-28",
+  "title": "ANBF Bodybuilding Guidelines",
+  "authors": "American Natural Bodybuilding Federation (ANBF)",
+  "year": "2026",
+  "url": "https://anbfnatural.com/bodybuilding-guidelines/",
+  "kind": "rulebook",
+  "supports": "Conditioning: \"visible muscle separation, deep cuts, striations, abdominal cuts … glute detail\"; tan \"to highlight muscle definition\"."
+ },
+ {
+  "id": "dv-29",
+  "title": "IFBB Rules, Section 2: Men's Bodybuilding (2021 edition)",
+  "authors": "International Fitness & Bodybuilding Federation (IFBB)",
+  "year": "2021",
+  "url": "https://ifbb.com/wp-content/uploads/2021/03/Mens-Bodybuilding-Rules-2021.pdf",
+  "kind": "rulebook",
+  "supports": "Judges assess \"muscle size and quality (density, separation, definition)\" and look for \"muscular density and definition\"; the rules do not name striations or vascularity."
+ },
+ {
+  "id": "dv-30",
+  "title": "Judging",
+  "authors": "World Fitness Federation (WFF International)",
+  "year": "2025",
+  "url": "https://wff-international.com/judging/",
+  "kind": "rulebook",
+  "supports": "\"Condition – the definition or separation of individual muscles, and muscle groups\"; Sports Model needs \"some vascularity and intra-muscular striations\"."
+ },
+ {
+  "id": "dv-31",
+  "title": "The 7 Ways Genetics Impact Bodybuilders, From Pro Coach Joe Bennett",
+  "authors": "Jake Dickson, quoting Joe Bennett (BarBend)",
+  "year": "2024",
+  "url": "https://barbend.com/news/impact-of-genetics-on-bodybuilders-coach-joe-bennett/",
+  "kind": "coach",
+  "supports": "\"Feathered quads\" have \"plenty of small lines and striations\"; separation as \"texture\"; not all very lean pros show \"graininess, striations, or extreme vascularity\"."
+ },
+ {
+  "id": "dv-32",
+  "title": "Body composition changes in elite male bodybuilders during preparation for competition",
+  "authors": "Withers RT, Noell CJ, Whittingham NO, Chatterton BE, Schultz CG, Keeves JP (Aust J Sci Med Sport)",
+  "year": "1997",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/9127683",
+  "kind": "academic",
+  "supports": "Three elite bodybuilders: sum of 8 skinfolds 51.1 → 36.7 mm; body fat 9.1% → 5.0%."
+ },
+ {
+  "id": "dv-33",
+  "title": "Natural bodybuilding competition preparation and recovery: a 12-month case study",
+  "authors": "Rossow LM, Fukuda DH, Fahs CA, Loenneke JP, Stout JR (Int J Sports Physiol Perform)",
+  "year": "2013",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23412685",
+  "kind": "academic",
+  "supports": "Body fat fell from 14.8% to 4.5% during contest preparation."
+ },
+ {
+  "id": "dv-34",
+  "title": "Two Keys to a Balanced, Pleasing Physique",
+  "authors": "Lee Haney (Muscle & Fitness / FLEX)",
+  "year": "2017",
+  "url": "https://www.muscleandfitness.com/flexonline/training/two-keys-balanced-pleasing-physique/",
+  "kind": "coach",
+  "supports": "Uses \"cross striations, particularly in the pecs, delts, triceps, and quads\" and \"shape and detail\"; claims varied exercises produce them."
+ },
+ {
+  "id": "dv-35",
+  "title": "Official NPC Women's Physique Division",
+  "authors": "National Physique Committee (NPC News Online)",
+  "year": "2026",
+  "url": "https://npcnewsonline.com/rules/official-npc-womens-physique-division/",
+  "kind": "rulebook",
+  "supports": "\"Clear muscle separation – small amount of striations is acceptable\"; not \"an overly striated physique\"."
+ },
+ {
+  "id": "dv-36",
+  "title": "IFBB Federation Rules, Section 8: Women's Physique (2024 edition)",
+  "authors": "IFBB",
+  "year": "2024",
+  "url": "https://ifbb.com/wp-content/uploads/2024/02/Womens-Physique-Rules-2024.pdf",
+  "kind": "rulebook",
+  "supports": "Physique \"should be free from deep muscle separation and/or striations\"; women's-bodybuilding \"vascularity, muscular definition and dryness\" must be marked down."
+ },
+ {
+  "id": "dv-37",
+  "title": "Determination of fascicle length and pennation in a contracting human muscle in vivo",
+  "authors": "Fukunaga T, Ichinose Y, Ito M, Kawakami Y, Fukashiro S (J Appl Physiol)",
+  "year": "1997",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/9029238",
+  "kind": "academic",
+  "supports": "Contraction shortened vastus lateralis fascicles and raised the fiber angle (14° → 21°)."
+ },
+ {
+  "id": "dv-38",
+  "title": "What makes skeletal muscle striated? Discoveries in the endosarcomeric and exosarcomeric cytoskeleton",
+  "authors": "Rall JA (Adv Physiol Educ 42:672–684)",
+  "year": "2018",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/30431326",
+  "kind": "academic",
+  "supports": "Histology meaning: the \"cross-striated appearance of a skeletal muscle fiber\" comes from equal-length, transversely aligned sarcomeres."
+ },
+ {
+  "id": "dv-39",
+  "title": "Muscle & Strength Bodybuilding Glossary",
+  "authors": "M&S Writers (Muscle & Strength)",
+  "year": "2025",
+  "url": "https://www.muscleandstrength.com/articles/bodybuilding-glossary.html",
+  "kind": "publication",
+  "supports": "Definition: \"the absence of fat over clearly delineated muscular movement\"; striations: \"very fine grooves\"; vascularity: \"increase in size and number of observable veins\"."
+ },
+ {
+  "id": "dv-40",
+  "title": "How Phil Heath Trains for Wide Lats and a Detailed Back",
+  "authors": "Joe Wuebben, quoting Phil Heath (Muscle & Fitness)",
+  "year": "2020",
+  "url": "https://www.muscleandfitness.com/flexonline/training/how-phil-heath-trains-wide-lats-and-detailed-back/",
+  "kind": "coach",
+  "supports": "Heath: an exercise \"adds good detail to the mid-back\"; rear poses \"show that Christmas tree\"; \"good etching in the lower back\"."
+ },
+ {
+  "id": "dv-41",
+  "title": "Oh Christmas Tree! A Killer Lower Back Workout",
+  "authors": "Cory Gregory (Muscle & Strength)",
+  "year": "2020",
+  "url": "https://www.muscleandstrength.com/articles/killer-lower-back-workout",
+  "kind": "coach",
+  "supports": "\"A defined, thick lower back – in a distinctive Christmas tree shape\"; exercise claims without evidence."
+ },
+ {
+  "id": "dv-42",
+  "title": "HSS-100: Back Specialization",
+  "authors": "Christian Thibaudeau (T Nation)",
+  "year": "2022",
+  "url": "https://archive.t-nation.com/training/hss-100-back-specialization/",
+  "kind": "coach",
+  "supports": "Samir Bannout's 1983 Mr. Olympia lower back led to the phrase \"the Christmas tree\"."
+ },
+ {
+  "id": "dv-43",
+  "title": "Anatomy and Physiology 2e, 11.1 Interactions of Skeletal Muscles, Their Fascicle Arrangement, and Their Lever Systems",
+  "authors": "Betts JG, Young KA, Wise JA, et al. (OpenStax)",
+  "year": "2022",
+  "url": "https://openstax.org/books/anatomy-and-physiology-2e/pages/11-1-interactions-of-skeletal-muscles-their-fascicle-arrangement-and-their-lever-systems",
+  "kind": "academic",
+  "supports": "\"Pennate (penna = 'feathers')\"; rectus femoris bipennate; deltoid multipennate; pectoralis major convergent. Appendix A: fascicle types; deltoid multipennate; extensor digitorum unipennate; pectoralis convergent."
+ },
+ {
+  "id": "dv-44",
+  "title": "Chris Cormier Says Feathered Quads Will Lead Keone Pearson To 212 Olympia Title",
+  "authors": "Greg Patuto, quoting Chris Cormier (Generation Iron)",
+  "year": "2024",
+  "url": "https://generationiron.com/chris-cormier-feathered-quads-keone-pearson-olympia/",
+  "kind": "publication",
+  "supports": "Pro usage: \"Those feathers on the quads\"."
+ },
+ {
+  "id": "dv-45",
+  "title": "How to Increase Vascularity for Roadmap Veins",
+  "authors": "Inside Bodybuilding (reviewed by Thomas O'Connor, MD)",
+  "year": "2023",
+  "url": "https://insidebodybuilding.com/vascularity",
+  "kind": "publication",
+  "supports": "\"Roadmap veins\" usage; claims that extracellular water between muscle and skin hides veins."
+ },
+ {
+  "id": "dv-46",
+  "title": "What Is Vascularity?",
+  "authors": "Corrie Winter (ATHLEAN-X)",
+  "year": "2025",
+  "url": "https://learn.athleanx.com/articles/what-is-vascularity",
+  "kind": "publication",
+  "supports": "\"Looking like a roadmap\" usage; vascularity changes with temperature, fat, blood pressure, and training."
+ },
+ {
+  "id": "dv-47",
+  "title": "MEN'S athletic Competition Rules of Men Athletic-Class",
+  "authors": "NaturalBodybuilding.EU (European Elite Tour)",
+  "year": "2025",
+  "url": "https://naturalbodybuilding.eu/mens-athletic-competition-rules-of-men-athletic-class/",
+  "kind": "rulebook",
+  "supports": "Judging criterion \"Muscle Definition & Vascularity (ca. 45% of Overall Judgement)\"."
+ },
+ {
+  "id": "dv-48",
+  "title": "Are Veiny Arms Really a Sign You're Super Fit?",
+  "authors": "Emily Shiffer, quoting Doug McGuff, MD, and Spencer Nadolsky, DO (Men's Health)",
+  "year": "2018",
+  "url": "https://www.menshealth.com/fitness/a19546283/vascularity-and-fitness-level/",
+  "kind": "publication",
+  "supports": "Physician opinions on leanness, pump, and genetics; claim that sodium and water retention can swell veins."
+ },
+ {
+  "id": "dv-49",
+  "title": "Impact of isometric handgrip exercises on cephalic vein diameter in non-AVF candidates, a pilot study",
+  "authors": "Uy AL, Jindal RM, Herndon TW, Yuan CM, Abbott KC, Hurst FP (J Vasc Access 14:157–63)",
+  "year": "2013",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23258587",
+  "kind": "academic",
+  "supports": "15 kidney patients: cephalic vein diameter grew in both the exercised and the non-exercised arm; no difference between arms."
+ },
+ {
+  "id": "dv-50",
+  "title": "Resistance exercise-induced fluid shifts: change in active muscle size and plasma volume",
+  "authors": "Ploutz-Snyder LL, Convertino VA, Dudley GA (Am J Physiol)",
+  "year": "1995",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/7573553",
+  "kind": "academic",
+  "supports": "Squats: active muscle area +10%, plasma volume −22% right after exercise."
+ },
+ {
+  "id": "dv-51",
+  "title": "Hypokalemic paralysis in a professional bodybuilder",
+  "authors": "Mayr FB, Domanovits H, Laggner AN (Am J Emerg Med)",
+  "year": "2012",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/21871759",
+  "kind": "academic",
+  "supports": "Diuretic misuse in bodybuilding can cause life-threatening low potassium."
+ },
+ {
+  "id": "dv-52",
+  "title": "Muscles Connecting the Upper Extremity to the Anterior and Lateral Thoracic Walls",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/the-muscles-connecting-the-upper-extremity-to-the-anterior-and-lateral-thoracic-walls",
+  "kind": "academic",
+  "supports": "Appendix A: pectoralis major, serratus anterior."
+ },
+ {
+  "id": "dv-53",
+  "title": "Surface Anatomy of the Upper Extremity",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/11-surface-anatomy-of-the-upper-extremity",
+  "kind": "academic",
+  "supports": "Appendix A: shoulder, back, arm, forearm surface form. Appendix B: visibility on compression."
+ },
+ {
+  "id": "dv-54",
+  "title": "Surface Anatomy of the Thorax",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/5-surface-anatomy-of-the-thorax",
+  "kind": "academic",
+  "supports": "Appendix A: sternal furrow."
+ },
+ {
+  "id": "dv-55",
+  "title": "Anatomy, Shoulder and Upper Limb, Deltoid Muscle",
+  "authors": "Elzanie, Varacallo (StatPearls)",
+  "year": "2024",
+  "url": "https://www.ncbi.nlm.nih.gov/sites/books/NBK537056/",
+  "kind": "academic",
+  "supports": "Appendix A: deltoid pennation; deltopectoral groove."
+ },
+ {
+  "id": "dv-56",
+  "title": "7c. Muscles and Fasciæ of the Shoulder",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/7c-the-muscles-and-fasci-of-the-shoulder",
+  "kind": "academic",
+  "supports": "Appendix A: deltoid, rotator and teres muscles."
+ },
+ {
+  "id": "dv-57",
+  "title": "Surface Anatomy of the Abdomen",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/7-surface-anatomy-of-the-abdomen",
+  "kind": "academic",
+  "supports": "Appendix A: rectus furrows, lineae, oblique surface form."
+ },
+ {
+  "id": "dv-58",
+  "title": "6d. Muscles and Fasciæ of the Abdomen",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/6d-the-muscles-and-fasci-of-the-abdomen",
+  "kind": "academic",
+  "supports": "Appendix A: external oblique, inguinal ligament, rectus."
+ },
+ {
+  "id": "dv-59",
+  "title": "Anatomy, Anterolateral Abdominal Wall Muscles",
+  "authors": "Varacallo, Scharbach, Al-Dhahir (StatPearls)",
+  "year": "2023",
+  "url": "https://www.ncbi.nlm.nih.gov/sites/books/NBK470334/",
+  "kind": "academic",
+  "supports": "Appendix A: external oblique inferior-medial; six-pack."
+ },
+ {
+  "id": "dv-60",
+  "title": "The Anterolateral Abdominal Wall",
+  "authors": "Oliver Jones (TeachMeAnatomy)",
+  "year": "2026",
+  "url": "https://teachmeanatomy.info/abdomen/muscles/abdominal-wall/",
+  "kind": "academic",
+  "supports": "Appendix A: external oblique inferomedial; linea semilunaris."
+ },
+ {
+  "id": "dv-61",
+  "title": "Rectus abdominis muscle",
+  "authors": "Knipe, Hacking, Liu, et al. (Radiopaedia)",
+  "year": "2026",
+  "url": "https://radiopaedia.org/articles/rectus-abdominis-muscle",
+  "kind": "academic",
+  "supports": "Appendix A: 3–4 intersections; lineae."
+ },
+ {
+  "id": "dv-62",
+  "title": "External oblique muscle",
+  "authors": "Dematawa, Willox, Worsley, et al. (Radiopaedia)",
+  "year": "2026",
+  "url": "https://radiopaedia.org/articles/external-oblique-muscle",
+  "kind": "academic",
+  "supports": "Appendix A: interdigitations; fibers down and medial; inguinal ligament."
+ },
+ {
+  "id": "dv-63",
+  "title": "7d. Muscles and Fasciæ of the Arm",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/7d-the-muscles-and-fasci-of-the-arm",
+  "kind": "academic",
+  "supports": "Appendix A: biceps, brachialis, triceps."
+ },
+ {
+  "id": "dv-64",
+  "title": "7e. Muscles and Fasciæ of the Forearm",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/7e-the-muscles-and-fasci-of-the-forearm",
+  "kind": "academic",
+  "supports": "Appendix A: forearm flexors and extensors."
+ },
+ {
+  "id": "dv-65",
+  "title": "Surface Anatomy of the Lower Extremity",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/13-surface-anatomy-of-the-lower-extremity",
+  "kind": "academic",
+  "supports": "Appendix A: hip, thigh, leg surface form. Appendix B: visibility on compression."
+ },
+ {
+  "id": "dv-66",
+  "title": "Iliotibial band",
+  "authors": "Dixon, Knipe (Radiopaedia)",
+  "year": "2025",
+  "url": "https://radiopaedia.org/articles/iliotibial-band",
+  "kind": "academic",
+  "supports": "Appendix A: ITB attachments."
+ },
+ {
+  "id": "dv-67",
+  "title": "Vastus medialis muscle",
+  "authors": "Radiopaedia (citation author \"b a\")",
+  "year": "2023",
+  "url": "https://radiopaedia.org/articles/vastus-medialis-muscle",
+  "kind": "academic",
+  "supports": "Appendix A: VML and VMO parts."
+ },
+ {
+  "id": "dv-68",
+  "title": "8c. Muscles and Fasciæ of the Leg",
+  "authors": "Henry Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/8c-the-muscles-and-fasci-of-the-leg",
+  "kind": "academic",
+  "supports": "Appendix A: calf, tibialis anterior."
+ },
+ {
+  "id": "dv-69",
+  "title": "Lower Extremity Venous Anatomy",
+  "authors": "Meissner MH",
+  "year": "2005",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3036282/",
+  "kind": "academic",
+  "supports": "Appendix B: accessory, posterior arch, SSV termination."
+ },
+ {
+  "id": "dv-70",
+  "title": "Veins of the Upper Extremity",
+  "authors": "Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/3c-the-veins-of-the-upper-extremity-and-thorax/",
+  "kind": "academic",
+  "supports": "Appendix B: upper-limb vein courses."
+ },
+ {
+  "id": "dv-71",
+  "title": "Cephalic vein",
+  "authors": "Radiopaedia",
+  "year": "2026",
+  "url": "https://radiopaedia.org/articles/cephalic-vein-1",
+  "kind": "academic",
+  "supports": "Appendix B: origin, termination, ultrasound visibility."
+ },
+ {
+  "id": "dv-72",
+  "title": "Basilic vein",
+  "authors": "Radiopaedia",
+  "year": "2026",
+  "url": "https://radiopaedia.org/articles/basilic-vein-1",
+  "kind": "academic",
+  "supports": "Appendix B: hiatus, termination, visibility."
+ },
+ {
+  "id": "dv-73",
+  "title": "Median cubital vein",
+  "authors": "Radiopaedia",
+  "year": "2026",
+  "url": "https://radiopaedia.org/articles/median-cubital-vein",
+  "kind": "academic",
+  "supports": "Appendix B: H/M patterns, visibility."
+ },
+ {
+  "id": "dv-74",
+  "title": "Basic Human Anatomy ch. 13",
+  "authors": "O'Rahilly et al. (Dartmouth)",
+  "year": "2008",
+  "url": "https://humananatomy.host.dartmouth.edu/BHA/public_html/part_3/chapter_13.html",
+  "kind": "academic",
+  "supports": "Appendix B: saphenous veins, thoracoepigastric enlargement."
+ },
+ {
+  "id": "dv-75",
+  "title": "Veins of the Lower Extremity",
+  "authors": "Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/3d-the-veins-of-the-lower-extremity-abdomen-and-pelvis/",
+  "kind": "academic",
+  "supports": "Appendix B: foot, saphenous, groin, thoracoepigastric veins."
+ },
+ {
+  "id": "dv-76",
+  "title": "Thoracoepigastric vein",
+  "authors": "Radiopaedia",
+  "year": "2021",
+  "url": "https://radiopaedia.org/articles/thoracoepigastric-vein",
+  "kind": "academic",
+  "supports": "Appendix B: epigastric–lateral thoracic link."
+ },
+ {
+  "id": "dv-77",
+  "title": "Superficial epigastric vein",
+  "authors": "Radiopaedia",
+  "year": "2021",
+  "url": "https://radiopaedia.org/articles/superficial-epigastric-vein",
+  "kind": "academic",
+  "supports": "Appendix B: drainage area and termination."
+ },
+ {
+  "id": "dv-78",
+  "title": "Superficial Inferior Epigastric Vein in Abdominal Flap",
+  "authors": "Park SO, Imanishi N, Chang H",
+  "year": "2022",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9340173/",
+  "kind": "academic",
+  "supports": "Appendix B: SIEV plane, termination, shape."
+ },
+ {
+  "id": "dv-79",
+  "title": "Arteries of the Lower Extremity",
+  "authors": "Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/6-the-arteries-of-the-lower-extremity/",
+  "kind": "academic",
+  "supports": "Appendix B: groin artery paths."
+ },
+ {
+  "id": "dv-80",
+  "title": "Knacks and pitfalls for SCIP flap",
+  "authors": "Ishibashi S et al",
+  "year": "2025",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12213947/",
+  "kind": "academic",
+  "supports": "Appendix B: SCIA path, SCIV drainage."
+ },
+ {
+  "id": "dv-81",
+  "title": "Portal System of Veins",
+  "authors": "Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/4-the-portal-system-of-veins/",
+  "kind": "academic",
+  "supports": "Appendix B: paraumbilical veins."
+ },
+ {
+  "id": "dv-82",
+  "title": "Surface Markings of the Lower Extremity",
+  "authors": "Gray (Bartleby)",
+  "year": "1918",
+  "url": "https://www.bartleby.com/lit-hub/anatomy-of-the-human-body/14-surface-markings-of-the-lower-extremity/",
+  "kind": "academic",
+  "supports": "Appendix B: saphenous surface lines."
+ },
+ {
+  "id": "dv-83",
+  "title": "Great saphenous vein",
+  "authors": "Radiopaedia",
+  "year": "2025",
+  "url": "https://radiopaedia.org/articles/great-saphenous-vein",
+  "kind": "academic",
+  "supports": "Appendix B: course, junction, duplication."
+ },
+ {
+  "id": "dv-84",
+  "title": "Small saphenous vein",
+  "authors": "Radiopaedia",
+  "year": "2023",
+  "url": "https://radiopaedia.org/articles/small-saphenous-vein",
+  "kind": "academic",
+  "supports": "Appendix B: course, variable termination."
+ },
+ {
+  "id": "dv-85",
+  "title": "Ultrasonography of the lower extremity veins",
+  "authors": "Lee DK et al",
+  "year": "2017",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5381851/",
+  "kind": "academic",
+  "supports": "Appendix B: accessory veins, SSV, Giacomini."
+ },
+ {
+  "id": "dv-86",
+  "title": "The anterior saphenous vein, Part 2",
+  "authors": "Caggiati A et al",
+  "year": "2024",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11523314/",
+  "kind": "academic",
+  "supports": "Appendix B: anterior saphenous vein anatomy."
+ },
+ {
+  "id": "ms-1",
+  "title": "IFBB Federation Rules, Section 2: Men's Bodybuilding (2026 Edition)",
+  "authors": "International Fitness & Bodybuilding Federation (IFBB)",
+  "year": "2026",
+  "url": "https://ifbb.com/wp-content/uploads/2025/07/Mens-Bodybuilding-Rules-2026-1.pdf",
+  "kind": "rulebook",
+  "supports": "Art. 7.1 \"proportion, symmetry, muscle size and quality (density, separation, definition)\"; Art. 10.1 \"muscular bulk, balanced development, muscular density and definition\"; Art. 10.2 \"harmonious, classical physique\"; Appendix 1 \"V-shaped torso\", \"full, peaked development\". No \"maturity\", \"grainy\", \"thick\", \"mass\", \"X-frame\", or \"flow\"."
+ },
+ {
+  "id": "ms-2",
+  "title": "IFBB Federation Rules, Section 3: Men's Classic Bodybuilding (2026 Edition)",
+  "authors": "IFBB",
+  "year": "2026",
+  "url": "https://ifbb.com/wp-content/uploads/2026/03/Mens-Classic-Bodybuilding-Rules-2026-1.pdf",
+  "kind": "rulebook",
+  "supports": "\"less muscular, yet athletic and aesthetically pleasing physique\"; \"round and firm appearance\"."
+ },
+ {
+  "id": "ms-3",
+  "title": "IFBB Federation Rules: Men's Physique and Muscular Men's Physique (2024 Edition)",
+  "authors": "IFBB",
+  "year": "2024",
+  "url": "https://ifbb.com/wp-content/uploads/2025/04/Mens-Physique-2024.pdf",
+  "kind": "rulebook",
+  "supports": "\"overall body density\"; \"'softer' and 'smoother' look\"; rejects bodybuilding \"dryness or hardness\"."
+ },
+ {
+  "id": "ms-4",
+  "title": "Official Bodybuilding Rules (Contest Format, Judging)",
+  "authors": "National Physique Committee (NPC)",
+  "year": "2026",
+  "url": "https://npcnewsonline.com/wp-json/wp/v2/pages/217685",
+  "kind": "rulebook",
+  "supports": "\"total package\", \"a balance of size, symmetry, and muscularity\". The human page renders by JavaScript, so the text was read through the site API."
+ },
+ {
+  "id": "ms-5",
+  "title": "Pro Competition Rules",
+  "authors": "IFBB Professional League",
+  "year": "2026",
+  "url": "https://www.ifbbpro.com/rules/",
+  "kind": "rulebook",
+  "supports": "Poses, rounds, and scoring; no written criteria (negative finding)."
+ },
+ {
+  "id": "ms-6",
+  "title": "NPC Worldwide Rules",
+  "authors": "IFBB Professional League / NPC Worldwide",
+  "year": "2026",
+  "url": "https://www.ifbbpro.com/npc-worldwide/rules/",
+  "kind": "rulebook",
+  "supports": "Lists \"grainy\", \"hard\", \"massive\", \"thick\", \"dense\" as common industry terms; \"the beauty and flow of the physique\"."
+ },
+ {
+  "id": "ms-7",
+  "title": "2026 WNBF Judging Criteria and Rules",
+  "authors": "World Natural Bodybuilding Federation",
+  "year": "2026",
+  "url": "https://docs.google.com/document/d/151BXb00D9LTF9d7QIIKYlPcln3-Hexq5YDTrp6Vb7E4/export?format=txt",
+  "kind": "rulebook",
+  "supports": "Symmetry with V-taper and X-frame; silhouette first; hardness under muscularity; judges describe observations, not causes."
+ },
+ {
+  "id": "ms-8",
+  "title": "Men's Bodybuilding Guidelines (Judging Criteria)",
+  "authors": "Organization of Competitive Bodybuilders (OCB)",
+  "year": "2026",
+  "url": "https://ocbonline.com/mens-bodybuilding/",
+  "kind": "rulebook",
+  "supports": "\"densely muscled\" under Size; \"overall grainy look\" under Definition; \"flow\"."
+ },
+ {
+  "id": "ms-9",
+  "title": "Men's Classic Physique Guidelines (Judging Criteria)",
+  "authors": "OCB",
+  "year": "2026",
+  "url": "https://ocbonline.com/mens-classic-physique/",
+  "kind": "rulebook",
+  "supports": "\"should not be as lean, striated or hard\"; \"A blocky, thick waist is not desirable.\""
+ },
+ {
+  "id": "ms-10",
+  "title": "Classic Physique Guidelines (Judging Criteria)",
+  "authors": "North American Natural Bodybuilding Federation (NANBF), n.d",
+  "year": "",
+  "url": "https://nanbf.net/nansite/classic-physique/",
+  "kind": "rulebook",
+  "supports": "Symmetry as \"structural harmony and overall balance\"."
+ },
+ {
+  "id": "ms-11",
+  "title": "Criteria Explained",
+  "authors": "British Natural Bodybuilding Federation (BNBF)",
+  "year": "2023",
+  "url": "https://bnbf.co.uk/events/criteria-explained/",
+  "kind": "rulebook",
+  "supports": "\"overall shape, structure and proportion\"; \"muscular mass relative to frame size\"; \"shapely flowing physique\"."
+ },
+ {
+  "id": "ms-12",
+  "title": "Judging",
+  "authors": "World Fitness Federation (WFF), n.d",
+  "year": "",
+  "url": "https://wff-international.com/judging/",
+  "kind": "rulebook",
+  "supports": "Separate definitions of muscularity, condition, size, shape, proportion, symmetry (left–right), and balance (upper–lower)."
+ },
+ {
+  "id": "ms-13",
+  "title": "Bodybuilding Judging Criteria",
+  "authors": "ExRx.net, n.d",
+  "year": "",
+  "url": "https://exrx.net/Bodybuilding/JudgingCriteria",
+  "kind": "publication",
+  "supports": "Mass as \"The perception of muscular size\"; broad \"symmetry\" is \"A misnomer\"; strict sense is left vs. right."
+ },
+ {
+  "id": "ms-14",
+  "title": "Blog 34 – Symmetry Paradox",
+  "authors": "Frank Zane (3× Mr. Olympia)",
+  "year": "2024",
+  "url": "https://frankzane.com/blog-34-symmetry-paradox/",
+  "kind": "coach",
+  "supports": "Bodybuilding symmetry means more than mirror symmetry; \"fluid lines\"; \"width over density\"."
+ },
+ {
+  "id": "ms-15",
+  "title": "Grainy Muscle – How Dorian Yates Achieved It",
+  "authors": "Dorian Yates, Muscular Development",
+  "year": "2020",
+  "url": "https://web.archive.org/web/20200712185140/http://www.musculardevelopment.com/training/14135-grainy-muscle-how-dorian-yates-acheived-it.html",
+  "kind": "coach",
+  "supports": "First-person origin and definition of \"grainy\"; \"balloons filled with water\"; causal claims are opinion."
+ },
+ {
+  "id": "ms-16",
+  "title": "Dorian Yates Covered Up His Legendary Back With a Bonkers Tattoo",
+  "authors": "Andrew Gutman, Muscle & Fitness",
+  "year": "2019",
+  "url": "https://www.muscleandfitness.com/flexonline/flex-news/dorian-yates-covered-his-legendary-back-bonkers-tattoo/",
+  "kind": "publication",
+  "supports": "\"muscle so dense and skin so thin that observers coined the term 'grainy'\"."
+ },
+ {
+  "id": "ms-17",
+  "title": "What Is Muscle Maturity, Anyway?",
+  "authors": "Jake Dickson, BarBend",
+  "year": "2024",
+  "url": "https://barbend.com/muscle-maturity/",
+  "kind": "publication",
+  "supports": "Maturity as a \"look\" after years of training; research is \"sparse to nonexistent\"."
+ },
+ {
+  "id": "ms-18",
+  "title": "The Road To Muscle Maturity",
+  "authors": "Jonathan Salmon, Generation Iron",
+  "year": "2024",
+  "url": "https://generationiron.com/muscle-maturity/",
+  "kind": "publication",
+  "supports": "Age framing: \"as much about your age\"; finer striations with age (opinion)."
+ },
+ {
+  "id": "ms-19",
+  "title": "What Is Muscle Maturity and How to Achieve It?",
+  "authors": "Patrick Dale, Fitness Volt",
+  "year": "2022",
+  "url": "https://fitnessvolt.com/muscle-maturity/",
+  "kind": "publication",
+  "supports": "\"no scientific definition\"; \"hard and solid\"; \"five to 15 years\"; \"not related to your age\"."
+ },
+ {
+  "id": "ms-20",
+  "title": "What Happens When You Stop Growing?",
+  "authors": "Ron Harris, Iron Man Magazine",
+  "year": "2015",
+  "url": "https://www.ironmanmagazine.com/what-happens-when-you-stop-growing",
+  "kind": "publication",
+  "supports": "Maturity as \"grainy detail\" after \"many years\"; a \"seasoned, dense look\" at unchanged size."
+ },
+ {
+  "id": "ms-21",
+  "title": "Jay Cutler Reveals Derek Lunsford's 'Huge Advantage' at 2026 Mr. Olympia",
+  "authors": "Doug Murray, Fitness Volt (quoting Jay Cutler)",
+  "year": "2026",
+  "url": "https://fitnessvolt.com/jay-cutler-2026-mr-olympia-breakdown/",
+  "kind": "publication",
+  "supports": "Maturity tied to age; \"density versus the conditioning factor\" (transcribed video)."
+ },
+ {
+  "id": "ms-22",
+  "title": "2022 Mr. Olympia Head Judge Steve Weinberger 'Disappointed' with Big Ramy After Losing Title",
+  "authors": "Middle Easy staff (quoting Steve Weinberger)",
+  "year": "2022",
+  "url": "https://middleeasy.com/bodybuilding/steve-weinberger-why-big-ramy-lost/",
+  "kind": "publication",
+  "supports": "Head judge uses \"muscle maturity\" for holding a full look through posing."
+ },
+ {
+  "id": "ms-23",
+  "title": "Shawn Ray: The Best Bodybuilder Never To Win Mr. Olympia (In His Own Words: Q&A)",
+  "authors": "Muscle Insider, answers by Shawn Ray",
+  "year": "2025",
+  "url": "https://muscleinsider.com/magazine_feature/shawn-ray-mr-olympia-legacy/",
+  "kind": "coach",
+  "supports": "\"My physique was maturing\"; \"mass monsters\" vs. \"polished\"."
+ },
+ {
+  "id": "ms-24",
+  "title": "Milos Sarcev Criticizes Vacuums in Bodybuilding",
+  "authors": "Doug Murray, Fitness Volt (quoting Milos Sarcev)",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/milos-sarcev-criticsized-vaccums-in-bodybuilding/",
+  "kind": "publication",
+  "supports": "Lists hardness, density, maturity, tie-ins, and striations as separate qualities."
+ },
+ {
+  "id": "ms-25",
+  "title": "Hany Rambod: Chris Bumstead Could Have Been Top 5 In Men's Open Bodybuilding With 1.5 Years Of Prep",
+  "authors": "Chris Ceballos, Generation Iron",
+  "year": "2026",
+  "url": "https://generationiron.com/chris-bumstead-mens-open-bodybuilding-hany-rambod/",
+  "kind": "publication",
+  "supports": "Writer's paraphrase groups \"back density, lat width, chest fullness, and overall muscle maturity\"."
+ },
+ {
+  "id": "ms-26",
+  "title": "Steve Weinberger Discusses If It's Possible to Bribe Judges and Explains How Shape Is Scored at Contests",
+  "authors": "Belinda Evans, Fitness Volt (quoting Steve Weinberger)",
+  "year": "2024",
+  "url": "https://fitnessvolt.com/steve-weinberger-bribing-judges-scoring-shape/",
+  "kind": "publication",
+  "supports": "Definition of shape; \"genetic shape\"; \"shape, size, and condition\"."
+ },
+ {
+  "id": "ms-27",
+  "title": "Head Judge Steve Weinberger: Big Ramy Coming In 'Too Lean' Could 'Hurt His Shape' at 2022 Mr. Olympia",
+  "authors": "Doug Murray, Fitness Volt",
+  "year": "2022",
+  "url": "https://fitnessvolt.com/steve-weinberger-big-ramy-too-lean-hurt-physique/",
+  "kind": "publication",
+  "supports": "\"symmetry and the proportions\"; \"mass monster\" vs. shape; a waist \"on the thick side\"."
+ },
+ {
+  "id": "ms-28",
+  "title": "Steve Weinberger Says Chris Bumstead Needs Thicker Back, Chest, & Bigger Arms for Open",
+  "authors": "Doug Murray, Fitness Volt",
+  "year": "2024",
+  "url": "https://fitnessvolt.com/steve-weinberger-talks-chris-bumstead-open-debut/",
+  "kind": "publication",
+  "supports": "Width (lat spread) vs. thickness; \"thick and he's round\"; \"10 percent softer\"."
+ },
+ {
+  "id": "ms-29",
+  "title": "IFBB VP Tyler Manion Explains Judging Criteria in 212/Men's Open",
+  "authors": "Doug Murray, Fitness Volt (quoting Tyler Manion)",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/tyler-manion-judging-criteria-212-and-mens-open-bodybuilding/",
+  "kind": "publication",
+  "supports": "\"density to his back\"; side chest and side triceps show the profile."
+ },
+ {
+  "id": "ms-30",
+  "title": "The 10 Best Ways to Build Your Back (section by Amit Sapir, IFBB Pro)",
+  "authors": "T Nation",
+  "year": "2017",
+  "url": "https://t-nation.com/t/the-10-best-ways-to-build-your-back/285877",
+  "kind": "coach",
+  "supports": "Width vs. \"thickness and density\"; claimed exercise mapping (untested)."
+ },
+ {
+  "id": "ms-31",
+  "title": "Simple, Guaranteed Strength And Size",
+  "authors": "Christian Thibaudeau, Thibarmy",
+  "year": "2018",
+  "url": "https://thibarmy.com/simple-guaranteed-strength-size/",
+  "kind": "coach",
+  "supports": "Claim that heavy low reps raise \"myogenic tone\" for a harder look (no citation)."
+ },
+ {
+  "id": "ms-32",
+  "title": "Menno Henselmans Answers: How Can You Tell If You Have Good Muscle-Building Genetics?",
+  "authors": "Michael Matthews (Legion Athletics) interviewing Menno Henselmans",
+  "year": "2018",
+  "url": "https://legionathletics.com/menno-henselmans-muscle-growth-genetics/",
+  "kind": "coach",
+  "supports": "Insertions are fixed; the biceps \"four fingers\" gap; muscles that \"flow into each other\"."
+ },
+ {
+  "id": "ms-33",
+  "title": "Decoding Genetics: Check If You Have Bodybuilding Genetics",
+  "authors": "Dylan Wolf, Generation Iron",
+  "year": "2026",
+  "url": "https://generationiron.com/decoding-genetics/",
+  "kind": "publication",
+  "supports": "Insertions \"just about entirely genetic\"; \"A larger gap usually suggests shorter biceps.\""
+ },
+ {
+  "id": "ms-34",
+  "title": "How To Get a V-Taper: Workouts and Training Tips From a PhD Bodybuilder",
+  "authors": "Jake Dickson with Dr. Ryan Girts, BarBend",
+  "year": "2024",
+  "url": "https://barbend.com/x-frame-bodybuilding/",
+  "kind": "publication",
+  "supports": "V-taper and X-frame definitions; \"you can't change the proportions of your skeleton\"; a genetic component to aesthetics."
+ },
+ {
+  "id": "ms-35",
+  "title": "Proportion: It's Your Body – Build It to be Beautiful",
+  "authors": "Greg Zulak",
+  "year": "2017",
+  "url": "https://physicalculturestudy.com/2017/03/15/proportion-its-your-body-build-it-to-be-beautiful-greg-zulak-1995-article/",
+  "kind": "publication",
+  "supports": "Historic X-frame definition; shape over mass; \"train the insertions\" advice."
+ },
+ {
+  "id": "ms-36",
+  "title": "Why Muscle Density Matters & How To Build It",
+  "authors": "Austin Letorney, Generation Iron",
+  "year": "2023",
+  "url": "https://generationiron.com/muscle-density-matters-strength/",
+  "kind": "publication",
+  "supports": "Density as a lean-to-fat ratio (shows inconsistent usage)."
+ },
+ {
+  "id": "ms-37",
+  "title": "How Long Does Muscle Maturity Over The Years Take?",
+  "authors": "MuscleMecca forum users",
+  "year": "2026",
+  "url": "https://musclemecca.com/threads/how-long-does-muscle-maturity-over-the-years-take.364415/",
+  "kind": "forum",
+  "supports": "Maturity as a \"dense, grainy, and complete look\"; size vs. maturity."
+ },
+ {
+  "id": "ms-38",
+  "title": "Muscle-fiber pennation angles are greater in hypertrophied than in normal muscles",
+  "authors": "Kawakami Y, Abe T, Fukunaga T",
+  "year": "1993",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/8365975/",
+  "kind": "academic",
+  "supports": "Bodybuilders have thicker triceps and larger pennation angles."
+ },
+ {
+  "id": "ms-39",
+  "title": "Comparison of the muscle fascicle length between resistance-trained and untrained individuals: cross-sectional observation",
+  "authors": "Fukutani A, Kurihara T",
+  "year": "2015",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/26185743/",
+  "kind": "academic",
+  "supports": "Trained people (incl. bodybuilders): thicker muscle, larger pennation, same fascicle length."
+ },
+ {
+  "id": "ms-40",
+  "title": "Human skeletal muscle size and architecture: variability and interdependence",
+  "authors": "Kawakami Y, Abe T, Kanehisa H, Fukunaga T",
+  "year": "2006",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/17039483/",
+  "kind": "academic",
+  "supports": "Triceps thickness 6–66 mm across 711 people."
+ },
+ {
+  "id": "ms-41",
+  "title": "Muscle fiber number in biceps brachii in bodybuilders and control subjects",
+  "authors": "MacDougall JD, Sale DG, Alway SE, Sutton JR",
+  "year": "1984",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/6520032/",
+  "kind": "academic",
+  "supports": "Same fiber number; connective and noncontractile tissue about 13% in all groups."
+ },
+ {
+  "id": "ms-42",
+  "title": "Muscle ultrastructural characteristics of elite powerlifters and bodybuilders",
+  "authors": "MacDougall JD, Sale DG, Elder GC, Sutton JR",
+  "year": "1982",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/7199447/",
+  "kind": "academic",
+  "supports": "Lower myofibrillar volume density in the elite group (possible steroid use noted)."
+ },
+ {
+  "id": "ms-43",
+  "title": "Contrasts in muscle and myofibers of elite male and female bodybuilders",
+  "authors": "Alway SE, Grumbt WH, Gonyea WJ, Stray-Gundersen J",
+  "year": "1989",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/2759948/",
+  "kind": "academic",
+  "supports": "Mean fiber area 9,607 µm² in elite men."
+ },
+ {
+  "id": "ms-44",
+  "title": "Effects of resistance training on elbow flexors of highly competitive bodybuilders",
+  "authors": "Alway SE, Grumbt WH, Stray-Gundersen J, Gonyea WJ",
+  "year": "1992",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/1592744/",
+  "kind": "academic",
+  "supports": "No significant muscle CSA change in 24 weeks."
+ },
+ {
+  "id": "ms-45",
+  "title": "Single muscle fibre contractile properties differ between body-builders, power athletes and control subjects",
+  "authors": "Meijer JP, Jaspers RT, Rittweger J, Seynnes OR, et al",
+  "year": "2015",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/26388513/",
+  "kind": "academic",
+  "supports": "Larger fibers with lower specific tension."
+ },
+ {
+  "id": "ms-46",
+  "title": "Muscle fiber hypertrophy in response to 6 weeks of high-volume resistance training in trained young men is largely attributed to sarcoplasmic hypertrophy",
+  "authors": "Haun CT, Vann CG, Osburn SC, et al",
+  "year": "2019",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/31166954/",
+  "kind": "academic",
+  "supports": "Actin and myosin concentration fell while fibers grew."
+ },
+ {
+  "id": "ms-47",
+  "title": "Sarcoplasmic Hypertrophy in Skeletal Muscle: A Scientific \"Unicorn\" or Resistance Training Adaptation?",
+  "authors": "Roberts MD, Haun CT, Vann CG, Osburn SC, Young KC",
+  "year": "2020",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/32760293/",
+  "kind": "academic",
+  "supports": "Myofibril packing vs. sarcoplasm expansion is an open question."
+ },
+ {
+  "id": "ms-48",
+  "title": "Muscle Fiber Type Transitions with Exercise Training: Shifting Perspectives",
+  "authors": "Plotkin DL, et al",
+  "year": "2021",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8473039/",
+  "kind": "academic",
+  "supports": "Heavy training shifts IIx toward IIa (contradicts \"IIa to IIb\")."
+ },
+ {
+  "id": "ms-49",
+  "title": "Role of extracellular matrix in adaptation of tendon and skeletal muscle to mechanical loading",
+  "authors": "Kjaer M",
+  "year": "2004",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/15044685/",
+  "kind": "academic",
+  "supports": "Loading raises collagen turnover (mostly tendon data)."
+ },
+ {
+  "id": "ms-50",
+  "title": "Skeletal Muscle Extracellular Matrix – What Do We Know About Its Composition, Regulation, and Physiological Roles? A Narrative Review",
+  "authors": "Csapo R, Gumpenberger M, Wessner B",
+  "year": "2020",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7096581/",
+  "kind": "academic",
+  "supports": "Long-term resistance-training ECM data exist only for animals."
+ },
+ {
+  "id": "ms-51",
+  "title": "The Structure and Role of Intramuscular Connective Tissue in Muscle Function",
+  "authors": "Purslow PP",
+  "year": "2020",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7248366/",
+  "kind": "academic",
+  "supports": "Perimysium divides muscle into fascicles and joins the epimysium at the surface; fascicle size varies."
+ },
+ {
+  "id": "ms-52",
+  "title": "Intramuscular connective tissue and its role in meat quality",
+  "authors": "Purslow PP",
+  "year": "2005",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/22063743/",
+  "kind": "academic",
+  "supports": "Meat \"grain\" = fascicle size set by perimysium."
+ },
+ {
+  "id": "ms-53",
+  "title": "Subcutaneous fat patterning in athletes: selection of appropriate sites and standardisation of a novel ultrasound measurement technique",
+  "authors": "Müller W, Lohman TG, Stewart AD, Maughan RJ, et al",
+  "year": "2016",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4717413/",
+  "kind": "academic",
+  "supports": "Summed fat over 8 sites from a few mm to over 100 mm in athletes; skinfolds include skin."
+ },
+ {
+  "id": "ms-54",
+  "title": "Body composition changes in elite male bodybuilders during preparation for competition",
+  "authors": "Withers RT, Noell CJ, Whittingham NO, Chatterton BE, Schultz CG, Keeves JP",
+  "year": "1997",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/9127683/",
+  "kind": "academic",
+  "supports": "Sum of 8 skinfolds fell from 51.1 to 36.7 mm."
+ },
+ {
+  "id": "ms-55",
+  "title": "Body Composition of Competitive Bodybuilders: A Systematic Review of Published Data and Recommendations for Future Work",
+  "authors": "Bauer P, Majisik A, Mitter B, et al",
+  "year": "2023",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/36727905/",
+  "kind": "academic",
+  "supports": "Contest body fat 5.8–10.7% (men) and 8.1–18.3% (women)."
+ },
+ {
+  "id": "ms-56",
+  "title": "The influence of age and sex on skin thickness, skin collagen and density",
+  "authors": "Shuster S, Black MM, McVitie E",
+  "year": "1975",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/1220811/",
+  "kind": "academic",
+  "supports": "Skin collagen falls with age; dermal thickness tracks collagen."
+ },
+ {
+  "id": "ms-57",
+  "title": "Skeletal muscle attenuation determined by computed tomography is associated with skeletal muscle lipid content",
+  "authors": "Goodpaster BH, Kelley DE, Thaete FL, He J, Ross R",
+  "year": "2000",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/10904041/",
+  "kind": "academic",
+  "supports": "CT attenuation tracks muscle fat (lean 49.2 vs. obese 39.3 HU)."
+ },
+ {
+  "id": "ms-58",
+  "title": "Measurement of skeletal muscle radiation attenuation and basis of its biological variation",
+  "authors": "Aubrey J, Esfandiari N, Baracos VE, et al",
+  "year": "2014",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/24393306/",
+  "kind": "academic",
+  "supports": "\"muscle (radio) density\" is inversely related to muscle fat."
+ },
+ {
+  "id": "ms-59",
+  "title": "Alterations in muscle attenuation following detraining and retraining in resistance-trained older adults",
+  "authors": "Taaffe DR, Henwood TR, Nalls MA, Walker DG, Lang TF, Harris TB",
+  "year": "2009",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/19060453/",
+  "kind": "academic",
+  "supports": "Training status shifts CT muscle attenuation."
+ },
+ {
+  "id": "ms-60",
+  "title": "Beyond the Limits of Human Muscle Hypertrophy: A Case Study of a Mr. Olympia Competitor Bodybuilder",
+  "authors": "Rosaci G, Biban S, Bartolomei S",
+  "year": "2026",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/42113013/",
+  "kind": "academic",
+  "supports": "Echo intensity rose 28–30% during cutting without fat gain (n = 1)."
+ },
+ {
+  "id": "ms-61",
+  "title": "Density and hydration of fresh and fixed human skeletal muscle",
+  "authors": "Ward SR, Lieber RL",
+  "year": "2005",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/16154420/",
+  "kind": "academic",
+  "supports": "Standard value 1.0597 g/cm³; fixed human muscle 1.055–1.112 g/cm³."
+ },
+ {
+  "id": "ms-62",
+  "title": "Body fat in adult man: semicentenary of fat density and skinfolds",
+  "authors": "Fidanza F",
+  "year": "2003",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/14618483/",
+  "kind": "academic",
+  "supports": "Human fat density 0.900 g/cm³ at 37 °C."
+ },
+ {
+  "id": "ms-63",
+  "title": "Changes in hardness of the human elbow flexor muscles after eccentric exercise",
+  "authors": "Murayama M, Nosaka K, Yoneda T, Minamitani K",
+  "year": "2000",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/10985588/",
+  "kind": "academic",
+  "supports": "Measured \"hardness\" includes skin, subcutaneous tissue, and muscle."
+ },
+ {
+  "id": "ms-64",
+  "title": "Changes in biceps brachii muscle hardness assessed by a push-in meter and strain elastography after eccentric versus concentric contractions",
+  "authors": "Murayama M, Inami T, Shima N, Yoneda T, Nosaka K",
+  "year": "2022",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/35655084/",
+  "kind": "academic",
+  "supports": "Hardness rose about 154% after damaging exercise."
+ },
+ {
+  "id": "ms-65",
+  "title": "A Six-Week Resistance Training Program Does Not Change Shear Modulus of the Triceps Brachii",
+  "authors": "Akagi R, Shikiba T, Tanaka J, Takahashi H",
+  "year": "2016",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/26957222/",
+  "kind": "academic",
+  "supports": "No change in resting stiffness."
+ },
+ {
+  "id": "ms-66",
+  "title": "An 8-week resistance training protocol is effective in adapting quadriceps but not patellar tendon shear modulus measured by Shear Wave Elastography",
+  "authors": "Mannarino P, da Matta TT, de Oliveira LF",
+  "year": "2019",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467440/",
+  "kind": "academic",
+  "supports": "Vastus lateralis stiffness rose; durometer reproducibility not evaluated."
+ },
+ {
+  "id": "ms-67",
+  "title": "Muscle hypertrophy, hormonal adaptations and strength development during strength training in strength-trained and untrained men",
+  "authors": "Ahtiainen JP, Pakarinen A, Alen M, Kraemer WJ, Häkkinen K",
+  "year": "2003",
+  "url": "https://link.springer.com/article/10.1007/s00421-003-0833-3",
+  "kind": "academic",
+  "supports": "CSA +5.6% (untrained) vs. −1.8% (trained) in 21 weeks."
+ },
+ {
+  "id": "ms-68",
+  "title": "Variability in muscle size and strength gain after unilateral resistance training",
+  "authors": "Hubal MJ, Gordish-Dressman H, Thompson PD, et al",
+  "year": "2005",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/15947721/",
+  "kind": "academic",
+  "supports": "Size change −2% to +59% (n = 585)."
+ },
+ {
+  "id": "ms-69",
+  "title": "Nutritional strategies of high level natural bodybuilders during competition preparation",
+  "authors": "Chappell AJ, Simper T, Barker ME",
+  "year": "2018",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5769537/",
+  "kind": "academic",
+  "supports": "Years training: placed 14.2 vs. non-placed 10.9 (p = 0.40); academic definitions of muscularity, conditioning, symmetry."
+ },
+ {
+  "id": "ms-70",
+  "title": "Nutritional strategies of British professional and amateur natural bodybuilders during competition preparation",
+  "authors": "Chappell AJ, Simper T, Helms E",
+  "year": "2019",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6704518/",
+  "kind": "academic",
+  "supports": "Years: pros 17.0 vs. amateurs 11.2 (p = 0.083)."
+ },
+ {
+  "id": "ms-71",
+  "title": "Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation",
+  "authors": "Helms ER, Aragon AA, Fitschen PJ",
+  "year": "2014",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4033492/",
+  "kind": "academic",
+  "supports": "Dehydration and electrolyte effects on appearance are unstudied and may be dangerous (risk statement only)."
+ },
+ {
+  "id": "ms-72",
+  "title": "Muscular development and lean body weight in body builders and weight lifters",
+  "authors": "Katch VL, Katch FI, Moffatt R, Gittleson M",
+  "year": "1980",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/7453511/",
+  "kind": "academic",
+  "supports": "Same lean mass and fat; bodybuilders had larger shoulder, chest, and arm girths."
+ },
+ {
+  "id": "ms-73",
+  "title": "Association between regional differences in muscle activation in one session of resistance exercise and in muscle hypertrophy after resistance training",
+  "authors": "Wakahara T, et al",
+  "year": "2012",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/21858666/",
+  "kind": "academic",
+  "supports": "Uneven triceps growth matched regional activation."
+ },
+ {
+  "id": "ms-74",
+  "title": "Nonuniform muscle hypertrophy: its relation to muscle activation in training session",
+  "authors": "Wakahara T, Fukutani A, Kawakami Y, Yanai T",
+  "year": "2013",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23657165/",
+  "kind": "academic",
+  "supports": "Mid-triceps grew most after a multijoint program."
+ },
+ {
+  "id": "ms-75",
+  "title": "Regional Hypertrophy, the Inhomogeneous Muscle Growth: A Systematic Review",
+  "authors": "Zabaleta-Korta A, Fernández-Peña E, Santos-Concejero J",
+  "year": "2020",
+  "url": "https://www.ovid.com/jnls/nsca-scj/fulltext/10.1519/ssc.0000000000000574~regional-hypertrophy-the-inhomogeneous-muscle-growth-a",
+  "kind": "academic",
+  "supports": "Regional growth in 13 of 14 studies."
+ },
+ {
+  "id": "ms-76",
+  "title": "Does Muscle Length Influence Regional Hypertrophy? A Systematic Review and Meta-Analysis",
+  "authors": "Varovic D, Wolf M, Schoenfeld BJ, Steele J, Grgic J, Mikulic P",
+  "year": "2025",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/40570881/",
+  "kind": "academic",
+  "supports": "Long vs. short muscle-length training gives similar growth."
+ },
+ {
+  "id": "ms-77",
+  "title": "Nonuniform response of skeletal muscle to heavy resistance training: Can bodybuilders induce regional muscle hypertrophy?",
+  "authors": "Antonio J",
+  "year": "2000",
+  "url": "https://scholars.nova.edu/en/publications/nonuniform-response-of-skeletal-muscle-to-heavy-resistance-traini",
+  "kind": "academic",
+  "supports": "The \"many exercises per muscle\" rationale is speculation."
+ },
+ {
+  "id": "ms-78",
+  "title": "Greater Hamstrings Muscle Hypertrophy but Similar Damage Protection after Training at Long versus Short Muscle Lengths",
+  "authors": "Maeo S, et al",
+  "year": "2021",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/33009197/",
+  "kind": "academic",
+  "supports": "Exercise position shifts which hamstring muscles grow."
+ },
+ {
+  "id": "ms-79",
+  "title": "Architectural, functional and molecular responses to concentric and eccentric loading in human skeletal muscle",
+  "authors": "Franchi MV, et al",
+  "year": "2014",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/24387247/",
+  "kind": "academic",
+  "supports": "Contraction mode shifts fascicle length and where growth occurs."
+ },
+ {
+  "id": "ms-80",
+  "title": "Adding muscle where you need it: non-uniform hypertrophy patterns in elite sprinters",
+  "authors": "Handsfield GG, et al",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/27373796/",
+  "kind": "academic",
+  "supports": "Muscle-specific size patterns; single-muscle asymmetries above 15%."
+ },
+ {
+  "id": "ms-81",
+  "title": "Contribution of Heritability and Epigenetic Factors to Skeletal Muscle Mass Variation in United Kingdom Twins",
+  "authors": "Livshits G, et al",
+  "year": "2016",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/27144936/",
+  "kind": "academic",
+  "supports": "Skeletal muscle mass h² = 0.81."
+ },
+ {
+  "id": "ms-82",
+  "title": "Fascicle length of gastrocnemius muscles in monozygous twins",
+  "authors": "Abe T",
+  "year": "2002",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/12612401/",
+  "kind": "academic",
+  "supports": "Twin resemblance in one calf head but not the other (9 pairs)."
+ },
+ {
+  "id": "ms-83",
+  "title": "Upper limb muscle volumes in adult subjects",
+  "authors": "Holzbaur KRS, Murray WM, Gold GE, Delp SL",
+  "year": "2007",
+  "url": "https://nmbl.stanford.edu/publications/pdf/Holzbaur2007a.pdf",
+  "kind": "academic",
+  "supports": "Volume distribution conserved across sizes; bone length explains 48% of muscle length."
+ },
+ {
+  "id": "ms-84",
+  "title": "Muscle shape consistency and muscle volume prediction of thigh muscles",
+  "authors": "Mersmann F, Bohm S, Schroll A, Boeth H, Duda G, Arampatzis A",
+  "year": "2015",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/24975992/",
+  "kind": "academic",
+  "supports": "Vastii shape independent of size and sex; volume from length, largest cross-section, and shape factor."
+ },
+ {
+  "id": "ms-85",
+  "title": "The distal biceps tendon: footprint and relevant clinical anatomy",
+  "authors": "Athwal GS, Steinmann SP, Rispoli DM",
+  "year": "2007",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/17923307/",
+  "kind": "academic",
+  "supports": "The anatomical insertion is the tendon footprint (average 21 × 7 mm)."
+ },
+ {
+  "id": "ms-86",
+  "title": "Distal biceps tendon anatomy: a cadaveric study",
+  "authors": "Eames MH, Bain GI, Fogg QA, van Riet RP",
+  "year": "2007",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/17473142/",
+  "kind": "academic",
+  "supports": "Distal tendon structure varies (two parts in 10 of 17)."
+ },
+ {
+  "id": "ms-87",
+  "title": "The morphometric parameters of the biceps brachii: cadaveric study",
+  "authors": "Alraddadi AS",
+  "year": "2024",
+  "url": "https://link.springer.com/article/10.1007/s00276-024-03328-7",
+  "kind": "academic",
+  "supports": "Third head in 10% of arms; dimensions track humerus length."
+ },
+ {
+  "id": "ms-88",
+  "title": "Muscle-tendon architecture in Kenyans and Japanese: Potential role of genetic endowment in the success of elite Kenyan endurance runners",
+  "authors": "Kunimasa Y, et al",
+  "year": "2022",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/35403817/",
+  "kind": "academic",
+  "supports": "Longer Achilles tendons from age 8; authors suggest genetic endowment."
+ },
+ {
+  "id": "ms-89",
+  "title": "Training-induced changes in structural and mechanical properties of the patellar tendon are related to muscle hypertrophy but not to strength gains",
+  "authors": "Seynnes OR, et al",
+  "year": "2009",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/19478195/",
+  "kind": "academic",
+  "supports": "Tendon CSA +5–6% in some regions; stiffness +24%."
+ },
+ {
+  "id": "ms-90",
+  "title": "Human tendon adaptation in response to mechanical loading: a systematic review and meta-analysis of exercise intervention studies on healthy adults",
+  "authors": "Bohm S, Mersmann F, Arampatzis A",
+  "year": "2015",
+  "url": "https://link.springer.com/article/10.1186/s40798-015-0009-9",
+  "kind": "academic",
+  "supports": "Stiffness changes more than CSA; no reports of a change in tendon rest length."
+ },
+ {
+  "id": "ms-91",
+  "title": "The effect of endurance exercise on the morphology of muscle attachment sites",
+  "authors": "Zumwalt A",
+  "year": "2006",
+  "url": "https://doi.org/10.1242/jeb.02028",
+  "kind": "academic",
+  "supports": "Exercise did not change attachment-site morphology (sheep)."
+ },
+ {
+  "id": "ms-92",
+  "title": "Medial gastrocnemius muscle growth during adolescence is mediated by increased fascicle diameter rather than by longitudinal fascicle growth",
+  "authors": "Weide G, et al",
+  "year": "2015",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/25879671/",
+  "kind": "academic",
+  "supports": "Belly length grows with the skeleton through aponeurosis length."
+ },
+ {
+  "id": "ms-93",
+  "title": "18. Shoulder breadth (biacromial)",
+  "authors": "City University of Hong Kong, online anthropometry resource, n.d",
+  "year": "",
+  "url": "https://personal.cityu.edu.hk/meachan/online%20anthropometry/chapter2/Ch2-18.htm",
+  "kind": "academic",
+  "supports": "Biacromial breadth is measured between the bony acromia."
+ },
+ {
+  "id": "ms-94",
+  "title": "Postnatal growth of the clavicle: birth to 18 years of age",
+  "authors": "McGraw MA, Mehlman CT, Lindsell CJ, Kirby CL",
+  "year": "2009",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/19934713/",
+  "kind": "academic",
+  "supports": "Boys reach about 80% of clavicle length by age 12."
+ },
+ {
+  "id": "ms-95",
+  "title": "Studies on the time frame for ossification of the medial clavicular epiphyseal cartilage in conventional radiography",
+  "authors": "Schmeling A, et al",
+  "year": "2004",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/14534796/",
+  "kind": "academic",
+  "supports": "Complete fusion first seen at 21 in men."
+ },
+ {
+  "id": "ms-96",
+  "title": "Surprising evidence of pelvic growth (widening) after skeletal maturity",
+  "authors": "Berger AA, May R, Renner JB, Viradia N, Dahners LE",
+  "year": "2011",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/21608025/",
+  "kind": "academic",
+  "supports": "Pelvis widens over 20 mm from age 20 to 80 (cross-sectional)."
+ },
+ {
+  "id": "ms-97",
+  "title": "Genetic and Environmental Influences on Body Measurements of Belgian Twins",
+  "authors": "Dupae E, Defrise-Gussenhoven E, Susanne C",
+  "year": "1982",
+  "url": "https://www.cambridge.org/core/journals/amg-acta-geneticae-medicae-et-gemellologiae-twin-research/article/genetic-and-environmental-influences-on-body-measurements-of-belgian-twins/DB697E5C978288CE44BAB7ADCEFDEE7C",
+  "kind": "academic",
+  "supports": "Significant genetic contribution to biacromial and bi-iliac breadths (adult twins)."
+ },
+ {
+  "id": "ms-98",
+  "title": "[Genetic effects on physical growth items of child twins in Han nationality]",
+  "authors": "Li YL, Ji CY, et al",
+  "year": "2005",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/16266548/",
+  "kind": "academic",
+  "supports": "Biacromial h² 0.78 (boys), 0.56 (girls); bi-iliac 0.73 and 0.59."
+ },
+ {
+  "id": "ms-99",
+  "title": "Visual perception of male body attractiveness",
+  "authors": "Fan J, Dai W, Liu F, Wu J",
+  "year": "2005",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1634963/",
+  "kind": "academic",
+  "supports": "Summarizes Maisey et al. 1999 (WCR 56% of variance); own 3D data: volume-height index about 73%."
+ },
+ {
+  "id": "ms-100",
+  "title": "Male physical attractiveness in Britain and Malaysia: A cross-cultural study",
+  "authors": "Swami V, Tovée MJ",
+  "year": "2005",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/18089203/",
+  "kind": "academic",
+  "supports": "WCR is the main cue for urban raters; BMI for rural raters."
+ },
+ {
+  "id": "ms-101",
+  "title": "Preferences for Sexually Dimorphic Body Characteristics Revealed in a Large Sample of Speed Daters",
+  "authors": "Sidari MJ, Lee AJ, Murphy SC, Sherlock JM, Dixson BJW, Zietsch BP",
+  "year": "2020",
+  "url": "https://doi.org/10.1177/1948550619882925",
+  "kind": "academic",
+  "supports": "Broader shoulders and higher shoulder-to-waist ratios preferred in live dates."
+ },
+ {
+  "id": "ms-102",
+  "title": "Cues of upper body strength account for most of the variance in men's bodily attractiveness",
+  "authors": "Sell A, Lukazsweski AW, Townsley M",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/29237852/",
+  "kind": "academic",
+  "supports": "Strength cues explain over 70% of attractiveness."
+ },
+ {
+  "id": "ms-103",
+  "title": "Why is muscularity sexy? Tests of the fitness indicator hypothesis",
+  "authors": "Frederick DA, Haselton MG",
+  "year": "2007",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/17578932/",
+  "kind": "academic",
+  "supports": "Moderate muscularity rated most attractive."
+ },
+ {
+  "id": "ms-104",
+  "title": "Body image perception among men in three countries",
+  "authors": "Pope HG Jr, Gruber AJ, Mangweth B, et al",
+  "year": "2000",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/10910794/",
+  "kind": "academic",
+  "supports": "Men overestimate the muscularity that women prefer."
+ },
+ {
+  "id": "ms-105",
+  "title": "Fluctuating asymmetry and preferences for sex-typical bodily characteristics",
+  "authors": "Brown WM, Price ME, Kang J, Pound N, Zhao Y, Yu H",
+  "year": "2008",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/18711125/",
+  "kind": "academic",
+  "supports": "Body asymmetry correlated negatively with attractiveness (single study; see [109])."
+ },
+ {
+  "id": "ms-106",
+  "title": "Fluctuating Asymmetry and Masculinity/Femininity in Humans: A Meta-Analysis",
+  "authors": "Van Dongen S",
+  "year": "2012",
+  "url": "https://link.springer.com/article/10.1007/s10508-012-9917-7",
+  "kind": "academic",
+  "supports": "Asymmetry vs. masculinity r = .04."
+ },
+ {
+  "id": "ms-107",
+  "title": "The upper extremity of the professional tennis player: muscle volumes, fiber-type distribution and muscle strength",
+  "authors": "Sanchís-Moysi J, et al",
+  "year": "2010",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/19602193/",
+  "kind": "academic",
+  "supports": "Dominant-arm muscles 11–15% larger."
+ },
+ {
+  "id": "ms-108",
+  "title": "A Critical Evaluation of the Biological Construct Skeletal Muscle Hypertrophy: Size Matters but So Does the Measurement",
+  "authors": "Haun CT, Vann CG, Roberts BM, Vigotsky AD, Schoenfeld BJ, Roberts MD",
+  "year": "2019",
+  "url": "https://www.frontiersin.org/journals/physiology/articles/10.3389/fphys.2019.00247/full",
+  "kind": "academic",
+  "supports": "Thickness (1D), CSA (2D), and volume (3D); dimensions can change differently."
+ },
+ {
+  "id": "ms-109",
+  "title": "Retraction Note: Dance reveals symmetry especially in young men",
+  "authors": "Brown W, Cronk L, Grochow K, et al., Nature",
+  "year": "2013",
+  "url": "https://www.nature.com/articles/nature12728",
+  "kind": "academic",
+  "supports": "Retraction of an earlier symmetry paper by the first author of [105]."
+ },
+ {
+  "id": "ms-110",
+  "title": "Resistance training rejuvenates aging skin by reducing circulating inflammatory factors and enhancing dermal extracellular matrices",
+  "authors": "Nishikori S, Yasuda J, Murata K, Takegaki J, Harada Y, Shirai Y, Fujita S",
+  "year": "2023",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10290068/",
+  "kind": "academic",
+  "supports": "Cheek skin of 56 sedentary middle-aged women; elasticity improved; the authors report thicker dermis, but Table 1 shows 1.77 to 1.79 mm (p = 0.20) in the resistance group."
+ },
+ {
+  "id": "cd-1",
+  "title": "IFBB Rules Section 2: Men's Bodybuilding, 2026 edition",
+  "authors": "International Fitness and Bodybuilding Federation (IFBB)",
+  "year": "2025",
+  "url": "https://www.ifbb.com/wp-content/uploads/2025/07/Mens-Bodybuilding-Rules-2026-1.pdf",
+  "kind": "rulebook",
+  "supports": "Criteria wording (quality, density, separation, definition, skin tone), body-fat exclusion, tan and oil rules, changed condition in the Finals."
+ },
+ {
+  "id": "cd-2",
+  "title": "NPC Worldwide Rules",
+  "authors": "NPC Worldwide / IFBB Professional League",
+  "year": "2026",
+  "url": "https://www.ifbbpro.com/npc-worldwide/rules/",
+  "kind": "rulebook",
+  "supports": "\"Total package\"; Men's Physique condition; Figure and Fit Model limits; list of industry terms; tan and oil rule."
+ },
+ {
+  "id": "cd-3",
+  "title": "Official Bodybuilding Rules",
+  "authors": "National Physique Committee (NPC), NPC News Online",
+  "year": "2026",
+  "url": "https://npcnewsonline.com/official-bodybuilding-rules/",
+  "kind": "rulebook",
+  "supports": "US NPC \"total package\" wording and tan/oil rule (page text read through the site's WordPress JSON)."
+ },
+ {
+  "id": "cd-4",
+  "title": "WNBF Bodybuilding",
+  "authors": "World Natural Bodybuilding Federation",
+  "year": "2026",
+  "url": "https://worldnaturalbb.com/competition-category/bodybuilding/",
+  "kind": "rulebook",
+  "supports": "Muscularity includes \"conditioning, definition and striations\"."
+ },
+ {
+  "id": "cd-5",
+  "title": "2026 World Natural Bodybuilding Federation Judging Criteria and Rules",
+  "authors": "(the \"Full Criteria Document\" linked from [S4]). WNBF",
+  "year": "2026",
+  "url": "https://docs.google.com/document/d/151BXb00D9LTF9d7QIIKYlPcln3-Hexq5YDTrp6Vb7E4/edit?usp=sharing",
+  "kind": "rulebook",
+  "supports": "Definition of Conditioning/Leanness; division ladder; tan and lighting statements; observation-based feedback; dehydration warning."
+ },
+ {
+  "id": "cd-6",
+  "title": "Men's Bodybuilding Guidelines",
+  "authors": "Organization of Competitive Bodybuilders (OCB)",
+  "year": "2026",
+  "url": "https://ocbonline.com/mens-bodybuilding/",
+  "kind": "rulebook",
+  "supports": "\"Deep cuts and striations\", \"overall grainy look\", limits (\"stringy\", glycogen depletion), spray-tan requirement."
+ },
+ {
+  "id": "cd-7",
+  "title": "Male Categories",
+  "authors": "Natural Bodybuilding Australia",
+  "year": "2024",
+  "url": "https://nbabodybuilding.com/male-categories/",
+  "kind": "rulebook",
+  "supports": "Division ladder from \"full six pack\" to \"cross striations\"."
+ },
+ {
+  "id": "cd-8",
+  "title": "Judge's Table: Know the Score",
+  "authors": "Michael Berg, with judges Steve Weinberger and Sandy Williamson; Muscle & Fitness (FLEX)",
+  "year": "2017",
+  "url": "https://www.muscleandfitness.com/flexonline/ifbb/judges-table-know-score/",
+  "kind": "coach",
+  "supports": "Judge's description of separation, striations, fullness, tan, and sheen."
+ },
+ {
+  "id": "cd-9",
+  "title": "The 10 Most Shredded Physiques of All Time",
+  "authors": "Greg Merritt; Muscle & Fitness",
+  "year": "2019",
+  "url": "https://www.muscleandfitness.com/athletes-celebrities/news/10-most-shredded-physiques-all-time/",
+  "kind": "publication",
+  "supports": "Top-end terms used interchangeably; \"grainy muscle\", striated glutes, \"crispness\", \"smooth\"."
+ },
+ {
+  "id": "cd-10",
+  "title": "The Big Glossary of Gym Slang",
+  "authors": "Jake Dickson; BarBend",
+  "year": "2024",
+  "url": "https://barbend.com/gym-slang/",
+  "kind": "publication",
+  "supports": "Definitions of peeled, ripped, and cutting."
+ },
+ {
+  "id": "cd-11",
+  "title": "10 of the Most Shredded Bodybuilders of All Time",
+  "authors": "Roger Lockridge; BarBend",
+  "year": "2024",
+  "url": "https://barbend.com/news/most-shredded-bodybuilders/",
+  "kind": "publication",
+  "supports": "\"All cut\" versus \"grainy and shrink-wrapped\"; striations define \"most shredded\"; grainy attributed to Dorian Yates."
+ },
+ {
+  "id": "cd-12",
+  "title": "Paper-Thin Skin: The Legacy of Bodybuilder Andreas Münzer",
+  "authors": "Conor Heffernan; BarBend",
+  "year": "2025",
+  "url": "https://barbend.com/news/bodybuilder-andreas-munzer-legacy/",
+  "kind": "publication",
+  "supports": "\"Peeled physique\"; Peter McGough's \"paper-thin\" skin description; death at 31."
+ },
+ {
+  "id": "cd-13",
+  "title": "Hany Rambod Hints Derek Lunsford is Considering 2025 Arnold Classic, Says Timing of Mr. Olympia Affected Derek's and Hadi Choopan's Conditioning",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2024",
+  "url": "https://fitnessvolt.com/hany-rambod-derek-lunsford-hadi-choopan-condition-2024-mr-olympia/",
+  "kind": "coach",
+  "supports": "Rambod: evening finalists did not \"look crispy\" after a day of meals."
+ },
+ {
+  "id": "cd-14",
+  "title": "King Kamali Breaks Down 2023 Mr. Olympia Top 5, Reflects on Nick Walker's Absence",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/king-kamali-reviews-2023-olympia/",
+  "kind": "coach",
+  "supports": "\"Deep, deep, deep crispy conditioning\"; \"Persian conditioning\" claim."
+ },
+ {
+  "id": "cd-15",
+  "title": "Milos Sarcev & Dennis Wolf Talk 2023 Mr. Olympia & Nick Walker 'Out-Freaking Everyone'",
+  "authors": "Belinda Evans; Fitness Volt",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/milos-sarcev-dennis-wolf-talk-2023-olympia-walker-out-freaking/",
+  "kind": "coach",
+  "supports": "Wolf: \"so crispy crisp so dry\"."
+ },
+ {
+  "id": "cd-16",
+  "title": "Samir Bannout Says 'Capable' Sergio Oliva Jr. Can Win 2023 Olympia With New Mentality",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2023",
+  "url": "https://fitnessvolt.com/samir-bannout-capable-sergio-oliva-jr-can-win-2023-olympia/",
+  "kind": "coach",
+  "supports": "\"Shredded to the bone\"; \"come in crispy like 24-carat\"."
+ },
+ {
+  "id": "cd-17",
+  "title": "Phil Heath Expects 'Seasoned Veteran' William Bonac to Push Big Ramy: 'He's Been There Before'",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2022",
+  "url": "https://fitnessvolt.com/phil-heath-william-bonac-push-big-ramy/",
+  "kind": "coach",
+  "supports": "Heath links \"density and muscle quality\" to \"going to be crispy\"."
+ },
+ {
+  "id": "cd-18",
+  "title": "King Kamali Lays Out Path For Nick Walker To Win 2022 Olympia: 'He Needs Hadi Choopan-Type Conditioning'",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2022",
+  "url": "https://fitnessvolt.com/king-kamali-on-nick-walker-win-2022-olympia-hadi-choopan-type-conditioning/",
+  "kind": "coach",
+  "supports": "\"Film of water\" contrasted with \"come in crispy\"."
+ },
+ {
+  "id": "cd-19",
+  "title": "VIDEO: Brandon Curry Fired Up To 'Make History' At Mr. Olympia: 'Time Is Ticking!'",
+  "authors": "Derek Hall; Fitness Volt",
+  "year": "2019",
+  "url": "https://fitnessvolt.com/brandon-curry-fired-up-olympia/",
+  "kind": "coach",
+  "supports": "Curry caption: \"looking forward to being crispy again\"."
+ },
+ {
+  "id": "cd-20",
+  "title": "A New Look at Dallas McCarver Is Further Proof He Will Be a Major Threat",
+  "authors": "GI Team; Generation Iron",
+  "year": "2016",
+  "url": "https://generationiron.com/a-new-look-at-dallas-mccarver-is-further-proof-he-will-be-a-major-threat/",
+  "kind": "coach",
+  "supports": "Earliest dated \"crispy\" example found: \"crispy.. extra crispy\"."
+ },
+ {
+  "id": "cd-21",
+  "title": "Brandon Curry Shares Plans To 'Bring Something New' To The 2021 Mr. Olympia",
+  "authors": "Tom Miller; Fitness Volt",
+  "year": "2021",
+  "url": "https://fitnessvolt.com/brandon-curry-something-new-olympia/",
+  "kind": "coach",
+  "supports": "\"Crisp conditioning\" weighed against \"fullness\"."
+ },
+ {
+  "id": "cd-22",
+  "title": "2026 Mr. Olympia Open Bodybuilding Prejudging Report",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2026",
+  "url": "https://fitnessvolt.com/2026-mr-olympia-prejudging-report/",
+  "kind": "publication",
+  "supports": "\"A dry, crisp look that judges have asked for\"."
+ },
+ {
+  "id": "cd-23",
+  "title": "How Can Derek Lunsford Get Past Samson Dauda?",
+  "authors": "Scott Felstead; Muscle & Fitness",
+  "year": "2025",
+  "url": "https://www.muscleandfitness.com/flexonline/flex-news/how-can-derek-lunsford-get-past-samson-dauda/",
+  "kind": "coach",
+  "supports": "Dennis James: cross striations, \"like diced\", \"super deep fine lines\"."
+ },
+ {
+  "id": "cd-24",
+  "title": "Hadi Choopan Wins 2024 Arnold Classic, Sends Message to Lunsford",
+  "authors": "M&F Editors; Muscle & Fitness",
+  "year": "2024",
+  "url": "https://www.muscleandfitness.com/flexonline/flex-news/hadi-choopan-first-victory-at-the-2024-arnold-classic-page-sep-sitename/",
+  "kind": "publication",
+  "supports": "\"Showed up sliced and diced\"."
+ },
+ {
+  "id": "cd-25",
+  "title": "You Can't Flex Fat: The Harsh Truth Every Aspiring Bodybuilder Needs to Hear",
+  "authors": "John Romano; Muscle & Fitness",
+  "year": "2025",
+  "url": "https://www.muscleandfitness.com/flexonline/training/you-cant-flex-fat-the-harsh-truth-every-aspiring-bodybuilder-needs-to-hear/",
+  "kind": "publication",
+  "supports": "\"Shredded, i.e., extremely low body fat\"; \"getting peeled\"; \"stage weight\"."
+ },
+ {
+  "id": "cd-26",
+  "title": "Dennis James and 'TMP' Crew Give Their Arnold Classic 2026 Predictions",
+  "authors": "Scott Felstead; Muscle & Fitness",
+  "year": "2026",
+  "url": "https://www.muscleandfitness.com/flexonline/flex-news/dennis-james-and-tmp-crew-give-their-arnold-classic-2026-predictions/",
+  "kind": "coach",
+  "supports": "Trade-off: \"super-duper peeled\" versus \"stay fuller\"."
+ },
+ {
+  "id": "cd-27",
+  "title": "Flex Wheeler Ignites Debate on Bodybuilding's Golden Era: 'The '90s Were Better Than Today's Olympia Champions'",
+  "authors": "Scott Felstead; Muscle & Fitness",
+  "year": "2025",
+  "url": "https://www.muscleandfitness.com/flexonline/flex-news/flex-wheeler-ignites-debate-on-bodybuildings-golden-era-the-90s-were-better-than-todays-olympia-champions/",
+  "kind": "coach",
+  "supports": "\"In better shape … more peeled\"."
+ },
+ {
+  "id": "cd-28",
+  "title": "Shawn Ray Says Samson Dauda Hasn't Improved Ahead of 2026 Mr. Olympia: \"The Cuts Are Not There\"",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2026",
+  "url": "https://fitnessvolt.com/shawn-ray-talks-samson-dauda-not-improved-2026-mr-olympia/",
+  "kind": "coach",
+  "supports": "\"His skin is very thick. The cuts are not there.\""
+ },
+ {
+  "id": "cd-29",
+  "title": "Bodybuilding Veteran Rich Gaspari Shares Key Advice on How to Get Contest-Ready During Peak Week",
+  "authors": "Doug Murray; Fitness Volt",
+  "year": "2026",
+  "url": "https://fitnessvolt.com/rich-gaspari-advice-contest-ready-peak-week/",
+  "kind": "publication",
+  "supports": "Usage of \"contest-ready\"."
+ },
+ {
+  "id": "cd-30",
+  "title": "Cut, Ripped, Jacked, or Swole?",
+  "authors": "Brett Williams; Men's Health",
+  "year": "2021",
+  "url": "https://www.menshealth.com/fitness/a24079330/muscular-definition-guide/",
+  "kind": "publication",
+  "supports": "Mainstream size-based \"ascending scale\"; \"shredded\" used for a \"cut\" physique."
+ },
+ {
+  "id": "cd-31",
+  "title": "shredded",
+  "authors": "(adjective, informal). Cambridge Dictionary. Accessed",
+  "year": "2026",
+  "url": "https://dictionary.cambridge.org/dictionary/english/shredded",
+  "kind": "publication",
+  "supports": "Definition; synonym \"ripped\"."
+ },
+ {
+  "id": "cd-32",
+  "title": "ripped",
+  "authors": "(adjective). Merriam-Webster. Accessed",
+  "year": "2026",
+  "url": "https://www.merriam-webster.com/dictionary/ripped",
+  "kind": "publication",
+  "supports": "\"Having high muscle definition\"."
+ },
+ {
+  "id": "cd-33",
+  "title": "crispy",
+  "authors": "(adjective). Merriam-Webster. Accessed",
+  "year": "2026",
+  "url": "https://www.merriam-webster.com/dictionary/crispy",
+  "kind": "publication",
+  "supports": "Only food and hair senses; no physique sense."
+ },
+ {
+  "id": "cd-34",
+  "title": "Some next level crispy conditioning",
+  "authors": "u/Fraker",
+  "year": "3000",
+  "url": "https://www.reddit.com/r/bodybuilding/comments/cx1sus/some_next_level_crispy_conditioning/",
+  "kind": "forum",
+  "supports": "Fan usage of \"crispy conditioning\". The page needs a login; the title and author were verified through Reddit's oEmbed endpoint: https://www.reddit.com/oembed?url=https://www.reddit.com/r/bodybuilding/comments/cx1sus/some_next_level_crispy_conditioning/"
+ },
+ {
+  "id": "cd-35",
+  "title": "Peak week recommendations for bodybuilders: an evidence based approach",
+  "authors": "Escalante G, Stevenson SW, Barakat C, Aragon AA, Schoenfeld BJ. BMC Sports Sci Med Rehabil 13:68",
+  "year": "2021",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/34120635/",
+  "kind": "academic",
+  "supports": "(full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC8201693/) — academic. \"Conditioning\" glossed as low body fat; water and sodium practices not shown effective or safe; self-prescribed diuretics."
+ },
+ {
+  "id": "cd-36",
+  "title": "Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation",
+  "authors": "Helms ER, Aragon AA, Fitschen PJ. J Int Soc Sports Nutr 11:20",
+  "year": "2014",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/24864135/",
+  "kind": "academic",
+  "supports": "(full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC4033492/) — academic. Contest level \"lacking any visible subcutaneous fat\"."
+ },
+ {
+  "id": "cd-37",
+  "title": "Alterations in measures of body composition, neuromuscular performance, hormonal levels, physiological adaptations, and psychometric outcomes during preparation for physique competition: a systematic review of case studies",
+  "authors": "Schoenfeld BJ, Androulakis-Korakakis P, Piñero A, et al. J Funct Morphol Kinesiol 8(2):59",
+  "year": "2023",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/37218855/",
+  "kind": "academic",
+  "supports": "(full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC10204542/) — academic. Pooled contest body fat: men 5.8%, women 13.1%."
+ },
+ {
+  "id": "cd-38",
+  "title": "Natural bodybuilding competition preparation and recovery: a 12-month case study",
+  "authors": "Rossow LM, Fukuda DH, Fahs CA, Loenneke JP, Stout JR. Int J Sports Physiol Perform 8(5):582–92",
+  "year": "2013",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/23412685/",
+  "kind": "academic",
+  "supports": "14.8% → 4.5% → 14.6% body fat."
+ },
+ {
+  "id": "cd-39",
+  "title": "Case study: natural bodybuilding contest preparation",
+  "authors": "Kistler BM, Fitschen PJ, Ranadive SM, Fernhall B, Wilund KR. Int J Sport Nutr Exerc Metab 24(6):694–700",
+  "year": "2014",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/24901578/",
+  "kind": "academic",
+  "supports": "DXA 17.5% → 7.4%."
+ },
+ {
+  "id": "cd-40",
+  "title": "Case study: unfavorable but transient physiological changes during contest preparation in a drug-free male bodybuilder",
+  "authors": "Pardue A, Trexler ET, Sprod LK. Int J Sport Nutr Exerc Metab 27(6):550–559",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/28770669/",
+  "kind": "academic",
+  "supports": "Same-day BodPod 9.6% versus DXA 5.1%; values after recovery."
+ },
+ {
+  "id": "cd-41",
+  "title": "Body composition changes in elite male bodybuilders during preparation for competition",
+  "authors": "Withers RT, Noell CJ, Whittingham NO, Chatterton BE, Schultz CG, Keeves JP. Aust J Sci Med Sport 29(1):11–6",
+  "year": "1997",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/9127683/",
+  "kind": "academic",
+  "supports": "4-compartment 9.1% → 5.0%; skinfold sums."
+ },
+ {
+  "id": "cd-42",
+  "title": "Body composition changes in female bodybuilders during preparation for competition",
+  "authors": "van der Ploeg GE, Brooks AG, Withers RT, Dollman J, Leaney F, Chatterton BE. Eur J Clin Nutr 55(4):268–77",
+  "year": "2001",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/11360131/",
+  "kind": "academic",
+  "supports": "4-compartment 18.3% → 12.7%; skinfold sums."
+ },
+ {
+  "id": "cd-43",
+  "title": "Changes in body composition and neuromuscular performance through preparation, 2 competitions, and a recovery period in an experienced female physique athlete",
+  "authors": "Tinsley GM, Trexler ET, Smith-Ryan AE, et al. J Strength Cond Res 33(7):",
+  "year": "2019",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/30036283/",
+  "kind": "academic",
+  "supports": "4-compartment 20.3% → 12.2%."
+ },
+ {
+  "id": "cd-44",
+  "title": "Physiological implications of preparing for a natural male bodybuilding competition",
+  "authors": "Mitchell L, Slater G, Hackett D, Johnson N, O'Connor H. Eur J Sport Sci 18(5):619–629",
+  "year": "2018",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/29490578/",
+  "kind": "academic",
+  "supports": "Fat mass 8.8 → 5.3 kg in 9 men; \"lean mass\" as a science term."
+ },
+ {
+  "id": "cd-45",
+  "title": "Lower limit of body fat in healthy active men",
+  "authors": "Friedl KE, Moore RJ, Martinez-Lopez LE, et al. J Appl Physiol 77(2):933–40",
+  "year": "1994",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/8002550/",
+  "kind": "academic",
+  "supports": "Lower limit of about 4–6% body fat; small subcutaneous losses near the limit."
+ },
+ {
+  "id": "cd-46",
+  "title": "Body composition changes in bodybuilders: a method comparison",
+  "authors": "van Marken Lichtenbelt WD, Hartgens F, Vollaard NB, Ebbing S, Kuipers H. Med Sci Sports Exerc 36(3):490–7",
+  "year": "2004",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/15076792/",
+  "kind": "academic",
+  "supports": "Individual errors of field methods (5.5–8 %BF)."
+ },
+ {
+  "id": "cd-47",
+  "title": "Subcutaneous fat patterning in athletes: selection of appropriate sites and standardisation of a novel ultrasound measurement technique",
+  "authors": "Müller W, Lohman TG, Stewart AD, et al. Br J Sports Med 50(1):45–54",
+  "year": "2016",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/26702017/",
+  "kind": "academic",
+  "supports": "(full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC4717413/) — academic. Mean SAT of about 0.8–1.1 mm per site in elite lean men; large individual differences."
+ },
+ {
+  "id": "cd-48",
+  "title": "Quantification of normal skin thickness using very high-frequency ultrasound: a clinical study in Chinese adults",
+  "authors": "Wang Y, Tian M, Guo R, Du F, Qiu L, Tang Y. Quant Imaging Med Surg 15(6):",
+  "year": "2025",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/40606357/",
+  "kind": "academic",
+  "supports": "Full skin about 1.7 mm (forearm) and 1.9 mm (leg); epidermis about 0.1 mm."
+ },
+ {
+  "id": "cd-49",
+  "title": "The influence of gender and age on the thickness and echo-density of skin",
+  "authors": "Firooz A, Rajabi-Estarabadi A, Zartab H, et al. Skin Res Technol 23(1):13–20",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/27273751/",
+  "kind": "academic",
+  "supports": "Skin thickness differs with sex and age."
+ },
+ {
+  "id": "cd-50",
+  "title": "Weight loss induces changes in adaptive thermogenesis in female and male physique athletes",
+  "authors": "Isola V, Hulmi JJ, Petäjä P, Helms ER, Karppinen JE, Ahtiainen JP. Appl Physiol Nutr Metab 48(4):307–320",
+  "year": "2023",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/36645885/",
+  "kind": "academic",
+  "supports": "Ultrasound subcutaneous fat thickness fell during prep."
+ },
+ {
+  "id": "cd-51",
+  "title": "Beyond the limits of human muscle hypertrophy: a case study of a Mr. Olympia competitor bodybuilder",
+  "authors": "Rosaci G, Biban S, Bartolomei S. J Strength Cond Res 40(10):",
+  "year": "2026",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/42113013/",
+  "kind": "academic",
+  "supports": "(full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC13592830/) — academic. Skinfolds nearly unchanged from off-season to 10 days out; muscle thickness fell."
+ },
+ {
+  "id": "cd-52",
+  "title": "Can bodybuilding peak week manipulations favorably affect muscle size, subcutaneous thickness, and related body composition variables? A case study",
+  "authors": "Barakat C, Escalante G, Stevenson SW, et al. Sports (Basel) 10(7):106",
+  "year": "2022",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/35878117/",
+  "kind": "academic",
+  "supports": "Ultrasound subcutaneous thickness −10% in the last 3 days (n=1)."
+ },
+ {
+  "id": "cd-53",
+  "title": "Nutrition recommendations for bodybuilders in the off-season: a narrative review",
+  "authors": "Iraki J, Fitschen P, Espinar S, Helms E. Sports (Basel) 7(7):154",
+  "year": "2019",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/31247944/",
+  "kind": "academic",
+  "supports": "(full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC6680710/) — academic. Off-season goal."
+ },
+ {
+  "id": "cd-54",
+  "title": "VASER-assisted high-definition liposculpture",
+  "authors": "Hoyos AE, Millard JA. Aesthet Surg J 27(6):594–604",
+  "year": "2007",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/19341688/",
+  "kind": "academic",
+  "supports": "Thinning superficial fat to \"highlight the 3-dimensional muscular anatomy\"."
+ },
+ {
+  "id": "cd-55",
+  "title": "Abdominal etching: past and present",
+  "authors": "Agochukwu-Nwubah N, Mentz HA. Aesthet Surg J 39(12):",
+  "year": "2019",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/31111146/",
+  "kind": "academic",
+  "supports": "Differential liposuction \"to enhance the detail of abdominal musculature\"."
+ },
+ {
+  "id": "cd-56",
+  "title": "Perceptions of female abdominal muscle definition: a crowdsourced analysis of contour preferences",
+  "authors": "Bhatia SS, Steppe C, Niksic A, Wen YE, Layt WOW, Aly A. Aesthet Surg J Open Forum 8:ojag083",
+  "year": "2026",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/42238813/",
+  "kind": "academic",
+  "supports": "A rendered 3-level definition scale; viewers preferred the least extreme level."
+ },
+ {
+  "id": "cd-57",
+  "title": "Beyond BMI for self-estimates of body size and shape: a new method for developing stimuli correctly calibrated for body composition",
+  "authors": "Maalin N, Mohamed S, Kramer RSS, Cornelissen PL, Martin D, Tovée MJ. Behav Res Methods 53(3):",
+  "year": "2021",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/33051818/",
+  "kind": "academic",
+  "supports": "3D bodies that vary adiposity and muscularity separately."
+ },
+ {
+  "id": "cd-58",
+  "title": "Independent aftereffects of fat and muscle: implications for neural encoding, body space representation, and body image disturbance",
+  "authors": "Sturman D, Stephen ID, Mond J, Stevenson RJ, Brooks KR. Sci Rep 7:",
+  "year": "2017",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/28071712/",
+  "kind": "academic",
+  "supports": "Fat and muscle are perceived on independent axes."
+ },
+ {
+  "id": "cd-59",
+  "title": "Perception of shape from shading",
+  "authors": "Ramachandran VS. Nature 331(",
+  "year": "1988",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/3340162/",
+  "kind": "academic",
+  "supports": "Shape from shading assumes one light source."
+ },
+ {
+  "id": "cd-60",
+  "title": "On the perception of shape from shading",
+  "authors": "Kleffner DA, Ramachandran VS. Percept Psychophys 52(1):18–36",
+  "year": "1992",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/1635855/",
+  "kind": "academic",
+  "supports": "Assumption that light shines from \"above\"."
+ },
+ {
+  "id": "cd-61",
+  "title": "Specular reflections and the perception of shape",
+  "authors": "Fleming RW, Torralba A, Adelson EH. J Vis 4(9):798–820",
+  "year": "2004",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/15493971/",
+  "kind": "academic",
+  "supports": "Specular reflections constrain perceived 3D shape."
+ },
+ {
+  "id": "cd-62",
+  "title": "Perception of three-dimensional shape from specular highlights, deformations of shading, and other types of visual information",
+  "authors": "Norman JF, Todd JT, Orban GA. Psychol Sci 15(8):565–70",
+  "year": "2004",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/15271003/",
+  "kind": "academic",
+  "supports": "Highlights are \"powerful sources of information\" about 3D shape."
+ },
+ {
+  "id": "cd-63",
+  "title": "Measurement of muscle contraction with ultrasound imaging",
+  "authors": "Hodges PW, Pengel LH, Herbert RD, Gandevia SC. Muscle Nerve 27(6):682–92",
+  "year": "2003",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/12766979/",
+  "kind": "academic",
+  "supports": "Muscle architecture and thickness change markedly up to about 30% of maximal contraction."
+ },
+ {
+  "id": "cd-64",
+  "title": "Nasal distortion in short-distance photographs: the selfie effect",
+  "authors": "Ward B, Ward M, Fried O, Paskhover B. JAMA Facial Plast Surg 20(4):333–335",
+  "year": "2018",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/29494735/",
+  "kind": "academic",
+  "supports": "Camera distance distorts perceived proportions."
+ },
+ {
+  "id": "cd-65",
+  "title": "Skin blood flow in adult human thermoregulation: how it works, when it does not, and why",
+  "authors": "Charkoudian N. Mayo Clin Proc 78(5):603–12",
+  "year": "2003",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/12744548/",
+  "kind": "academic",
+  "supports": "Skin blood flow up to 6–8 L/min in heat; local warming can cause maximal vasodilation."
+ },
+ {
+  "id": "cd-66",
+  "title": "Local warming and insertion of peripheral venous cannulas: single blinded prospective randomised controlled trial and single blinded randomised crossover trial",
+  "authors": "Lenhardt R, Seybold T, Kimberger O, Stoiser B, Sessler DI. BMJ 325(",
+  "year": "2002",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/12193353/",
+  "kind": "academic",
+  "supports": "Warming the hand and forearm made venous cannulation faster and more successful."
+ },
+ {
+  "id": "cd-67",
+  "title": "Difficult intravenous access (DIVA) in the adult population: an umbrella review",
+  "authors": "Torné-Ruiz A, Delgado M, Moreno S, Corral-Núñez A, Cemeli T, Roca J. BMJ Open 16(6):e",
+  "year": "2026",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/42285580/",
+  "kind": "academic",
+  "supports": "Obesity and venous invisibility are risk factors."
+ },
+ {
+  "id": "cd-68",
+  "title": "Mortality in male bodybuilding athletes",
+  "authors": "Vecchiato M, Ermolao A, Da Col M, et al. Eur Heart J 46(30):",
+  "year": "2025",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/40393525/",
+  "kind": "academic",
+  "supports": "121 deaths, 46 sudden cardiac deaths among 20,286 IFBB competitors."
+ },
+ {
+  "id": "cd-69",
+  "title": "Severe acquired hypokalemic paralysis in a bodybuilder after self-medication with triamterene/hydrochlorothiazide",
+  "authors": "Pfisterer N, Stöllberger C, Finsterer J. Clin J Sport Med 30(5):e172–e174",
+  "year": "2020",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/31770156/",
+  "kind": "academic",
+  "supports": "Risk of diuretic misuse with fluid restriction."
+ }
+]

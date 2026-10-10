@@ -1,0 +1,33 @@
+{
+  "name": "bodybuilding-appearance-explorer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "model": "bun scripts/model/build.ts --h 0.0035 --out public/model",
+    "model:lite": "bun scripts/model/build.ts --h 0.005 --out public/model-lite",
+    "sources": "bun scripts/content/extract-sources.ts",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.scripts.json"
+  },
+  "dependencies": {
+    "@fontsource-variable/outfit": "^5.3.0",
+    "@fontsource/bebas-neue": "^5.3.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.3"
+  }
+}
