@@ -12,6 +12,12 @@ export interface Tracker {
   readonly delegate: Delegate;
   /** The one person in the frame, or undefined when there is none. `timestampMs` must grow from call to call. */
   detect(frame: HTMLVideoElement | HTMLCanvasElement, timestampMs: number): PoseLandmarks | undefined;
+  /**
+   * Makes the next `detect` a fresh detection. VIDEO mode tracks from the previous frame's body region, so after a
+   * turn it can keep a stale left/right reading for seconds. Feeds one blank frame of the last size at `timestampMs`,
+   * which must lie between the last frame's timestamp and the next one's.
+   */
+  reset(timestampMs: number): void;
   close(): void;
 }
 
@@ -58,6 +64,7 @@ export async function createTracker(): Promise<Tracker> {
     delegate = 'CPU';
     landmarker = await open(delegate);
   }
+  let blank: HTMLCanvasElement | undefined;
   return {
     delegate,
     detect(frame, timestampMs) {
@@ -65,8 +72,15 @@ export async function createTracker(): Promise<Tracker> {
       const width = isVideo ? frame.videoWidth : frame.width;
       const height = isVideo ? frame.videoHeight : frame.height;
       if (width === 0 || height === 0) return undefined;
+      if (blank?.width !== width || blank.height !== height) {
+        blank = Object.assign(document.createElement('canvas'), { width, height });
+        blank.getContext('2d')?.fillRect(0, 0, width, height);
+      }
       const points = landmarker.detectForVideo(frame, timestampMs).landmarks.at(0);
       return points && poseLandmarks(points, width, height);
+    },
+    reset(timestampMs) {
+      if (blank) landmarker.detectForVideo(blank, timestampMs);
     },
     close: () => landmarker.close(),
   };

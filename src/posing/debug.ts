@@ -1,4 +1,5 @@
 import { PoseLandmarker } from '@mediapipe/tasks-vision';
+import { filterFacing, NO_FACING, type FacingFilter } from './facing';
 import { JOINTS, type PoseLandmarks } from './landmarks';
 import { calibrate, classifyFacing, measure, MIN_VISIBILITY, type Calibration } from './metrics';
 import { faultCue, scoreCall, type CallScore } from './score';
@@ -7,7 +8,7 @@ import { LandmarkSmoother } from './smoothing';
 import { POSE_SPECS } from './spec';
 import { Speech, type SayResult } from './speech';
 import { CameraError, createTracker, openCamera, type Tracker } from './tracker';
-import type { Metrics, PoseId } from './types';
+import type { Facing, Metrics, PoseId } from './types';
 
 // Verification surface for the live loop: camera or dropped file → tracker → smoother → score → cue scheduler →
 // speech, with every stage on screen. `window.posingDebug` hands the same data to automated runs.
@@ -95,6 +96,7 @@ let trackerLoad: Promise<Tracker> | undefined;
 let tracker: Tracker | undefined;
 let source: Source | undefined;
 let smoother = new LandmarkSmoother();
+let facing: FacingFilter = NO_FACING;
 let calibration: Calibration | undefined;
 let session: SessionState = startSession(performance.now());
 let last: Frame | undefined;
@@ -126,9 +128,9 @@ function frameSize(frame: HTMLVideoElement | HTMLCanvasElement): readonly [numbe
   return frame instanceof HTMLVideoElement ? [frame.videoWidth, frame.videoHeight] : [frame.width, frame.height];
 }
 
-function scoreFrame(lm: PoseLandmarks): Scored {
+function scoreFrame(lm: PoseLandmarks, seen: Facing | undefined): Scored {
   const metrics = measure(lm, { calibration });
-  return { metrics, call: scoreCall(pose, metrics, classifyFacing(lm)) };
+  return { metrics, call: scoreCall(pose, metrics, seen) };
 }
 
 /** Mean frame-to-frame change of a trace field over the last 2 s: score points, or pixels a landmark moved. */
@@ -173,8 +175,9 @@ function onFrame(frame: HTMLVideoElement | HTMLCanvasElement, now: number): void
   frames += 1;
   if (raw) posed += 1;
   const lm = smoother.next(raw, now);
-  const scored = lm && scoreFrame(lm);
-  const rawScore = raw && scoreFrame(raw).call.result.score;
+  facing = lm ? filterFacing(facing, classifyFacing(lm), now) : NO_FACING;
+  const scored = lm && scoreFrame(lm, facing.facing);
+  const rawScore = raw && scoreFrame(raw, classifyFacing(raw)).call.result.score;
   const step = advance(
     session,
     !lm || !scored ? { kind: 'nobody' } : inView(lm) ? { kind: 'body', score: scored.call.result } : { kind: 'cropped' },
@@ -337,6 +340,7 @@ function play(next: Source): void {
   source?.stop();
   source = next;
   smoother = new LandmarkSmoother();
+  facing = NO_FACING;
   frameTimes.length = 0;
   hint.hidden = true;
   errorOut.textContent = '';

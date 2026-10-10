@@ -169,6 +169,33 @@ describe('cue scheduler', () => {
     ]);
   });
 
+  it('ignores a single unscorable frame during the hold, but not a longer dropout', () => {
+    expect(
+      run([
+        [0, body(90)],
+        [1000, body(90)],
+        [1100, turnedAway],
+        [1200, body(90)],
+        [3000, body(90)],
+      ]),
+    ).toEqual([
+      { kind: 'holding', at: 0, say: { text: 'Hold it.', interrupt: true } },
+      {
+        kind: 'hit',
+        at: 3000,
+        say: { text: 'Pose hit. Relax.', interrupt: true },
+        result: { score: 90, timeToHitMs: 0, meanScore: 90, scoreSd: 0 },
+      },
+    ]);
+    expect(
+      run([
+        [0, body(90)],
+        [1000, body(90)],
+        [1400, turnedAway],
+      ]).map((e) => e.kind),
+    ).toEqual(['holding', 'framing', 'cue']);
+  });
+
   it('does not correct faults that cost almost nothing', () => {
     const minor: Sighting = {
       kind: 'body',

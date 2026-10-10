@@ -2,27 +2,12 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { IconFrame, IconX } from '../../components/Icons';
 import type { PoseId } from '../types';
 import { deletePhoto, deletePhotos, listPhotos, photoImageUrl } from './api';
-import { formatDate, scoreTone } from './format';
+import { formatDate, POSE_LABELS, scoreTone } from './format';
 import { ProgressCompare, type Slot } from './ProgressCompare';
 import { TrendChart } from './TrendChart';
 import type { PhotoId, PhotoMeta } from './types';
 import './progress.css';
 
-/** Display order follows prejudging: quarter turns, then the mandatory poses. */
-const POSE_LABELS: Record<PoseId, string> = {
-  relaxedFront: 'Relaxed front',
-  quarterTurnLeftSide: 'Quarter turn left',
-  relaxedBack: 'Relaxed back',
-  quarterTurnRightSide: 'Quarter turn right',
-  frontDoubleBiceps: 'Front double biceps',
-  frontLatSpread: 'Front lat spread',
-  sideChest: 'Side chest',
-  backDoubleBiceps: 'Back double biceps',
-  backLatSpread: 'Back lat spread',
-  sideTriceps: 'Side triceps',
-  absAndThighs: 'Abdominals and thighs',
-  mostMuscular: 'Most muscular',
-};
 const POSES = Object.keys(POSE_LABELS) as PoseId[];
 
 interface Confirm {

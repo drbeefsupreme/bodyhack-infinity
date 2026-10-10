@@ -448,10 +448,6 @@ input[type="range"] { accent-color: var(--accent); width: 100%; }
 .shell-module > * { flex: 1; min-height: 0; }
 .shell-module > .app { height: auto; }
 
-.tutor-placeholder {
-  display: grid; place-items: center; padding: 32px 18px; overflow: auto;
-  background: radial-gradient(ellipse at 50% 30%, #1b2134, var(--bg) 70%);
-}
 .tutor-card {
   max-width: 560px; text-align: center; padding: 28px 30px; border: 1px solid var(--border); border-radius: var(--radius);
   background: var(--panel); box-shadow: 0 6px 0 #05070c, 0 0 40px rgba(255, 122, 69, 0.12);

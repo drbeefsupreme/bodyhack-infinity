@@ -1,11 +1,11 @@
 import { useEffect, useState, type ComponentType } from 'react';
 import { App } from './App';
 import { IconCompass, IconMuscle } from './components/Icons';
-import { TutorPlaceholder } from './posing/TutorPlaceholder';
+import { TutorApp } from './posing/ui/TutorApp';
 
 const MODULES = [
   { id: 'explorer', label: 'Appearance Explorer', short: 'Explorer', Icon: IconCompass, View: App },
-  { id: 'posing', label: 'Posing Tutor', short: 'Posing', Icon: IconMuscle, View: TutorPlaceholder },
+  { id: 'posing', label: 'Posing Tutor', short: 'Posing', Icon: IconMuscle, View: TutorApp },
 ] as const satisfies readonly { id: string; label: string; short: string; Icon: ComponentType<{ size?: number }>; View: ComponentType }[];
 
 type ModuleId = (typeof MODULES)[number]['id'];

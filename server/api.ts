@@ -4,7 +4,7 @@ import { delimiter, join } from 'node:path';
 import type { Connect, Plugin } from 'vite';
 import type { PhotoImageType } from '../src/posing/progress/types.ts';
 import { apiRefusal } from './access.ts';
-import { runCoach } from './coach.ts';
+import { coachModel, runCoach } from './coach.ts';
 import { chooseIntent } from './jev.ts';
 import { CONTENT_TYPE, deletePhoto, deletePhotos, listPhotos, photosDir, readPhotoImage, savePhoto } from './photos.ts';
 import { typesafeKey } from './secrets.ts';
@@ -71,7 +71,7 @@ function apiMiddleware(root: string, photos: string, allowRemote: boolean): Conn
 async function handle(root: string, photos: string, route: string, query: URLSearchParams, req: IncomingMessage): Promise<Reply> {
   switch (route) {
     case 'GET /api/health':
-      return { status: 200, body: { ok: true, omp: onPath('omp'), jev: typesafeKey(root) !== null } };
+      return { status: 200, body: { ok: true, omp: onPath('omp'), jev: typesafeKey(root) !== null, coachModel: coachModel() } };
     case 'POST /api/intent': {
       const raw = await readJson(req);
       if ('status' in raw) return raw;

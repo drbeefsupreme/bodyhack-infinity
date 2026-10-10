@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseCoachReply } from './coach.ts';
+import { coachModel, DEFAULT_COACH_MODEL, parseCoachReply } from './coach.ts';
 import { parseChoiceAnswer } from './jev.ts';
 import { readEnvValue } from './secrets.ts';
 import { parseCoachRequest, parseIntentRequest } from './validate.ts';
@@ -18,6 +18,14 @@ describe('parseCoachReply', () => {
   it('returns null when no object has string cues', () => {
     expect(parseCoachReply('{"cues": string[], "note": string}')).toBeNull();
     expect(parseCoachReply('{"cues": [1, 2]}')).toBeNull();
+  });
+});
+
+describe('coachModel', () => {
+  it('uses BODYHACK_COACH_MODEL when it is set, else the default that /api/health reports', () => {
+    expect(coachModel({ BODYHACK_COACH_MODEL: ' anthropic/claude-opus-5-5 ' })).toBe('anthropic/claude-opus-5-5');
+    expect(coachModel({ BODYHACK_COACH_MODEL: '  ' })).toBe(DEFAULT_COACH_MODEL);
+    expect(coachModel({})).toBe('anthropic/claude-sonnet-5');
   });
 });
 

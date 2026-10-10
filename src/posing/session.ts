@@ -11,6 +11,11 @@ export interface SchedulerConfig {
   readonly hitScore: number;
   /** The hold survives dips down to `hitScore - holdSlack`, so a score hovering at the line does not restart it. */
   readonly holdSlack: number;
+  /**
+   * While holding, frames that cannot be scored (a facing flicker, a landmark dropout) are ignored for this long, so
+   * one bad frame does not restart the hold.
+   */
+  readonly framingGraceMs: number;
   /** How long the pose must be held for a hit. */
   readonly holdMs: number;
   /** A correction is not said again sooner than this after it was last said. */
@@ -26,6 +31,7 @@ export interface SchedulerConfig {
 export const SCHEDULER: SchedulerConfig = {
   hitScore: 85,
   holdSlack: 5,
+  framingGraceMs: 300,
   holdMs: 3000,
   repeatMs: 4000,
   fixMs: 2500,
@@ -76,7 +82,7 @@ interface HoldStats {
 export type Phase =
   | { readonly kind: 'framing'; readonly reason: FramingReason }
   | { readonly kind: 'correcting' }
-  | { readonly kind: 'holding'; readonly since: number; readonly stats: HoldStats }
+  | { readonly kind: 'holding'; readonly since: number; readonly stats: HoldStats; readonly seenAt: number }
   | { readonly kind: 'hit'; readonly result: HitResult };
 
 export interface SessionState {
@@ -212,6 +218,8 @@ export function advance(
   const reading = read(sighting, config.minorScore);
 
   if (reading.kind === 'framing') {
+    // A short dropout during the hold is ignored: the hold clock runs on and nothing is said.
+    if (s.phase.kind === 'holding' && now - s.phase.seenAt <= config.framingGraceMs) return { state, events: [] };
     if (s.phase.kind !== 'framing' || s.phase.reason !== reading.reason) {
       s.phase = { kind: 'framing', reason: reading.reason };
       s.focus = undefined;
@@ -222,7 +230,7 @@ export function advance(
     const { since, stats } = s.phase;
     const held = { n: stats.n + 1, sum: stats.sum + reading.score, sumSq: stats.sumSq + reading.score * reading.score };
     if (now - since < config.holdMs) {
-      s.phase = { kind: 'holding', since, stats: held };
+      s.phase = { kind: 'holding', since, stats: held, seenAt: now };
     } else {
       const meanScore = held.sum / held.n;
       const result: HitResult = {
@@ -235,7 +243,7 @@ export function advance(
       events.push({ kind: 'hit', at: now, say: say(s, HIT_SAY, true, now, config), result });
     }
   } else if (s.phase.kind !== 'holding' && reading.score >= config.hitScore) {
-    s.phase = { kind: 'holding', since: now, stats: { n: 1, sum: reading.score, sumSq: reading.score * reading.score } };
+    s.phase = { kind: 'holding', since: now, stats: { n: 1, sum: reading.score, sumSq: reading.score * reading.score }, seenAt: now };
     s.focus = undefined;
     events.push({ kind: 'holding', at: now, say: say(s, HOLD_SAY, true, now, config) });
   } else {

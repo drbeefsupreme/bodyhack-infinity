@@ -28,9 +28,14 @@ export interface CoachResult extends CoachReply {
   ms: number;
 }
 
+/** The coach model when a request names none: BODYHACK_COACH_MODEL, else DEFAULT_COACH_MODEL. */
+export function coachModel(env: NodeJS.ProcessEnv = process.env): string {
+  return env.BODYHACK_COACH_MODEL?.trim() || DEFAULT_COACH_MODEL;
+}
+
 /** Runs one `omp -p` coach review. The snapshot goes through a temp file that is always deleted. */
 export async function runCoach(req: CoachRequest): Promise<CoachResult> {
-  const model = req.model ?? (process.env.BODYHACK_COACH_MODEL?.trim() || DEFAULT_COACH_MODEL);
+  const model = req.model ?? coachModel();
   const dir = tmpdir();
   const imagePath = req.image ? join(dir, `bodyhack-coach-${randomUUID()}.${req.image.type}`) : null;
   const started = performance.now();

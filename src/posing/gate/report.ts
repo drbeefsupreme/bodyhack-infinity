@@ -123,7 +123,8 @@ export function renderReport(final: GateRun, snapshots: readonly Snapshot[]): st
     '',
     'The figure is rendered with the app\'s Viewer from the judges\' view (front camera, full body, plain wall) and each ' +
       'canvas frame goes through the live pipeline: `createTracker` (MediaPipe Pose Landmarker, VIDEO mode), ' +
-      '`LandmarkSmoother`, `measure` (calibrated on the relaxed-front render), `classifyFacing` and `scoreCall` for all 12 calls.',
+      '`LandmarkSmoother`, `measure` (calibrated on the relaxed-front render), `classifyFacing` through the facing ' +
+      'hysteresis (`filterFacing`) and `scoreCall` for all 12 calls.',
     '',
     'Each case starts with empty frames, so MediaPipe loses the previous case, then shows the relaxed stance of the ' +
       'call\'s facing, as between calls at prejudging, then the pose. Without the empty frames, VIDEO mode carried the ' +

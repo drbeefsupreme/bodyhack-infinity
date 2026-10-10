@@ -1,7 +1,7 @@
 # Bodyhack Infinity
 
-Two modules in one app: the **Appearance Explorer** (below) and the **Posing Tutor** (in
-progress). Open a module with the switch at the top, or with `?module=explorer` or
+Two modules in one app: the **Appearance Explorer** (below) and the **Posing Tutor** (see
+[Posing Tutor](#posing-tutor)). Open a module with the switch at the top, or with `?module=explorer` or
 `?module=posing` in the URL.
 
 An interactive 3D playground for the words bodybuilders use to describe how muscles look —
@@ -202,7 +202,9 @@ Key findings that shaped the app:
 src/                 React app, Three.js viewer, shader, content
   content/           terms, comparisons, quiz, presets, generated sources
   three/             Viewer (A/B scissor rendering), skin shader, model loader, control mapping
-  posing/            pose domain, tracker, smoothing, cue scheduler, speech, debug page
+  posing/            pose domain, tracker, smoothing, facing hysteresis, cue scheduler, speech, debug page
+    modes/           practice modes as pure reducers (Learn, Hold, Judge's calls, Mirror), voice commands, settings
+    ui/              tutor screens: home, live drill engine, figure view, settings
 scripts/model/       SDF anatomy, field, mesher, morph baking (Bun)
 scripts/content/     source extraction from research reports
 research/            research reports, asset survey, region screenshots from the modeling agents
@@ -213,12 +215,47 @@ shot.html            render harness used for verification
 posing-debug.html    tracking and cue debug page
 ```
 
+## Posing Tutor
+
+Open `?module=posing`. Pick a pose (the 12 NPC / IFBB Pro prejudging poses), then a mode:
+
+| Mode | What happens |
+|---|---|
+| Learn a pose | The build-up steps one at a time, spoken; say "next" or press Space. Then free correction until the pose is hit. |
+| Hold drill | Hit the pose and hold it 10, 20 or 30 s. The hold restarts if the score stays under the line for more than 1 s. Result: mean score and steadiness (standard deviation in points). |
+| Judge's calls | Prejudging order: the quarter turns, then the 8 mandatories, each called like a head judge, 25 s per call. Summary per call with score and time; personal bests in `localStorage`. |
+| Mirror | The figure copies you live (2D retarget of arm and leg angles). No score. |
+| Progress | Your saved photos per pose (below). |
+
+Each session starts with a relaxed-front calibration (skippable). Keys: Space next, S skip, R repeat, W what's
+wrong, P pause, Esc stop. At every hit the tutor saves a photo (`/api/photos`) and, with the coach debrief on,
+asks the coach model through `omp` (`/api/coach`, about 7 s); the next pose never waits for it.
+
+**Voice commands.** Chrome speech recognition hears a phrase (paused while the tutor speaks); jev picks next,
+repeat, what's wrong, pause, resume, stop, skip or other. The tutor acts at confidence 0.7 or more, else a
+keyword table decides; when `/api/intent` fails (503 without `TYPESAFE_API_KEY`), keywords only. Tests can inject
+a phrase with `window.__tutorHeard('next one please')`.
+
+**Privacy.** `index.html` sets `connect-src 'self'`, so the page talks only to its own server; this blocks
+MediaPipe's usage metrics to `odml.pa.googleapis.com`. What leaves the computer: the hit photo and its scores
+(to the coach model through omp), your speech (to Google, by Chrome's recognition), the cue text (to Google if the
+chosen voice is a network voice) and the recognized command text (to jev). The video, the landmarks and the
+photos stay here.
+
+Run it with `npm run dev`, then `npm run mediapipe` once for the pose model. Settings (voice, mute, voice
+commands, coach debrief, coach model) are on the tutor home; the coach model defaults to the server's
+(`BODYHACK_COACH_MODEL` or `anthropic/claude-sonnet-5`, reported by `/api/health`).
+
+**Known risk.** Right after a continuous turn to the back, MediaPipe can read a side view for a few seconds.
+The tutor smooths facing (300 ms hysteresis), ignores 300 ms dropouts during a hold, and starts a fresh detection
+when a call changes the facing; on the fake-camera clip the back pose then settles in 0 to 2.5 s.
+
 ## Progress photos
 
 The Posing Tutor saves a photo every time you hit a pose, with the date, the score, the corrections and the
 tracked landmarks. The progress view (`src/posing/progress/ProgressView.tsx`) shows a timeline per pose, a
 side-by-side or onion-skin compare of two dates (first against latest by default) with an optional skeleton
-overlay, and the score trend. Until the tutor mounts it, open it at `/progress-dev.html` on the dev server.
+overlay, and the score trend. The tutor's Progress card opens it; `/progress-dev.html` still shows it alone.
 
 Photos stay on this computer. The local API stores them in `$BODYHACK_DATA_DIR/photos`, else in
 `~/.local/share/bodyhack-infinity/photos` (directory mode 0700, files 0600): one JPEG or WebP and one JSON

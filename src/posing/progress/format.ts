@@ -1,3 +1,21 @@
+import type { PoseId } from '../types';
+
+/** Short pose names. Display order follows prejudging: quarter turns, then the mandatory poses. */
+export const POSE_LABELS: Record<PoseId, string> = {
+  relaxedFront: 'Relaxed front',
+  quarterTurnLeftSide: 'Quarter turn left',
+  relaxedBack: 'Relaxed back',
+  quarterTurnRightSide: 'Quarter turn right',
+  frontDoubleBiceps: 'Front double biceps',
+  frontLatSpread: 'Front lat spread',
+  sideChest: 'Side chest',
+  backDoubleBiceps: 'Back double biceps',
+  backLatSpread: 'Back lat spread',
+  sideTriceps: 'Side triceps',
+  absAndThighs: 'Abdominals and thighs',
+  mostMuscular: 'Most muscular',
+};
+
 const DATE = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 const SHORT_DATE = new Intl.DateTimeFormat(undefined, { day: 'numeric', month: 'short' });
 

@@ -6,6 +6,7 @@ import { DEFAULT_PRESENTATION } from '../../three/skin';
 import { FIGURE_POSES } from '../figurePoses';
 import { REFS } from '../fixtures';
 import type { PoseLandmarks } from '../landmarks';
+import { filterFacing, NO_FACING, type FacingFilter } from '../facing';
 import { calibrate, classifyFacing, measure, type Calibration } from '../metrics';
 import { faultCue, scoreCall } from '../score';
 import { LandmarkSmoother } from '../smoothing';
@@ -148,6 +149,7 @@ async function run({ snapshots }: GateInput): Promise<GateOutput> {
     for (let i = 0; i < LEAD_IN; i++) tracker.detect(frame, (clock += FRAME_MS));
     show(figure);
     const smoother = new LandmarkSmoother();
+    let filter: FacingFilter = NO_FACING;
     const frames: Frame[] = [];
     let last: PoseLandmarks | undefined;
     for (let i = 0; i < FRAMES; i++) {
@@ -156,7 +158,8 @@ async function run({ snapshots }: GateInput): Promise<GateOutput> {
       const lm = smoother.next(raw, clock);
       last = lm;
       const metrics = lm && measure(lm, { calibration });
-      const facing = lm && classifyFacing(lm);
+      filter = lm ? filterFacing(filter, classifyFacing(lm), clock) : NO_FACING;
+      const facing = filter.facing;
       const calls = POSE_IDS.map((id) => [id, metrics && scoreCall(id, metrics, facing)] as const);
       const own = calls.find(([id]) => id === pose)?.[1];
       const top = own?.result.faults.at(0);
