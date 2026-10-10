@@ -71,6 +71,7 @@ export interface Snapshot {
   readonly notice: string | undefined;
   readonly heard: Heard | undefined;
   readonly listening: ListenState;
+  readonly listenError: string | undefined;
   readonly bests: NewBests | undefined;
 }
 
@@ -157,7 +158,7 @@ export class TutorEngine {
     this.calibration = options.spec.mode === 'mirror' ? (options.calibration ?? 'skipped') : options.calibration;
     this.listener = new VoiceListener(
       (text) => void this.heard(text),
-      (listening) => this.update({ listening }),
+      (listening) => this.update({ listening, listenError: this.listener.error }),
     );
     this.snap = {
       camera: { kind: 'starting' },
@@ -171,6 +172,7 @@ export class TutorEngine {
       notice: undefined,
       heard: undefined,
       listening: 'off',
+      listenError: undefined,
       bests: undefined,
     };
     this.unsubscribeSpeech = options.speech.subscribe(() => this.listener.setSuppressed(options.speech.speaking));

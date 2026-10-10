@@ -36,6 +36,7 @@ export class VoiceListener {
   private blocked = false;
   private timer: number | undefined;
   private current: ListenState = 'off';
+  private lastError: string | undefined;
 
   constructor(
     private readonly onPhrase: (text: string) => void,
@@ -44,6 +45,11 @@ export class VoiceListener {
 
   get state(): ListenState {
     return this.current;
+  }
+
+  /** Chrome's error code for the last failure (`network`, `audio-capture`, `not-allowed`, ...). */
+  get error(): string | undefined {
+    return this.lastError;
   }
 
   setEnabled(enabled: boolean): void {
@@ -104,10 +110,13 @@ export class VoiceListener {
       }
     };
     rec.onerror = (event) => {
+      if (event.error === 'no-speech' || event.error === 'aborted') return;
+      console.warn('speech recognition error:', event.error, event.message);
+      this.lastError = event.error;
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
         this.blocked = true;
         this.set('denied');
-      } else if (event.error !== 'no-speech' && event.error !== 'aborted') {
+      } else {
         this.set('error');
       }
     };
@@ -119,9 +128,12 @@ export class VoiceListener {
     this.recognition = rec;
     try {
       rec.start();
+      this.lastError = undefined;
       this.set('listening');
-    } catch {
+    } catch (err) {
+      console.warn('speech recognition failed to start:', err);
       this.recognition = undefined;
+      this.lastError = err instanceof Error ? err.name : 'start-failed';
       this.set('error');
     }
   }
