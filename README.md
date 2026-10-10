@@ -1,4 +1,8 @@
-# Bodybuilding Appearance Explorer
+# Bodyhack Infinity
+
+Two modules in one app: the **Appearance Explorer** (below) and the **Posing Tutor** (in
+progress). Open a module with the switch at the top, or with `?module=explorer` or
+`?module=posing` in the URL.
 
 An interactive 3D playground for the words bodybuilders use to describe how muscles look —
 *full, flat, spilled over, dry, crispy, separated, striated, vascular, mature* — and what is and
@@ -33,8 +37,23 @@ The baked model files are already in `public/model` and `public/model-lite`. To 
 npm run model && npm run model:lite
 ```
 
-Other scripts: `npm test` (content integrity and mapping tests), `npm run typecheck`,
+Other scripts: `npm test` (content integrity, mapping and local API tests), `npm run typecheck`,
 `npm run sources` (re-extract the verified source lists from `research/*.md`).
+
+### Local API
+
+`npm run dev` and `npm run preview` also serve a small JSON API from `server/` (a Vite plugin).
+The browser never sees the keys.
+
+| Endpoint | Needs | Does |
+|---|---|---|
+| `GET /api/health` | nothing | `{ ok, omp, jev }`: whether `omp` is on `PATH` and a jev key is set |
+| `POST /api/intent` | `TYPESAFE_API_KEY` | picks a voice command: `{ heard, options }` → `{ choice, confidence, probabilities }` |
+| `POST /api/coach` | `omp` on `PATH`, logged in | coach debrief of a snapshot via `omp -p`: `{ pose, summary, imageDataUrl?, model? }` → `{ cues, note, model, ms }` |
+
+The server reads `TYPESAFE_API_KEY` from the environment, else from `.env.local` in the project
+root, else `~/git/crispy/.env.local`, else `~/.config/bodyhack-infinity/env`. Set
+`BODYHACK_COACH_MODEL` to change the coach model (default `anthropic/claude-sonnet-5`).
 
 ## What you can do
 
