@@ -1,16 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { apiRefusal, type ApiRequest } from './access.ts';
+import { apiAccess, type ApiRequest } from './access.ts';
 
 const local: ApiRequest = {
   method: 'GET',
+  path: '/api/health',
   remoteAddress: '127.0.0.1',
   host: 'localhost:5351',
   origin: undefined,
   contentType: undefined,
+  authorization: undefined,
+  preflightMethod: undefined,
+  preflightHeaders: undefined,
 };
 const post: ApiRequest = { ...local, method: 'POST', origin: 'http://localhost:5351', contentType: 'application/json' };
 
-describe('apiRefusal', () => {
+/** The refusal reason with the bridge unpaired, or null when the request may run. */
+function apiRefusal(req: ApiRequest, allowRemote: boolean): string | null {
+  const access = apiAccess(req, { allowRemote, bridgeToken: () => null });
+  return access.kind === 'refused' ? access.reason : null;
+}
+
+describe('apiAccess without the bridge', () => {
   it('lets loopback requests on a local Host through', () => {
     for (const req of [
       local,

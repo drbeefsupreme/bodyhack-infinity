@@ -292,3 +292,54 @@ directory and needs the dev server and `npm run mediapipe`:
 BODYHACK_DATA_DIR=/tmp/bodyhack-seed npm run dev -- --port 5351
 BODYHACK_DATA_DIR=/tmp/bodyhack-seed bun scripts/seed-progress.ts --app http://localhost:5351
 ```
+
+## Phone bridge
+
+The Android app sends the coach debrief and voice-command intent requests to this computer over Tailscale. The
+jev key and the omp login stay here. The bridge opens three routes to the paired phone: `GET /api/health`,
+`POST /api/coach` and `POST /api/intent`. The photo routes and all other routes stay closed to other machines.
+
+A request from another machine gets through the bridge only when all of these are true:
+
+- Its source address is in the Tailscale range (`100.64.0.0/10` or `fd7a:115c:a1e0::/48`).
+- It has `Authorization: Bearer <token>`, and the token is the stored token (constant-time compare).
+- It has no `Origin`, or the origin of the app WebView: `https://localhost`, `capacitor://localhost` or
+  `http://localhost`. The reply then has `Access-Control-Allow-Origin` for that origin.
+- A `POST` has `Content-Type: application/json`.
+
+The server answers a CORS preflight (`OPTIONS`) for the three routes only from a Tailscale address and an app
+origin, for the method of the route, and for the `Authorization` and `Content-Type` headers. It refuses all other
+preflights to `/api/*` with 403. Requests from this computer follow the rules in [Local API](#local-api). When no
+token is stored, the server acts as if the bridge did not exist.
+
+Make the token and pair the phone:
+
+```sh
+npm run bridge                    # for a server on port 5173 (npm run dev)
+npm run bridge -- --port 5190     # for a server on another port
+npm run bridge -- --rotate        # make a new token; the old token stops working
+```
+
+The command prints the server URL (the Tailscale IPv4 address from `tailscale ip -4` and the port), the token, the
+pairing link `bodyhack://pair?url=...&token=...` and a QR code of that link. The QR code needs the `qrencode`
+program (`apt install qrencode`). Without it, type the URL and the token in the app settings. The token is 32
+random bytes (base64url) in `~/.config/bodyhack-infinity/bridge.json` (mode 0600), with the time it was made.
+The server reads the token on each bridge request, so a new token applies without a restart.
+
+Run the server for the phone with one of these commands:
+
+```sh
+npm run dev                                       # port 5173
+npm run build && npm run preview -- --port 5190   # production build on port 5190
+```
+
+Both servers listen on all interfaces. Tailscale must run on this computer and on the phone. In the app, use the
+Tailscale IP address that `npm run bridge` prints, not a MagicDNS name: Vite refuses Host names that are not
+`localhost` or an IP address.
+
+Check the bridge from this computer (the request then comes from its own Tailscale address):
+
+```sh
+curl -H "Authorization: Bearer $(node -p "require('$HOME/.config/bodyhack-infinity/bridge.json').token")" \
+  http://$(tailscale ip -4):5173/api/health
+```

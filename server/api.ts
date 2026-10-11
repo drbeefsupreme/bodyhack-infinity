@@ -3,7 +3,8 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { delimiter, join } from 'node:path';
 import type { Connect, Plugin } from 'vite';
 import type { PhotoImageType } from '../src/posing/progress/types.ts';
-import { apiRefusal } from './access.ts';
+import { apiAccess } from './access.ts';
+import { bridgeFile, readPairing } from './bridge.ts';
 import { coachModel, runCoach } from './coach.ts';
 import { chooseIntent } from './jev.ts';
 import { CONTENT_TYPE, deletePhoto, deletePhotos, listPhotos, photosDir, readPhotoImage, savePhoto } from './photos.ts';
@@ -17,54 +18,94 @@ type Reply = { status: number; body: object } | { status: number; image: { type:
 
 /**
  * Local API for both `vite` (dev) and `vite preview`. `root` is the project root, where `.env.local` lives.
- * Only loopback callers on a local Host reach it, unless BODYHACK_API_ALLOW_REMOTE=1 (server/access.ts).
+ * Only loopback callers on a local Host reach it, unless BODYHACK_API_ALLOW_REMOTE=1, plus the paired phone on the
+ * bridge routes (server/access.ts).
  */
 export function bodyhackApi(root: string): Plugin {
-  const handle = apiMiddleware(root, photosDir(), process.env.BODYHACK_API_ALLOW_REMOTE === '1');
+  const { preflight, api } = apiMiddleware(root, photosDir(), process.env.BODYHACK_API_ALLOW_REMOTE === '1', bridgeFile());
+  // Vite's CORS middleware answers every OPTIONS request before plugin middlewares run, so /api preflights go first.
+  // Other requests keep Vite's Host validation in front of the API.
+  const install = (middlewares: Connect.Server) => {
+    middlewares.stack.unshift({ route: '', handle: preflight });
+    middlewares.use(api);
+  };
   return {
     name: 'bodyhack-api',
     configureServer(server) {
-      server.middlewares.use(handle);
+      install(server.middlewares);
     },
     configurePreviewServer(server) {
-      server.middlewares.use(handle);
+      install(server.middlewares);
     },
   };
 }
 
-function apiMiddleware(root: string, photos: string, allowRemote: boolean): Connect.NextHandleFunction {
-  return (req, res, next) => {
-    const [path, search = ''] = (req.url ?? '').split('?');
-    if (!path.startsWith('/api/')) {
-      next();
-      return;
-    }
-    const route = `${req.method} ${path}`;
-    const refusal = apiRefusal(
+function apiMiddleware(
+  root: string,
+  photos: string,
+  allowRemote: boolean,
+  bridge: string,
+): { preflight: Connect.NextHandleFunction; api: Connect.NextHandleFunction } {
+  /** Sends the CORS headers, then answers a preflight or a refusal; returns false when the request may run. */
+  const answered = (req: IncomingMessage, res: ServerResponse, path: string): boolean => {
+    const access = apiAccess(
       {
         method: req.method,
+        path,
         remoteAddress: req.socket.remoteAddress,
         host: req.headers.host,
         origin: req.headers.origin,
         contentType: req.headers['content-type'],
+        authorization: req.headers.authorization,
+        preflightMethod: req.headers['access-control-request-method'],
+        preflightHeaders: req.headers['access-control-request-headers'],
       },
-      allowRemote,
+      { allowRemote, bridgeToken: () => readPairing(bridge)?.token ?? null },
     );
-    if (refusal) {
-      console.warn(`[api] ${route} from ${req.socket.remoteAddress} refused: ${refusal}`);
-      send(res, { status: 403, body: { error: refusal } });
-      return;
+    if (access.cors !== null) {
+      res.setHeader('access-control-allow-origin', access.cors);
+      res.setHeader('vary', 'Origin');
     }
-    const started = performance.now();
-    handle(root, photos, route, new URLSearchParams(search), req)
-      .catch((err: unknown): Reply => {
-        console.error(`[api] ${route} failed:`, err instanceof Error ? err.message : err);
-        return { status: 500, body: { error: 'internal error' } };
-      })
-      .then((reply) => {
-        console.log(`[api] ${route} ${reply.status} ${Math.round(performance.now() - started)} ms`);
-        send(res, reply);
+    if (access.kind === 'preflight') {
+      res.writeHead(204, {
+        'access-control-allow-methods': access.method,
+        'access-control-allow-headers': 'Authorization, Content-Type',
+        'access-control-max-age': '600',
       });
+      res.end();
+      return true;
+    }
+    if (access.kind === 'refused') {
+      console.warn(`[api] ${req.method} ${path} from ${req.socket.remoteAddress} refused: ${access.reason}`);
+      send(res, { status: 403, body: { error: access.reason } });
+      return true;
+    }
+    return false;
+  };
+  return {
+    preflight: (req, res, next) => {
+      const [path] = (req.url ?? '').split('?');
+      if (req.method !== 'OPTIONS' || !path.startsWith('/api/') || !answered(req, res, path)) next();
+    },
+    api: (req, res, next) => {
+      const [path, search = ''] = (req.url ?? '').split('?');
+      if (!path.startsWith('/api/')) {
+        next();
+        return;
+      }
+      if (answered(req, res, path)) return;
+      const route = `${req.method} ${path}`;
+      const started = performance.now();
+      handle(root, photos, route, new URLSearchParams(search), req)
+        .catch((err: unknown): Reply => {
+          console.error(`[api] ${route} failed:`, err instanceof Error ? err.message : err);
+          return { status: 500, body: { error: 'internal error' } };
+        })
+        .then((reply) => {
+          console.log(`[api] ${route} ${reply.status} ${Math.round(performance.now() - started)} ms`);
+          send(res, reply);
+        });
+    },
   };
 }
 
