@@ -7,26 +7,33 @@ import android.os.SystemClock
 import android.util.Base64
 import com.getcapacitor.JSObject
 import com.google.mediapipe.framework.image.BitmapImageBuilder
+import com.google.mediapipe.framework.image.MPImage
 import com.google.mediapipe.tasks.core.Delegate
 import com.google.mediapipe.tasks.vision.core.RunningMode
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarker
+import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
+import java.util.EnumMap
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-/** IMAGE-mode landmarker for `detectImage`, on its own thread, built on first use and dropped by [release]. */
+/**
+ * The landmarkers of `detectImage`, on their own thread, built on first use and dropped by [release]: IMAGE mode for
+ * single images, and VIDEO mode, which tracks from call to call like live tracking, for calls with a timestamp.
+ */
 internal class StillDetector(private val context: Context, private val policy: DelegatePolicy) {
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    private var landmarker: Pair<PoseLandmarker, Delegate>? = null
+    private val landmarkers = EnumMap<RunningMode, Pair<PoseLandmarker, Delegate>>(RunningMode::class.java)
+    private var lastTimestampMs = Long.MIN_VALUE
 
     /** Calls [done] on the detector thread with `{ frame, delegate }`, or with the failure. */
-    fun detect(dataUrl: String, done: (Result<JSObject>) -> Unit) {
+    fun detect(dataUrl: String, timestampMs: Long?, done: (Result<JSObject>) -> Unit) {
         executor.execute {
             done(
                 runCatching {
                     val bitmap = decode(dataUrl)
-                    val (result, delegate) = run(bitmap)
+                    val (result, delegate) = run(BitmapImageBuilder(bitmap).build(), timestampMs)
                     JSObject().apply {
-                        put("frame", poseFrame(result, SystemClock.uptimeMillis(), bitmap.width, bitmap.height))
+                        put("frame", poseFrame(result, timestampMs ?: SystemClock.uptimeMillis(), bitmap.width, bitmap.height))
                         put("delegate", delegate.label)
                     }
                 },
@@ -34,16 +41,22 @@ internal class StillDetector(private val context: Context, private val policy: D
         }
     }
 
-    private fun run(bitmap: Bitmap) = BitmapImageBuilder(bitmap).build().let { image ->
-        val (current, delegate) = landmarker ?: policy.create(context, RunningMode.IMAGE).also { landmarker = it }
-        try {
-            current.detect(image) to delegate
+    private fun run(image: MPImage, timestampMs: Long?): Pair<PoseLandmarkerResult, Delegate> {
+        val mode = if (timestampMs == null) RunningMode.IMAGE else RunningMode.VIDEO
+        if (timestampMs != null) {
+            require(timestampMs > lastTimestampMs) { "timestampMs must grow: $timestampMs after $lastTimestampMs" }
+            lastTimestampMs = timestampMs
+        }
+        val detect = { l: PoseLandmarker -> if (timestampMs == null) l.detect(image) else l.detectForVideo(image, timestampMs) }
+        val (current, delegate) = landmarkers.getOrPut(mode) { policy.create(context, mode) }
+        return try {
+            detect(current) to delegate
         } catch (e: RuntimeException) {
             if (delegate != Delegate.GPU) throw e
             policy.gpuFailed(e)
             current.closeSafely()
-            val cpu = policy.create(context, RunningMode.IMAGE).also { landmarker = it }
-            cpu.first.detect(image) to cpu.second
+            val cpu = policy.create(context, mode).also { landmarkers[mode] = it }
+            detect(cpu.first) to cpu.second
         }
     }
 
@@ -55,10 +68,17 @@ internal class StillDetector(private val context: Context, private val policy: D
         return requireNotNull(BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options)) { "the image cannot be decoded" }
     }
 
-    /** Frees the landmarker; the next [detect] builds a new one. */
+    /** Ends the VIDEO-mode track: the next call with a timestamp starts a new one, at any timestamp. */
+    fun resetTrack() = executor.execute {
+        landmarkers.remove(RunningMode.VIDEO)?.first?.closeSafely()
+        lastTimestampMs = Long.MIN_VALUE
+    }
+
+    /** Frees the landmarkers; the next [detect] builds a new one. */
     fun release() = executor.execute {
-        landmarker?.first?.closeSafely()
-        landmarker = null
+        landmarkers.values.forEach { it.first.closeSafely() }
+        landmarkers.clear()
+        lastTimestampMs = Long.MIN_VALUE
     }
 
     fun shutdown() {

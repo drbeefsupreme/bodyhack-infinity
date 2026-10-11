@@ -86,6 +86,7 @@ class BodyhackPosePlugin : Plugin() {
     @PluginMethod
     fun reset(call: PluginCall) = onMain {
         camera?.reset()
+        still.resetTrack()
         call.resolve()
     }
 
@@ -113,7 +114,8 @@ class BodyhackPosePlugin : Plugin() {
             call.reject("detectImage needs dataUrl")
             return
         }
-        still.detect(dataUrl) { result ->
+        val timestampMs = (call.data.opt("timestampMs") as? Number)?.let { Math.round(it.toDouble()) }
+        still.detect(dataUrl, timestampMs) { result ->
             result.fold(call::resolve) { e -> call.reject(e.message ?: "detectImage failed", e as? Exception) }
         }
     }

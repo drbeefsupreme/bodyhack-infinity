@@ -32,7 +32,7 @@ export default defineConfig({
   build: {
     outDir: resolve(root, webDir),
     emptyOutDir: true,
-    rollupOptions: { input: { start: join(root, startPage) } },
+    rollupOptions: { input: { start: join(root, startPage), androidGate: join(root, 'android-gate.html') } },
     chunkSizeWarningLimit: 1500,
   },
 });
