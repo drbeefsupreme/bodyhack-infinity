@@ -1,14 +1,14 @@
 // The web Platform: the browser's camera, MediaPipe for the web, Web Speech, the screen wake lock, localStorage, and
-// the local API (server/api.ts) for photos, the coach and the voice intent. Replies are parsed here, at the network
-// boundary.
+// the local API (server/api.ts) for photos, the coach and the voice intent. Coach and intent replies are parsed in
+// ./replies.ts, at the network boundary.
 
 import { COMMAND_OPTIONS, type IntentReply } from '../modes/commands';
-import { field } from '../modes/stored';
 import type { PhotoId, PhotoMeta, SavePhotoRequest } from '../progress/types';
 import { webSpeech } from '../speech';
 import { CameraError, createTracker, openCamera, type Tracker } from '../tracker';
 import type { PoseId } from '../types';
 import type { CoachAsk, CoachNote, Health } from '../ui/api';
+import { parseCoach, parseHealth, parseIntent } from './replies';
 import type { CoachClient, KeepAwake, Platform, PhotoStore, PoseSource, PoseSourceStart } from './types';
 import { VoiceListener } from './webVoice';
 
@@ -132,40 +132,21 @@ const webPhotos: PhotoStore = {
 
 const webCoach: CoachClient = {
   async health(): Promise<Health> {
-    const body: unknown = await fetch('/api/health').then((res) => res.json());
-    const coachModel = field(body, 'coachModel');
-    return { omp: field(body, 'omp') === true, jev: field(body, 'jev') === true, coachModel: typeof coachModel === 'string' ? coachModel : undefined };
+    return parseHealth(await fetch('/api/health').then((res) => res.json()));
   },
 
-  /** Any failure (503 when jev is not configured or down) is `unavailable`. */
   async askIntent(heard: string, signal?: AbortSignal): Promise<IntentReply> {
     try {
       const res = await fetch('/api/intent', { ...JSON_POST, body: JSON.stringify({ heard, options: COMMAND_OPTIONS }), signal });
-      if (!res.ok) return { kind: 'unavailable' };
-      const body: unknown = await res.json();
-      const choice = field(body, 'choice');
-      const confidence = field(body, 'confidence');
-      if (typeof choice !== 'string' || typeof confidence !== 'number') return { kind: 'unavailable' };
-      return { kind: 'answer', choice, confidence };
+      return parseIntent(res.ok, await res.json().catch(() => undefined));
     } catch {
       return { kind: 'unavailable' };
     }
   },
 
-  /** Throws with the server's error message when it fails. */
   async askCoach(ask: CoachAsk): Promise<CoachNote> {
     const res = await fetch('/api/coach', { ...JSON_POST, body: JSON.stringify(ask) });
-    const body: unknown = await res.json().catch(() => undefined);
-    const error = field(body, 'error');
-    if (!res.ok) throw new Error(typeof error === 'string' ? error : `the coach request failed with ${res.status}`);
-    const cues = field(body, 'cues');
-    const note = field(body, 'note');
-    const model = field(body, 'model');
-    const ms = field(body, 'ms');
-    if (!Array.isArray(cues) || !cues.every((c) => typeof c === 'string') || typeof note !== 'string') {
-      throw new Error('the coach reply had no cues and note');
-    }
-    return { cues, note, model: typeof model === 'string' ? model : '', ms: typeof ms === 'number' ? ms : 0 };
+    return parseCoach(res.status, await res.json().catch(() => undefined));
   },
 };
 
@@ -215,6 +196,7 @@ function webKeepAwake(): KeepAwake {
 
 export const webPlatform: Platform = {
   kind: 'web',
+  modelBase: 'model',
   poseSource: webPoseSource,
   speechEngine: webSpeech,
   voiceInput: (onPhrase, onState) => new VoiceListener(onPhrase, onState),

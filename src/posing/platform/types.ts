@@ -75,6 +75,8 @@ export interface KeepAwake {
 
 export interface Platform {
   readonly kind: 'web' | 'android';
+  /** Folder of the baked figure model the tutor's 3D views load: the detailed mesh on web, the lite mesh in the app. */
+  readonly modelBase: string;
   poseSource(): PoseSource;
   speechEngine(): SpeechEngine | undefined;
   voiceInput(onPhrase: (text: string) => void, onState: (state: ListenState) => void): VoiceInput;

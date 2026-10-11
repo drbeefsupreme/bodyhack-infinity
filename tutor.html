@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<!-- The page talks only to its own origin; the bridge calls go through native HTTP. -->
+<meta http-equiv="Content-Security-Policy" content="connect-src 'self'" />
+<title>Bodyhack Posing</title>
+<style>
+  /* The tutor fills the screen, as in the web shell's module area. */
+  #root { display: flex; flex-direction: column; }
+  #root > * { flex: 1; min-height: 0; }
+  /* The native camera preview is drawn behind the transparent WebView while it shows, so the page is see-through
+     down to the camera pane. Behind the page is the app window's dark background (android res/values/styles.xml). */
+  html[data-native-preview],
+  html[data-native-preview] body,
+  html[data-native-preview] #root,
+  html[data-native-preview] .tutor-run,
+  html[data-native-preview] .tutor-camera { background: transparent; }
+  /* The native preview fills the pane like object-fit: cover; the skeleton overlay must match it. */
+  html[data-native-preview] .tutor-camera canvas { object-fit: cover; }
+  /* Until the phone layout exists: the camera pane keeps a height on a narrow screen (#root outranks tutor.css). */
+  @media (max-width: 1100px) { #root .tutor-camera { min-height: 45vh; } }
+</style>
+</head>
+<body><div id="root"></div><script type="module" src="/src/posing/ui/tutorMain.tsx"></script></body>
+</html>

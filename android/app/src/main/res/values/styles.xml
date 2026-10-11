@@ -13,6 +13,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <!-- Shows through the page around the native camera preview (tutor.html makes the page see-through). -->
+        <item name="android:windowBackground">@color/bodyhack_bg</item>
     </style>
 
 

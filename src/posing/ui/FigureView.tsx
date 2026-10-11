@@ -1,13 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { Viewer } from '../../three/Viewer';
 import { DEFAULT_PRESENTATION } from '../../three/skin';
 import { FIGURE_POSES } from '../figurePoses';
 import type { FigureTarget } from '../modes/mode';
+import { PlatformContext } from '../platform/context';
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /** The 3D figure from the judges' view, in a library pose (animated) or a live pose (instant, for Mirror). */
 export function FigureView({ figure }: { figure: FigureTarget }) {
+  const { modelBase } = use(PlatformContext);
   const host = useRef<HTMLDivElement>(null);
   const [viewer, setViewer] = useState<Viewer | undefined>();
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -18,7 +20,7 @@ export function FigureView({ figure }: { figure: FigureTarget }) {
     let cancelled = false;
     let v: Viewer;
     try {
-      v = new Viewer(el, { reducedMotion: REDUCED_MOTION, modelBase: 'model' });
+      v = new Viewer(el, { reducedMotion: REDUCED_MOTION, modelBase });
     } catch {
       setStatus('error');
       return;
@@ -38,7 +40,7 @@ export function FigureView({ figure }: { figure: FigureTarget }) {
       setViewer(undefined);
       v.dispose();
     };
-  }, []);
+  }, [modelBase]);
 
   const pose = figure.kind === 'pose' ? figure.pose : undefined;
   const live = figure.kind === 'live' ? figure.figure : undefined;

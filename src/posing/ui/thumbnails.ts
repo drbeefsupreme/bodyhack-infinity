@@ -11,11 +11,11 @@ export type Thumbnails = Readonly<Record<PoseId, string>>;
 
 let rendering: Promise<Thumbnails> | undefined;
 
-async function render(): Promise<Thumbnails> {
+async function render(modelBase: string): Promise<Thumbnails> {
   const host = document.createElement('div');
   host.style.cssText = `position:fixed;left:-10000px;top:0;width:${SIZE.width}px;height:${SIZE.height}px;pointer-events:none`;
   document.body.append(host);
-  const viewer = new Viewer(host, { reducedMotion: true, modelBase: 'model' });
+  const viewer = new Viewer(host, { reducedMotion: true, modelBase });
   try {
     await viewer.load();
     viewer.setPresentation(DEFAULT_PRESENTATION);
@@ -35,9 +35,10 @@ async function render(): Promise<Thumbnails> {
   }
 }
 
-/** The thumbnails, rendered on the first call. A failed render is retried on the next call. */
-export function poseThumbnails(): Promise<Thumbnails> {
-  rendering ??= render().catch((err: unknown) => {
+/** The thumbnails from the model in `modelBase`, rendered on the first call. A failed render is retried on the next
+ * call. A page has one platform, so one model base. */
+export function poseThumbnails(modelBase: string): Promise<Thumbnails> {
+  rendering ??= render(modelBase).catch((err: unknown) => {
     rendering = undefined;
     throw err;
   });
