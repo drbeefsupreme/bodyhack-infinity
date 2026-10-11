@@ -1,6 +1,7 @@
 # Posing Tutor for Android: plan
 
-Status: proposed, waiting for the operator's checkpoint. Playbook: poteto-mode → figure-it-out.
+Status: approved at the checkpoint with one change: native tracking from the start (hybrid). Playbook: poteto-mode →
+figure-it-out.
 Operator facts: recent Pixel (Android 14+); emulator-only testing for now; the coach reaches this computer over Tailscale.
 
 ## Definition of done (falsifiable)
@@ -34,19 +35,23 @@ Only the operator can check speed and the GPU path on the real Pixel. The emulat
 | Speech | No `speechSynthesis` in WebView; native TTS and recognition plugins work | TextToSpeech and the on-device recognizer work |
 | Code to write | Native plugins + phone layout + platform seam | About 2,400 lines of domain port + 1,000 test lines + 3D port + all UI |
 
-## Decision: Capacitor app that reuses the web tutor, with native speech, storage and keep-awake
+## Decision: Capacitor app that reuses the web tutor, with native tracking, speech, storage and keep-awake
 
-- The tutor's domain, modes, scoring, gate and 3D figure run unchanged, so one implementation stays the truth.
-  The WebView gate already passes.
-- Speed risk: on the Pixel the WebView may run MediaPipe on the CPU. The tutor needs about 15 fps; the desktop CPU
-  delegate ran at 23-36 ms per frame. If the phone is too slow, a native tracking plugin can replace `tracker.ts`
-  behind the same interface without touching the rest (the native prototype proved that path and its agreement).
+- The tutor's domain, modes, scoring, gate and 3D figure stay in TypeScript and run unchanged in the WebView, so one
+  implementation stays the truth. The WebView gate already passes.
+- The operator chose native tracking from the start: a Kotlin Capacitor plugin owns the front camera (CameraX), shows
+  the mirrored preview behind the transparent WebView and runs MediaPipe Tasks for Android (GPU, CPU fallback). It
+  sends landmarks to the tutor as events. Contract: `src/posing/platform/posePlugin.ts`. On the emulator's CPU this
+  path ran at 30 ms per frame against 53 ms in the WebView, and its metrics matched web to 0.02°.
+- The gate on Android feeds the figure renders through the plugin's `detectImage`, so it checks the native tracker
+  plus the TypeScript scoring together.
 
 ## Architecture
 
-- **Platform seam** (`src/posing/platform/`): interfaces for speech output, voice input, photo store, coach and intent
-  client, keep-awake. Web implementations wrap today's code; Android implementations use Capacitor plugins. The
-  engine and the views take the platform object, never `window` APIs directly.
+- **Platform seam** (`src/posing/platform/types.ts`): interfaces for the pose source (camera + detection + photo
+  capture), speech output, voice input, photo store, coach and intent client, keep-awake. Web implementations wrap
+  today's code; Android implementations use the pose plugin and Capacitor plugins. The engine and the views take the
+  platform object, never `window` APIs directly.
 - **Photos on the phone:** app-private storage (Capacitor Filesystem), same metadata as the desktop store; the Progress
   views read through the photo-store interface. An "export to gallery" action is a later option.
 - **Bridge:** the desktop server gets a paired remote mode for `/api/coach` and `/api/intent` only: requests from the
@@ -59,11 +64,13 @@ Only the operator can check speed and the GPU path on the real Pixel. The emulat
 
 1. Platform seam in the web app; web behavior unchanged (tests, gate, fake-camera e2e). In parallel:
 2. Desktop bridge (server only): token pairing, Tailscale-range rule, CORS for the app origin, tests.
-3. Capacitor scaffold: `android/`, `tutor.html`, build and install scripts, APK launches on the emulator.
-4. Android verification harness: `android:gate` (gate in the WebView) and `android:e2e` (video-file camera), with the
-   baseline captured before features.
-5. Native adapters: TTS (local voice preferred), recognition (on-device preferred), keep-awake, photo store, permissions.
-6. Phone layout and settings (bridge pairing, voice, mute, debrief).
-7. Docs, README Android section, debug-signed APK, final verification.
+3. Capacitor scaffold and the native pose plugin: `android/`, build and install scripts, CameraX preview behind the
+   WebView, LIVE_STREAM landmarks, `detectImage`, `capturePhoto`; verified on the emulator with a video-file camera.
+4. Android platform adapter and `tutor.html` entry: the tutor runs in the app on the native pose source.
+5. Android verification harness: `android:gate` (renders through `detectImage`) and `android:e2e` (video-file camera),
+   with the baseline captured before the remaining features.
+6. Native adapters: TTS (local voice preferred), recognition (on-device preferred), keep-awake, photo store.
+7. Phone layout and settings (bridge pairing, voice, mute, debrief).
+8. Docs, README Android section, debug-signed APK, final verification.
 
-Fan-out: units 1, 2 and 3 touch disjoint files and run in parallel. Units 4-6 follow, one owner at a time.
+Fan-out: units 1, 2 and 3 touch disjoint files and run in parallel. Units 4-7 follow, one owner at a time.
