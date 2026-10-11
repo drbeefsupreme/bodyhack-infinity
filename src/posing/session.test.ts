@@ -196,6 +196,26 @@ describe('cue scheduler', () => {
     ).toEqual(['holding', 'framing', 'cue']);
   });
 
+  it('starts the hold with the session when the athlete is already in the pose on a frame older than the session', () => {
+    let state = startSession(5000);
+    const events: SessionEvent[] = [];
+    // The 3 s hold counts from 5000, not 4700: no hit at 7700, the hit at 8000 with time to hit 0.
+    for (const now of [4700, 5000, 6000, 7000, 7700, 8000]) {
+      const next = advance(state, body(92), now);
+      state = next.state;
+      events.push(...next.events);
+    }
+    expect(events).toEqual([
+      { kind: 'holding', at: 4700, say: { text: 'Hold it.', interrupt: true } },
+      {
+        kind: 'hit',
+        at: 8000,
+        say: { text: 'Pose hit. Relax.', interrupt: true },
+        result: { score: 92, timeToHitMs: 0, meanScore: 92, scoreSd: 0 },
+      },
+    ]);
+  });
+
   it('does not correct faults that cost almost nothing', () => {
     const minor: Sighting = {
       kind: 'body',

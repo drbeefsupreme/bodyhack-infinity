@@ -44,6 +44,15 @@ describe('Hold drill', () => {
     expect(hit?.kind === 'hit' && hit.result).toEqual(expect.objectContaining({ meanScore: 88, resets: 1, timeToHitMs: 6000 }));
   });
 
+  it('counts the hold from the drill start when the first frame is older than the start', () => {
+    const { drill } = startDrill(holdMode('frontDoubleBiceps', 10), 1000);
+    drill.frame(700, body(92), undefined);
+    expect(drill.view(1000).stage).toEqual({ kind: 'holding', heldMs: 0, goalMs: 10_000 });
+    expect(hits(feed(drill, 800, 10_900, body(92)))).toEqual([]);
+    const [hit] = hits(drill.frame(11_000, body(92), undefined));
+    expect(hit?.kind === 'hit' && hit.result).toEqual(expect.objectContaining({ timeToHitMs: 0, meanScore: 92, goalMs: 10_000 }));
+  });
+
   it('calls halfway on a 20 second hold', () => {
     const { drill } = startDrill(holdMode('backDoubleBiceps', 20), 0);
     drill.frame(0, body(95), undefined);

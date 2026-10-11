@@ -243,7 +243,9 @@ export function advance(
       events.push({ kind: 'hit', at: now, say: say(s, HIT_SAY, true, now, config), result });
     }
   } else if (s.phase.kind !== 'holding' && reading.score >= config.hitScore) {
-    s.phase = { kind: 'holding', since: now, stats: { n: 1, sum: reading.score, sumSq: reading.score * reading.score }, seenAt: now };
+    // A camera frame can be older than the session (it was taken before the call started): the hold starts with the session.
+    const since = Math.max(now, s.startedAt);
+    s.phase = { kind: 'holding', since, stats: { n: 1, sum: reading.score, sumSq: reading.score * reading.score }, seenAt: now };
     s.focus = undefined;
     events.push({ kind: 'holding', at: now, say: say(s, HOLD_SAY, true, now, config) });
   } else {

@@ -92,8 +92,10 @@ export function holdMode(pose: PoseId, goalS: HoldGoal, config: HoldConfig = HOL
         const holding = events.find((e) => e.kind === 'holding');
         const score = sighting.kind === 'body' ? sighting.score.score : undefined;
         if (!holding || score === undefined) return { state: { ...state, stage: { kind: 'approach', session } }, effects: spoken(events) };
+        // A camera frame can be older than the approach session: the hold starts no earlier than the session.
+        const since = Math.max(now, stage.session.startedAt);
         return {
-          state: { ...state, stage: { kind: 'holding', since: now, below: undefined, stats: { n: 1, sum: score, sumSq: score * score, last: score }, called: 0 } },
+          state: { ...state, stage: { kind: 'holding', since, below: undefined, stats: { n: 1, sum: score, sumSq: score * score, last: score }, called: 0 } },
           effects: [say(holdSay, true)],
         };
       }
