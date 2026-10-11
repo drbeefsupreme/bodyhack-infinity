@@ -1,6 +1,8 @@
-// Chrome speech recognition for voice commands: continuous, final phrases only. It is paused while the tutor speaks,
-// so the microphone does not hear the tutor's own voice. Chrome ends a recognition session after some silence; the
-// listener starts a new one while it is wanted.
+// The web VoiceInput: Chrome speech recognition for voice commands, continuous, final phrases only. It is paused while
+// the tutor speaks, so the microphone does not hear the tutor's own voice. Chrome ends a recognition session after
+// some silence; the listener starts a new one while it is wanted.
+
+import type { ListenState, VoiceInput } from './types';
 
 /** The part of Chrome's `SpeechRecognition` the listener uses. TypeScript's DOM library does not declare it. */
 interface Recognition {
@@ -16,8 +18,6 @@ interface Recognition {
 
 type RecognitionConstructor = new () => Recognition;
 
-export type ListenState = 'off' | 'listening' | 'paused' | 'unsupported' | 'denied' | 'error';
-
 /** Quiet time after the tutor stops speaking before the microphone opens again (room echo). */
 const AFTER_SPEECH_MS = 400;
 const RETRY_MS = 3000;
@@ -28,7 +28,7 @@ function recognitionConstructor(): RecognitionConstructor | undefined {
   return typeof ctor === 'function' ? (ctor as RecognitionConstructor) : undefined;
 }
 
-export class VoiceListener {
+export class VoiceListener implements VoiceInput {
   private readonly ctor = recognitionConstructor();
   private recognition: Recognition | undefined;
   private enabled = false;

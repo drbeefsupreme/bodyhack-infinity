@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { use, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { IconX } from '../../components/Icons';
 import type { Calibration } from '../metrics';
 import type { Command } from '../modes/commands';
 import type { FigureTarget } from '../modes/mode';
 import type { TutorSettings } from '../modes/settings';
+import { PlatformContext } from '../platform/context';
 import type { Speech } from '../speech';
 import { TutorEngine, type Heard, type RunSpec, type SessionCalibration, type Snapshot } from './engine';
 import { FigureView } from './FigureView';
@@ -43,11 +44,12 @@ interface Props {
 /** One drill: an engine per mount. Remount (a new key) to start again. */
 export function TutorRun(props: Props) {
   const [engine, setEngine] = useState<TutorEngine | undefined>();
-  const initial = useRef(props);
+  const platform = use(PlatformContext);
+  const initial = useRef({ ...props, platform });
 
   useEffect(() => {
-    const { spec, speech, settings, calibration, onCalibration } = initial.current;
-    const e = new TutorEngine({ spec, speech, settings, calibration, onCalibration });
+    const { spec, speech, settings, calibration, onCalibration, platform } = initial.current;
+    const e = new TutorEngine({ spec, speech, settings, calibration, onCalibration, platform });
     setEngine(e);
     return () => {
       e.dispose();
@@ -64,12 +66,12 @@ export function TutorRun(props: Props) {
 
 function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
   const snap = useSyncExternalStore(engine.subscribe, engine.snapshot);
-  const video = useRef<HTMLVideoElement>(null);
+  const pane = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLCanvasElement>(null);
   const [now, setNow] = useState(() => performance.now());
 
   useEffect(() => {
-    if (video.current && overlay.current) void engine.start(video.current, overlay.current);
+    if (pane.current && overlay.current) void engine.start(pane.current, overlay.current);
     window.__tutorHeard = (text) => engine.heard(text);
     window.__tutorState = engine.snapshot;
     return () => {
@@ -134,7 +136,7 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
         </figure>
 
         <div className="tutor-camera">
-          <video ref={video} playsInline muted />
+          <div ref={pane} className="tutor-camera-feed" />
           <canvas ref={overlay} aria-hidden="true" />
           {stage?.kind === 'framing' && <FramingGuide reason={stage.reason} />}
           {camera.kind === 'starting' && <p className="tutor-camera-status">Starting the camera and the pose tracker…</p>}

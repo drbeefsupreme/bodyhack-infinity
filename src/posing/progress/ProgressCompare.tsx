@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { IconEye, IconLayers, IconSwap } from '../../components/Icons';
 import { JOINTS, type PoseLandmarks, type SidedJoint } from '../landmarks';
-import { photoImageUrl } from './api';
+import { PlatformContext } from '../platform/context';
 import { formatDate, scoreTone } from './format';
 import type { PhotoMeta } from './types';
 
@@ -44,10 +44,11 @@ function Skeleton({ landmarks, slot }: { landmarks: PoseLandmarks; slot: Slot })
 }
 
 function PhotoCard({ photo, slot, overlay }: { photo: PhotoMeta; slot: Slot; overlay: boolean }) {
+  const { photos } = use(PlatformContext);
   return (
     <figure className={`progress-photo ${slot}`}>
       <div className="progress-frame">
-        <img src={photoImageUrl(photo.id)} alt={`${slot === 'before' ? 'Before' : 'After'}: ${formatDate(photo.takenAt)}`} />
+        <img src={photos.imageSrc(photo)} alt={`${slot === 'before' ? 'Before' : 'After'}: ${formatDate(photo.takenAt)}`} />
         {overlay && photo.landmarks && <Skeleton landmarks={photo.landmarks} slot={slot} />}
       </div>
       <figcaption>
@@ -69,6 +70,7 @@ function PhotoCard({ photo, slot, overlay }: { photo: PhotoMeta; slot: Slot; ove
 
 /** Two photos of one pose: side by side or blended, with the score change. */
 export function ProgressCompare({ before, after, activeSlot, onActiveSlot }: Props) {
+  const { photos } = use(PlatformContext);
   const [view, setView] = useState<'side' | 'onion'>('side');
   const [overlay, setOverlay] = useState(false);
   const [blend, setBlend] = useState(50);
@@ -113,8 +115,8 @@ export function ProgressCompare({ before, after, activeSlot, onActiveSlot }: Pro
       ) : (
         <div className="progress-onion">
           <div className="progress-frame">
-            <img src={photoImageUrl(before.id)} alt={`Before: ${formatDate(before.takenAt)}`} />
-            <img className="progress-onion-top" src={photoImageUrl(after.id)} alt={`After: ${formatDate(after.takenAt)}`} style={{ opacity: blend / 100 }} />
+            <img src={photos.imageSrc(before)} alt={`Before: ${formatDate(before.takenAt)}`} />
+            <img className="progress-onion-top" src={photos.imageSrc(after)} alt={`After: ${formatDate(after.takenAt)}`} style={{ opacity: blend / 100 }} />
             {overlay && before.landmarks && <Skeleton landmarks={before.landmarks} slot="before" />}
             {overlay && after.landmarks && <Skeleton landmarks={after.landmarks} slot="after" />}
           </div>

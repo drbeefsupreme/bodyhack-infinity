@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { IconFrame, IconX } from '../../components/Icons';
+import { PlatformContext } from '../platform/context';
 import type { PoseId } from '../types';
-import { deletePhoto, deletePhotos, listPhotos, photoImageUrl } from './api';
 import { formatDate, POSE_LABELS, scoreTone } from './format';
 import { ProgressCompare, type Slot } from './ProgressCompare';
 import { TrendChart } from './TrendChart';
@@ -71,6 +71,7 @@ function Empty() {
 
 /** Timeline, compare and score trend of the saved progress photos, per pose. */
 export function ProgressView() {
+  const { photos: store } = use(PlatformContext);
   const [load, setLoad] = useState<Load>({ kind: 'loading' });
   const [pose, setPose] = useState<PoseId | null>(null);
   const [picked, setPicked] = useState<{ before?: PhotoId; after?: PhotoId }>({});
@@ -80,11 +81,11 @@ export function ProgressView() {
 
   const reload = useCallback(
     () =>
-      listPhotos().then(
+      store.list().then(
         (photos) => setLoad({ kind: 'ready', photos }),
         (err: unknown) => setLoad({ kind: 'error', message: err instanceof Error ? err.message : String(err) }),
       ),
-    [],
+    [store],
   );
   useEffect(() => {
     void reload();
@@ -143,7 +144,7 @@ export function ProgressView() {
                 title: 'Delete every photo?',
                 body: `This deletes all ${all.length} progress photos of every pose from this computer. You cannot undo it.`,
                 action: 'Delete everything',
-                run: () => deletePhotos('all'),
+                run: () => store.removeAll('all'),
               })
             }
           >
@@ -181,7 +182,7 @@ export function ProgressView() {
                       title: `Delete all ${POSE_LABELS[current]} photos?`,
                       body: `This deletes ${photos.length} ${photos.length === 1 ? 'photo' : 'photos'} of ${POSE_LABELS[current]} from this computer. Other poses keep their photos.`,
                       action: `Delete ${photos.length}`,
-                      run: () => deletePhotos({ pose: current }),
+                      run: () => store.removeAll({ pose: current }),
                     })
                   }
                 >
@@ -195,7 +196,7 @@ export function ProgressView() {
                   return (
                     <li key={photo.id} className={`progress-thumb${slot ? ` ${slot}` : ''}`}>
                       <button type="button" className="progress-thumb-pick" onClick={() => pick(photo)} aria-label={`Pick ${label}`}>
-                        <img src={photoImageUrl(photo.id)} alt="" loading="lazy" />
+                        <img src={store.imageSrc(photo)} alt="" loading="lazy" />
                         <span className="progress-thumb-meta">
                           <span>{formatDate(photo.takenAt)}</span>
                           <span className={`progress-score ${scoreTone(photo.score)}`}>{Math.round(photo.score)}</span>
@@ -211,7 +212,7 @@ export function ProgressView() {
                             title: 'Delete this photo?',
                             body: `This deletes the ${POSE_LABELS[current]} photo of ${formatDate(photo.takenAt)} (score ${Math.round(photo.score)}) from this computer. You cannot undo it.`,
                             action: 'Delete photo',
-                            run: () => deletePhoto(photo.id),
+                            run: () => store.remove(photo.id),
                           })
                         }
                       >

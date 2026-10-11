@@ -3,7 +3,7 @@ import type { Stage, Summary } from '../modes/mode';
 import type { CallResult } from '../modes/judge';
 import type { NewBests } from '../modes/records';
 import { POSE_LABELS, scoreTone } from '../progress/format';
-import type { CameraFailure } from '../tracker';
+import type { CameraFailure } from '../platform/types';
 import type { DebriefState, Heard } from './engine';
 
 const seconds = (ms: number) => `${(ms / 1000).toFixed(1)} s`;
