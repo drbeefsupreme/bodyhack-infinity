@@ -35,6 +35,8 @@ export interface Cdp {
   send(method: string, params?: object): Promise<unknown>;
   /** Evaluates `expression` in the page (awaiting a returned promise) and returns its JSON value. */
   evaluate(expression: string, timeoutMs?: number): Promise<unknown>;
+  /** Calls `listener` with the params of every `method` event (enable its domain first). */
+  on(method: string, listener: (params: unknown) => void): void;
   close(): void;
 }
 
@@ -57,6 +59,7 @@ export async function connect(wsUrl: string, onConsole?: (type: string, text: st
   ws.onerror = () => opened.reject(new Error(`Cannot connect to ${wsUrl}`));
   await opened.promise;
   const pending = new Map<number, PromiseWithResolvers<unknown>>();
+  const listeners: { readonly method: string; readonly listener: (params: unknown) => void }[] = [];
   let nextId = 0;
   ws.onmessage = (event) => {
     const msg = JSON.parse(String(event.data)) as CdpMessage;
@@ -68,6 +71,8 @@ export async function connect(wsUrl: string, onConsole?: (type: string, text: st
     } else if (msg.method === 'Runtime.consoleAPICalled' && onConsole) {
       const { type, args } = msg.params as ConsoleEvent;
       onConsole(type, args.map(describe).join(' '));
+    } else if (msg.method !== undefined) {
+      for (const l of listeners) if (l.method === msg.method) l.listener(msg.params);
     }
   };
   ws.onclose = () => {
@@ -103,6 +108,7 @@ export async function connect(wsUrl: string, onConsole?: (type: string, text: st
         clearTimeout(timer);
       }
     },
+    on: (method, listener) => listeners.push({ method, listener }),
     close: () => ws.close(),
   };
 }

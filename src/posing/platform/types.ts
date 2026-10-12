@@ -8,6 +8,7 @@ import type { PoseId } from '../types';
 import type { SpeechEngine, SpeechStore } from '../speech';
 import type { CoachAsk, CoachNote, Health } from '../ui/api';
 import type { IntentReply } from '../modes/commands';
+import type { NanoDownloadProgress } from './coachPlugin';
 
 export type Delegate = 'GPU' | 'CPU';
 export type CameraFailure = 'denied' | 'noDevice' | 'busy' | 'unsupported';
@@ -61,37 +62,29 @@ export interface PhotoStore {
   removeAll(scope: { readonly pose: PoseId } | 'all'): Promise<number>;
 }
 
-/** The coach model and the voice-command intent. On Android these go to the paired desktop bridge. */
+/** The coach model and the voice-command intent: the local server on web; Gemini Nano and jev on the phone on Android. */
 export interface CoachClient {
   health(): Promise<Health>;
   askCoach(ask: CoachAsk): Promise<CoachNote>;
   askIntent(heard: string, signal?: AbortSignal): Promise<IntentReply>;
 }
 
+/**
+ * The phone's own coach and voice-command setup, for Settings on Android. The coach status and whether a key is stored
+ * come from `CoachClient.health`. The TypeSafe key is write-only here: nothing reads it back into the page's UI.
+ */
+export interface DeviceSetup {
+  /** Starts or joins the Gemini Nano download and resolves when the model is available. */
+  downloadCoach(onProgress: (progress: NanoDownloadProgress) => void): Promise<void>;
+  /** Runs a bundled figure render through the coach, as a debrief does. */
+  selfTest(): Promise<CoachNote>;
+  saveKey(key: string): Promise<void>;
+  clearKey(): Promise<void>;
+}
+
 export interface KeepAwake {
   acquire(): Promise<void>;
   release(): Promise<void>;
-}
-
-export type BridgeStatus =
-  | { readonly state: 'unpaired' }
-  | { readonly state: 'offline'; readonly url: string; readonly error: string }
-  | { readonly state: 'online'; readonly url: string; readonly health: Health };
-
-/** A `bodyhack://pair?url=…&token=…` link the app was opened with, checked like a typed pairing. */
-export type PairLink = { readonly ok: true; readonly url: string; readonly token: string } | { readonly ok: false; readonly error: string };
-
-/** The pairing with the desktop bridge (`npm run bridge`) that the coach and the intent go through. */
-export interface DesktopBridge {
-  status(): Promise<BridgeStatus>;
-  /** Stores the pairing, then checks it. Throws with the reason when the URL or the token cannot be a bridge. */
-  pair(url: string, token: string): Promise<BridgeStatus>;
-  unpair(): void;
-  /**
-   * Calls `listener` with each pairing link the app is opened with, the launch link included, except a link for the
-   * stored pairing. Returns the unsubscribe call.
-   */
-  onPairLink(listener: (link: PairLink) => void): () => void;
 }
 
 export interface Platform {
@@ -103,8 +96,8 @@ export interface Platform {
   voiceInput(onPhrase: (text: string) => void, onState: (state: ListenState) => void): VoiceInput;
   readonly photos: PhotoStore;
   readonly coach: CoachClient;
-  /** Undefined on web, where the coach is the local server. */
-  readonly bridge: DesktopBridge | undefined;
+  /** Undefined on web, where the local server owns the coach and the jev key. */
+  readonly setup: DeviceSetup | undefined;
   readonly keepAwake: KeepAwake;
   readonly store: SpeechStore;
 }

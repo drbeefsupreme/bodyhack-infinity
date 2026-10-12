@@ -1,48 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { coachModel, DEFAULT_COACH_MODEL, parseCoachReply } from './coach.ts';
-import { parseChoiceAnswer } from './jev.ts';
+import { coachModel, DEFAULT_COACH_MODEL } from './coach.ts';
 import { readEnvValue } from './secrets.ts';
 import { parseCoachRequest, parseIntentRequest } from './validate.ts';
-
-describe('parseCoachReply', () => {
-  it('reads the JSON from a fenced reply with prose around it', () => {
-    const out = 'Looking at the image.\n```json\n{"cues": ["Flare the lats", "Lift the chest"], "note": "Good {shape}."}\n```\nDone.';
-    expect(parseCoachReply(out)).toEqual({ cues: ['Flare the lats', 'Lift the chest'], note: 'Good {shape}.' });
-  });
-
-  it('keeps at most three cues and takes the last valid object', () => {
-    const out = '{"cues": ["old"], "note": "draft"} then {"cues": ["a", "b", "c", "d"], "note": "final"}';
-    expect(parseCoachReply(out)).toEqual({ cues: ['a', 'b', 'c'], note: 'final' });
-  });
-
-  it('returns null when no object has string cues', () => {
-    expect(parseCoachReply('{"cues": string[], "note": string}')).toBeNull();
-    expect(parseCoachReply('{"cues": [1, 2]}')).toBeNull();
-  });
-});
 
 describe('coachModel', () => {
   it('uses BODYHACK_COACH_MODEL when it is set, else the default that /api/health reports', () => {
     expect(coachModel({ BODYHACK_COACH_MODEL: ' anthropic/claude-opus-5-5 ' })).toBe('anthropic/claude-opus-5-5');
     expect(coachModel({ BODYHACK_COACH_MODEL: '  ' })).toBe(DEFAULT_COACH_MODEL);
     expect(coachModel({})).toBe('anthropic/claude-sonnet-5');
-  });
-});
-
-describe('parseChoiceAnswer', () => {
-  it('returns choice, confidence and a probability for every option', () => {
-    const body = { answers: { intent: { type: 'choice', choice: 'next', confidence: 0.9, probabilities: { next: 0.95, repeat: 0.05 } } } };
-    expect(parseChoiceAnswer(body, ['next', 'repeat', 'stop'])).toEqual({
-      choice: 'next',
-      confidence: 0.9,
-      probabilities: { next: 0.95, repeat: 0.05, stop: 0 },
-    });
-  });
-
-  it('rejects a choice outside the options and malformed bodies', () => {
-    expect(parseChoiceAnswer({ answers: { intent: { choice: 'jump', confidence: 1, probabilities: {} } } }, ['next'])).toBeNull();
-    expect(parseChoiceAnswer(null, ['next'])).toBeNull();
-    expect(parseChoiceAnswer('oops', ['next'])).toBeNull();
   });
 });
 

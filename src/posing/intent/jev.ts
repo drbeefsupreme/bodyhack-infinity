@@ -1,37 +1,48 @@
-const ENDPOINT = 'https://api.typesafe.ai/v1/systemone';
+// Jev (TypeSafe) picks the voice command that a transcript means. The local server (server/api.ts, over fetch) and the
+// Android app (src/posing/platform/androidCoach.ts, over CapacitorHttp) send the same request through this module. The
+// caller gives the HTTP POST, so the module uses no network API itself.
+
+export const JEV_ENDPOINT = 'https://api.typesafe.ai/v1/systemone';
+export const JEV_TIMEOUT_MS = 2000;
 const MODEL = 'jev-latest';
-const TIMEOUT_MS = 2000;
 const QUESTION_ID = 'intent';
 const INSTRUCTIONS =
   'The `transcript` is what speech recognition heard while a user practiced bodybuilding poses in a training app. ' +
   'Which command did the user mean?';
 
 export interface IntentAnswer {
-  choice: string;
-  confidence: number;
-  probabilities: Record<string, number>;
+  readonly choice: string;
+  readonly confidence: number;
+  readonly probabilities: Readonly<Record<string, number>>;
 }
 
+export interface JsonReply {
+  readonly status: number;
+  readonly body: unknown;
+}
+
+/** One JSON POST. Rejects when no reply arrives (network error or timeout), with the reason as the message. */
+export type PostJson = (url: string, headers: Readonly<Record<string, string>>, body: object, timeoutMs: number) => Promise<JsonReply>;
+
 /** Asks jev one Choice question: which of `options` (option → description) the transcript `heard` means. */
-export async function chooseIntent(key: string, heard: string, options: Record<string, string>): Promise<IntentAnswer> {
-  let res: Response;
+export async function chooseIntent(post: PostJson, key: string, heard: string, options: Readonly<Record<string, string>>): Promise<IntentAnswer> {
+  let res: JsonReply;
   try {
-    res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-      body: JSON.stringify({
+    res = await post(
+      JEV_ENDPOINT,
+      { authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+      {
         state: { transcript: heard },
         model: MODEL,
         questions: { [QUESTION_ID]: { type: 'choice', instructions: INSTRUCTIONS, criteria: options } },
-      }),
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
+      },
+      JEV_TIMEOUT_MS,
+    );
   } catch (err) {
-    if (err instanceof DOMException && err.name === 'TimeoutError') throw new Error(`jev timed out after ${TIMEOUT_MS} ms`);
     throw new Error(`jev unreachable: ${err instanceof Error ? err.message : String(err)}`);
   }
-  if (!res.ok) throw new Error(`jev returned HTTP ${res.status}`);
-  const answer = parseChoiceAnswer(await res.json(), Object.keys(options));
+  if (res.status < 200 || res.status > 299) throw new Error(`jev returned HTTP ${res.status}`);
+  const answer = parseChoiceAnswer(res.body, Object.keys(options));
   if (!answer) throw new Error('jev returned an unexpected answer shape');
   return answer;
 }

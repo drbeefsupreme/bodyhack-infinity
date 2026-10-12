@@ -207,8 +207,10 @@ src/                 React app, Three.js viewer, shader, content
   posing/            pose domain, tracker, smoothing, facing hysteresis, cue scheduler, speech, debug page
     modes/           practice modes as pure reducers (Learn, Hold, Judge's calls, Mirror), voice commands, settings
     ui/              tutor screens: home, live drill engine, figure view, settings
-    platform/        device seam: web (browser + local API) and Android (native plugins + bridge)
-android/             Capacitor Android app; native pose (CameraX + MediaPipe) and voice plugins in Kotlin
+    coach/           the coach debrief prompt (omp and Gemini Nano variants) and its reply parser
+    intent/          the jev request and answer for voice commands, shared by the server and the app
+    platform/        device seam: web (browser + local API) and Android (native plugins, Gemini Nano, jev)
+android/             Capacitor Android app; native pose, voice, coach (Gemini Nano) and secrets plugins in Kotlin
 scripts/android/     toolchain setup, build, install, emulator, Android gate, e2e and phone screenshot drivers
 scripts/model/       SDF anatomy, field, mesher, morph baking (Bun)
 scripts/content/     source extraction from research reports
@@ -297,57 +299,6 @@ BODYHACK_DATA_DIR=/tmp/bodyhack-seed npm run dev -- --port 5351
 BODYHACK_DATA_DIR=/tmp/bodyhack-seed bun scripts/seed-progress.ts --app http://localhost:5351
 ```
 
-## Phone bridge
-
-The Android app sends the coach debrief and voice-command intent requests to this computer over Tailscale. The
-jev key and the omp login stay here. The bridge opens three routes to the paired phone: `GET /api/health`,
-`POST /api/coach` and `POST /api/intent`. The photo routes and all other routes stay closed to other machines.
-
-A request from another machine gets through the bridge only when all of these are true:
-
-- Its source address is in the Tailscale range (`100.64.0.0/10` or `fd7a:115c:a1e0::/48`).
-- It has `Authorization: Bearer <token>`, and the token is the stored token (constant-time compare).
-- It has no `Origin`, or the origin of the app WebView: `https://localhost`, `capacitor://localhost` or
-  `http://localhost`. The reply then has `Access-Control-Allow-Origin` for that origin.
-- A `POST` has `Content-Type: application/json`.
-
-The server answers a CORS preflight (`OPTIONS`) for the three routes only from a Tailscale address and an app
-origin, for the method of the route, and for the `Authorization` and `Content-Type` headers. It refuses all other
-preflights to `/api/*` with 403. Requests from this computer follow the rules in [Local API](#local-api). When no
-token is stored, the server acts as if the bridge did not exist.
-
-Make the token and pair the phone:
-
-```sh
-npm run bridge                    # for a server on port 5173 (npm run dev)
-npm run bridge -- --port 5190     # for a server on another port
-npm run bridge -- --rotate        # make a new token; the old token stops working
-```
-
-The command prints the server URL (the Tailscale IPv4 address from `tailscale ip -4` and the port), the token, the
-pairing link `bodyhack://pair?url=...&token=...` and a QR code of that link. The QR code needs the `qrencode`
-program (`apt install qrencode`). Without it, type the URL and the token in the app settings. The token is 32
-random bytes (base64url) in `~/.config/bodyhack-infinity/bridge.json` (mode 0600), with the time it was made.
-The server reads the token on each bridge request, so a new token applies without a restart.
-
-Run the server for the phone with one of these commands:
-
-```sh
-npm run dev                                       # port 5173
-npm run build && npm run preview -- --port 5190   # production build on port 5190
-```
-
-Both servers listen on all interfaces. Tailscale must run on this computer and on the phone. In the app, use the
-Tailscale IP address that `npm run bridge` prints, not a MagicDNS name: Vite refuses Host names that are not
-`localhost` or an IP address.
-
-Check the bridge from this computer (the request then comes from its own Tailscale address):
-
-```sh
-curl -H "Authorization: Bearer $(node -p "require('$HOME/.config/bodyhack-infinity/bridge.json').token")" \
-  http://$(tailscale ip -4):5173/api/health
-```
-
 ## Android app
 
 The Android app is the Posing Tutor alone, for a phone that stands upright with its screen facing you, 2 to 3 m
@@ -364,8 +315,24 @@ tutor. The tutor code is the same TypeScript. It runs in a Capacitor WebView beh
   the photos stay on the phone. Uninstalling the app deletes them.
 - **Screen.** The screen stays on during a session.
 
-The coach debrief and the voice-command intent go to this computer through the [Phone bridge](#phone-bridge). Without
-the bridge, voice commands use the keyword fallback and the debrief shows "coach offline".
+- **Coach debrief.** Gemini Nano runs on the phone through the ML Kit GenAI Prompt API (Android AICore). A Kotlin
+  plugin (`android/.../coach/`) gives it the photo of the hit and the score summary, with a shorter prompt for the
+  small model (`src/posing/coach/prompt.ts`). Where Gemini Nano is not available (the emulator, phones before the
+  Pixel 9), the debrief says "On-device coach is not available on this phone" and the reason.
+- **Voice-command intent.** The app asks jev (`https://api.typesafe.ai`) directly, with the same request as the local
+  server (`src/posing/intent/jev.ts`), through native HTTP. The TypeSafe key is pasted once in Settings and kept by a
+  Kotlin plugin (`android/.../secrets/`), encrypted with a key in the Android Keystore. Without a key, or offline,
+  the keyword table decides.
+
+The app needs no computer. The page may load only its own files (`tutor.html` sets a strict Content-Security-Policy),
+and Android allows HTTPS only. The app's only own network request is the jev call, with the recognized text only.
+Google's on-device libraries in the app (MediaPipe Tasks for tracking, ML Kit GenAI for the coach) also send usage
+statistics to Google at `firebaselogging.googleapis.com`: library name and version, app package name, a random ID,
+and device metadata (model, manufacturer, Android build, country, locale, time zone offset, mobile network code,
+network type). They send no photo, prompt, coach reply, landmarks, scores or TypeSafe key. On the emulator, a pose
+session queued 5 MediaPipe events of 41 to 57 bytes (upload at the earliest 30 s later, when online), and the first
+coach call queued 5 ML Kit events of 114 bytes (upload at most once a day, when the phone is idle and online). The
+uploads themselves and long sessions on a real Pixel were not measured. Settings shows the same facts.
 
 ### Build and install
 
@@ -379,20 +346,21 @@ For a Pixel, install `app-arm64-v8a-debug.apk`. You can install it over USB with
 `adb install -r android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk`, or copy the file to the phone and
 open it (allow "install unknown apps" for the file app). The APK is debug-signed, so it is for sideloading only.
 
-### Pair the phone with the desktop coach
+### Set up the coach and voice commands
 
-1. On this computer, start the server (`npm run dev`) and run `npm run bridge`.
-2. On the phone, turn on Tailscale. Scan the QR code with the camera app; it opens the app's pairing dialog. Or, in
-   the app, open Settings > Desktop coach and paste the URL and the token.
-3. Settings shows "online" and the coach model. The pairing survives an app restart. Unpair it in Settings.
+1. Open Settings > On-device coach. If the status says the model is not downloaded, tap "Download the model" and keep
+   the app open until the progress bar is full. Tap "Self-test": the coach looks at a bundled side chest render and
+   shows its note and its time.
+2. Open Settings > Voice commands, paste your TypeSafe API key and tap "Save the key". The app shows only whether a
+   key is saved, never the key. "Clear the key" removes it.
 
 ### Checks
 
 | Command | What it checks |
 |---|---|
 | `npm run android:gate` | Renders every pose in the app's WebView, runs the frames through the native tracker and the TypeScript scoring, and compares with the desktop gate (pass: no failures, scores within 5 points) |
-| `npm run android:e2e` | Emulator with one video of posed figure renders per mode as the front camera: Learn a pose to a hit (photo in app storage, a voice command acted), a 10 s Hold drill with no reset, the first 3 Judge's calls hit, Mirror follows the arms, native speech spoke. Then it starts `npm run dev` on a free port and pairs by the `bodyhack://pair` link: jev decides a free phrase, a coach note arrives, and after unpairing a hit shows "coach offline". It makes one real jev call and one real coach call |
-| `node scripts/android/phone-shots.ts` | Phone screens in portrait and landscape, pairing by link, delete on the device, keep-awake |
+| `npm run android:e2e` | Emulator with one video of posed figure renders per mode as the front camera: Learn a pose to a hit (photo in app storage, a voice command acted), a 10 s Hold drill with no reset, the first 3 Judge's calls hit, Mirror follows the arms, native speech spoke. Then, with no computer involved: Settings and the self-test show the coach as unavailable, the TypeSafe key of this computer goes into the Keystore through a test hook, jev decides a free phrase from the phone (one real jev call), and a hit shows the "not available on this phone" note. Network: the WebView requests only its own origin, CapacitorHttp calls only `api.typesafe.ai`, and the app's sockets reach only that host plus Google SDK telemetry (a separate, named category); no CSP violation; the key is not in logcat |
+| `node scripts/android/phone-shots.ts` | Phone screens in portrait and landscape, the On-device coach and Voice commands settings (a dummy key saved, kept across a restart, cleared), delete on the device, keep-awake |
 
 The emulator runs the figure and the camera together only with `-gpu host` (llvmpipe on this machine). The scripts
 start it without a window. Reports: `docs/android/android-gate-report.md`, `docs/android/e2e-report.md`,
@@ -404,5 +372,5 @@ start it without a window. Reports: `docs/android/android-gate-report.md`, `docs
   still frame). The Pixel's GPU path, its speed, legibility at 2 to 3 m and real speech recognition need the real
   phone.
 - The emulator has no audio input, so voice recognition was checked only through a test hook and its error handling.
-- Android lets the app use plain HTTP, so it can reach the bridge. The app accepts only Tailscale addresses for the
-  bridge, and the bridge needs the token.
+- The emulator has no AICore, so Gemini Nano itself (download, debrief quality, speed) was not tested; only the
+  "not available" path and the plugin wiring were. That needs the Pixel.

@@ -24,7 +24,7 @@ export interface NativeTimings {
   readonly warmupMs: number;
   /** canvas.toDataURL('image/png') of each frame. */
   readonly encodeMs: readonly number[];
-  /** detectImage round trips through the Capacitor bridge. */
+  /** detectImage round trips from the page to the native plugin and back. */
   readonly detectMs: readonly number[];
   /** Every delegate that detectImage reported. */
   readonly delegates: readonly Delegate[];

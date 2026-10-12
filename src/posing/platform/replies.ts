@@ -1,5 +1,5 @@
-// Parses the replies of /api/health, /api/intent and /api/coach (server/api.ts). The web platform gets them from its
-// own server, the Android platform from the paired bridge; both parse here, at the network boundary.
+// Parses the replies of /api/health, /api/intent and /api/coach (server/api.ts) for the web platform, at the network
+// boundary.
 
 import type { IntentReply } from '../modes/commands';
 import { field } from '../modes/stored';
@@ -7,7 +7,7 @@ import type { CoachNote, Health } from '../ui/api';
 
 export function parseHealth(body: unknown): Health {
   const coachModel = field(body, 'coachModel');
-  return { omp: field(body, 'omp') === true, jev: field(body, 'jev') === true, coachModel: typeof coachModel === 'string' ? coachModel : undefined };
+  return { kind: 'server', omp: field(body, 'omp') === true, jev: field(body, 'jev') === true, coachModel: typeof coachModel === 'string' ? coachModel : undefined };
 }
 
 /** Any failure (503 when jev is not configured or down) is `unavailable`. */

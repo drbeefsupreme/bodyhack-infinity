@@ -1,10 +1,14 @@
 // What the coach and the health check return. The platform's CoachClient (src/posing/platform/types.ts) produces them.
 
-export interface Health {
-  readonly omp: boolean;
-  readonly jev: boolean;
-  readonly coachModel: string | undefined;
-}
+import type { NanoStatusResult } from '../platform/coachPlugin';
+
+/**
+ * `server` (web): the local server runs the coach through omp and asks jev with the key in .env.local.
+ * `device` (Android): Gemini Nano runs the coach on the phone, and jev gets the TypeSafe key kept in the Keystore.
+ */
+export type Health =
+  | { readonly kind: 'server'; readonly omp: boolean; readonly jev: boolean; readonly coachModel: string | undefined }
+  | { readonly kind: 'device'; readonly coach: NanoStatusResult; readonly keyStored: boolean };
 
 export interface CoachNote {
   readonly cues: readonly string[];

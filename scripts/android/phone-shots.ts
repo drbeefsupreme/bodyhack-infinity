@@ -1,9 +1,9 @@
-// The phone layout on Android: node scripts/android/phone-shots.ts [--bridge-port 5196] [--build | --no-build]
+// The phone layout on Android: node scripts/android/phone-shots.ts [--build | --no-build]
 // Boots the harness emulator with a camera video (empty room, relaxed front, the move into front double biceps and
 // back), installs the APK with cleared data and drives tutor.html over CDP in portrait, then in landscape
-// (`adb emu rotate`). It pairs the app through the `bodyhack://pair` link with the real `npm run bridge` values (the
-// Vite server with the bridge must run on --bridge-port), restarts the app to check that the pairing persists, runs
-// Learn to two hits with the coach debrief, opens Progress and deletes one photo. With a 15 s screen timeout, the run
+// (`adb emu rotate`). In Settings it shows the on-device coach (unavailable on the emulator) and its self-test, and
+// pastes a dummy TypeSafe key into the Voice commands form, checks that it stays saved across an app restart and is
+// never shown, then clears it. It runs Learn to two hits with the coach debrief, opens Progress and deletes one photo. With a 15 s screen timeout, the run
 // stays idle for 25 s and the screen must stay on; outside a run the same idle must turn it off. Screenshots, the
 // score legibility and the checks go to docs/android/shots/phone/ (results.md, results.json). Exits 1 when a check
 // fails.
@@ -15,7 +15,6 @@ import { parseArgs } from 'node:util';
 import type { FrameSpec } from '../../src/posing/gate/androidGate.ts';
 import type { PoseId } from '../../src/posing/types.ts';
 import { attachApp, bootEmulator, EMULATOR_LOG, ensureApk, installApp, lockHarness, screenshot, startApp, type AppPage, type BuildMode } from './lib/device.ts';
-import { bridgeValues } from './lib/bridge.ts';
 import { renderFrames } from './lib/frames.ts';
 import { adb, APP_ID, main, ROOT, runVisible, sleep, waitFor } from './lib/tools.ts';
 
@@ -24,6 +23,8 @@ const WORK = join(tmpdir(), 'bodyhack-phone-shots');
 const POSE: PoseId = 'frontDoubleBiceps';
 const SECONDS_PER_FRAME = 0.25;
 const SETTINGS = { voiceCommands: false, debrief: true, coachModel: '', holdGoal: 10 };
+/** A stand-in for a TypeSafe key: the screenshots show the form, never a real key. */
+const DUMMY_KEY = 'phone-shots-not-a-real-key';
 /** The score must be at least this share of the screen height to read from 2-3 m. */
 const MIN_SCORE_SHARE = 0.12;
 /** The emulator's screen capture lags the page by about a second on -gpu host. */
@@ -136,11 +137,10 @@ async function makeVideo(): Promise<string> {
 }
 
 main(async (cleanup) => {
-  const { values } = parseArgs({ options: { 'bridge-port': { type: 'string', default: '5196' }, build: { type: 'boolean' }, 'no-build': { type: 'boolean' } } });
+  const { values } = parseArgs({ options: { build: { type: 'boolean' }, 'no-build': { type: 'boolean' } } });
   const build: BuildMode = values.build ? 'always' : values['no-build'] ? 'never' : 'auto';
   mkdirSync(SHOTS, { recursive: true });
   for (const file of readdirSync(SHOTS)) if (file.endsWith('.png')) rmSync(join(SHOTS, file));
-  const bridge = bridgeValues(Number(values['bridge-port']));
   const video = await makeVideo();
   const apk = ensureApk(build, ['tutor.html']);
   cleanup(lockHarness());
@@ -182,6 +182,12 @@ main(async (cleanup) => {
   };
   const scrollTo = (selector: string) => ev<boolean>(`(() => { const el = document.querySelector(${JSON.stringify(selector)}); el?.scrollIntoView({ block: 'start' }); return !!el; })()`);
   const seen = async () => (await ev<Seen | null>(SEEN).catch(() => null)) ?? undefined;
+  /** The data-state of a Settings section of the phone (DeviceSettings.tsx), once it is no longer checking. */
+  const stateOf = (section: string) =>
+    waitFor(`the ${section} state`, 15_000, async () => {
+      const state = await ev<string>(`document.querySelector('[data-testid="${section}"] .tutor-device-state')?.dataset.state ?? ''`);
+      return state !== '' && state !== 'checking' ? state : undefined;
+    });
   const until = (label: string, timeoutMs: number, accept: (s: Seen) => boolean) =>
     waitFor(label, timeoutMs, async () => {
       const s = await seen();
@@ -271,7 +277,7 @@ main(async (cleanup) => {
     if (coach) {
       const note = await until('the coach note', 150_000, (s) => s.debrief === 'note').catch(() => undefined);
       await shot(`${tag}-16-run-coach-note`);
-      check(`${tag}: the coach note arrives through the bridge`, note?.debrief === 'note', `debrief ${note?.debrief ?? 'timeout'}`);
+      check(`${tag}: the coach debrief shows a note`, note?.debrief === 'note', `debrief ${note?.debrief ?? 'timeout'}`);
       if (note?.debrief === 'note') {
         await click('.tutor-debrief-close');
         check(`${tag}: the coach note can be dismissed`, !(await ev<boolean>(`!!document.querySelector('.tutor-debrief')`)), 'card gone');
@@ -287,45 +293,40 @@ main(async (cleanup) => {
     await click('.tutor-pose', 'Side chest');
     await shot('port-02-picker');
     await click('.tutor-pose', 'Front double biceps');
-    await scrollTo('.tutor-settings');
-    await waitFor('the bridge state', 15_000, async () => ((await ev<string>(`document.querySelector('.tutor-bridge-state')?.dataset.state ?? ''`)) === 'unpaired' ? true : undefined));
-    await shot('port-03-settings-unpaired');
-    check('Settings shows unpaired on a fresh install', true, 'data-state=unpaired');
-
-    const link = `bodyhack://pair?${new URLSearchParams(bridge)}`;
-    adb('shell', `am start -a android.intent.action.VIEW -d '${link}' ${APP_ID}`);
-    await waitFor('the pair dialog', 15_000, async () => ((await ev<boolean>(`!!document.querySelector('[data-testid="pair-dialog"][open]')`)) ? true : undefined));
-    await shot('port-04-pair-dialog');
-    await click('[data-testid="pair-dialog"] .btn', 'Pair');
-    const step = await waitFor('the pairing', 20_000, async () => {
-      const s = await ev<string>(`document.querySelector('[data-testid="pair-dialog"]')?.dataset.step ?? ''`);
-      return s === 'paired' || s === 'failed' ? s : undefined;
+    await scrollTo('[data-testid="device-coach"]');
+    const coachState = await stateOf('device-coach');
+    await shot('port-03-settings-coach');
+    check('Settings shows the on-device coach status (unavailable on the emulator)', coachState === 'unavailable', `data-state ${coachState}`);
+    await click('[data-testid="device-coach"] .pill', 'Self-test');
+    const selfTest = await waitFor('the self-test', 30_000, async () => {
+      const state = await ev<string>(`document.querySelector('[data-testid="coach-self-test"]')?.dataset.state ?? ''`);
+      return state === 'done' || state === 'failed' ? state : undefined;
     });
-    await shot('port-05-pair-done');
-    await click('[data-testid="pair-dialog"] .btn', 'Done');
-    const paired = await ev<{ state: string; url?: string }>(`window.__bodyhackBridge.status()`, 15_000);
-    check('Pairing by the bodyhack://pair link', step === 'paired' && paired.state === 'online' && paired.url === bridge.url, `dialog ${step}, status ${paired.state} ${paired.url ?? ''}`);
-    await scrollTo('.tutor-bridge');
-    await shot('port-06-settings-paired');
+    await shot('port-04-settings-self-test');
+    check('The self-test shows its result', selfTest === 'done', `data-state ${selfTest}`);
 
-    const bad = `bodyhack://pair?${new URLSearchParams({ url: 'http://192.168.1.20:5173', token: bridge.token })}`;
-    adb('shell', `am start -a android.intent.action.VIEW -d '${bad}' ${APP_ID}`);
-    await waitFor('the refused link', 15_000, async () => ((await ev<string>(`document.querySelector('[data-testid="pair-dialog"]')?.dataset.step ?? ''`)) === 'failed' ? true : undefined));
-    await shot('port-07-pair-refused');
-    await click('[data-testid="pair-dialog"] .btn', 'Done');
-    const still = await ev<{ state: string; url?: string }>(`window.__bodyhackBridge.status()`, 15_000);
-    check('A non-Tailscale link is refused and keeps the pairing', still.url === bridge.url, `status ${still.state} ${still.url ?? ''}`);
+    await scrollTo('[data-testid="device-key"]');
+    const keyBefore = await stateOf('device-key');
+    await shot('port-05-settings-key-not-saved');
+    await ev(`document.querySelector('[data-testid="device-key"] input').focus()`);
+    await app.cdp.send('Input.insertText', { text: DUMMY_KEY });
+    await shot('port-06-settings-key-pasted');
+    await click('[data-testid="device-key"] .btn', 'Save the key');
+    const keySaved = await waitFor('the saved key', 15_000, async () => ((await ev<string>(`document.querySelector('[data-testid="device-key"] .tutor-device-state')?.dataset.state ?? ''`)) === 'saved' ? 'saved' : undefined));
+    await shot('port-07-settings-key-saved');
+    check('Pasting a key saves it', keyBefore === 'not-saved' && keySaved === 'saved', `before ${keyBefore}, after ${keySaved}`);
 
     app.close();
     app = await startApp();
     await homeReady();
-    await scrollTo('.tutor-bridge');
-    const kept = await waitFor('the bridge state after restart', 15_000, async () => {
-      const s = await ev<string>(`document.querySelector('.tutor-bridge-state')?.dataset.state ?? ''`);
-      return s && s !== 'checking' ? s : undefined;
-    });
-    await shot('port-08-settings-after-restart');
-    check('The pairing survives an app restart', kept === 'online', `after restart: ${kept}`);
+    await scrollTo('[data-testid="device-key"]');
+    const kept = await stateOf('device-key');
+    const page = await ev<string>(`document.documentElement.outerHTML + [...document.querySelectorAll('input')].map((i) => i.value).join(' ')`);
+    await shot('port-08-settings-key-after-restart');
+    check('The key survives an app restart and is never shown', kept === 'saved' && !page.includes(DUMMY_KEY), `after restart: ${kept}; key text on the page: ${page.includes(DUMMY_KEY) ? 'yes' : 'no'}`);
+    await click('[data-testid="device-key"] .pill', 'Clear the key');
+    const cleared = await waitFor('the cleared key', 15_000, async () => ((await ev<string>(`document.querySelector('[data-testid="device-key"] .tutor-device-state')?.dataset.state ?? ''`)) === 'not-saved' ? 'not-saved' : undefined));
+    check('Clearing the key', cleared === 'not-saved', `data-state ${cleared}`);
     await ev(`scrollTo(0, 0); document.querySelector('.tutor-home')?.scrollTo(0, 0)`);
 
     const awakeBefore = await keptAwake();
@@ -370,7 +371,7 @@ main(async (cleanup) => {
     await click('.tutor-back');
     await homeReady();
     await shot('land-01-home');
-    await scrollTo('.tutor-bridge');
+    await scrollTo('[data-testid="device-coach"]');
     await shot('land-03-settings');
     await ev(`document.querySelector('.tutor-home')?.scrollTo(0, 0)`);
     await learn('land', false);
@@ -397,7 +398,7 @@ main(async (cleanup) => {
   }
 
   const passed = checks.every((c) => c.ok);
-  writeFileSync(join(SHOTS, 'results.json'), JSON.stringify({ checks, legibility, shots, bridgeUrl: bridge.url }, null, 1));
+  writeFileSync(join(SHOTS, 'results.json'), JSON.stringify({ checks, legibility, shots }, null, 1));
   writeFileSync(
     join(SHOTS, 'results.md'),
     [
@@ -409,7 +410,6 @@ main(async (cleanup) => {
       '',
       `- When: ${new Date().toISOString()}`,
       `- Device: emulator AVD bodyhack-harness (pixel_7 profile, -gpu host), front camera \`${relative(ROOT, video)}\``,
-      `- Bridge: ${bridge.url} (from \`npm run bridge -- --port ${values['bridge-port']}\`)`,
       '',
       '| Check | Result | Detail |',
       '|---|---|---|',

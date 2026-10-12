@@ -155,7 +155,7 @@ function report(o: {
     '',
     '| ms | median | p90 | max |',
     '|---|---|---|---|',
-    msRow('`detectImage` round trip (bridge + detection)', t.detectMs),
+    msRow('`detectImage` round trip (plugin call + detection)', t.detectMs),
     msRow('PNG encode of the frame in the WebView', t.encodeMs),
     '',
     '## Own-pose scores, Android against desktop',

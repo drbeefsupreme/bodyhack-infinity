@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The paired desktop bridge (server/bridge.ts) is plain HTTP on a Tailscale address; WireGuard encrypts the link.
-     Android cannot limit cleartext to an IP range (100.64.0.0/10), so cleartext is allowed here, and the app limits
-     the bridge URL to Tailscale addresses and *.ts.net names when it is paired (src/posing/platform/androidBridge.ts).
-     The WebView itself loads only https://localhost. -->
+<!-- HTTPS only. The app's one external host is api.typesafe.ai (jev, through CapacitorHttp); the WebView loads only
+     https://localhost, which the app serves itself. -->
 <network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>

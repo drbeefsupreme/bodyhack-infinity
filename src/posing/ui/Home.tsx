@@ -8,7 +8,7 @@ import { PlatformContext } from '../platform/context';
 import { POSE_LABELS } from '../progress/format';
 import type { Speech } from '../speech';
 import type { PoseId } from '../types';
-import type { CoachLinkState } from './DesktopCoach';
+import type { Health } from './api';
 import { PosePicker } from './PosePicker';
 import { Settings } from './Settings';
 
@@ -39,10 +39,11 @@ interface Props {
   readonly settings: TutorSettings;
   readonly onSettings: (settings: TutorSettings) => void;
   readonly speech: Speech;
-  readonly coach: CoachLinkState;
+  readonly health: Health | undefined;
+  readonly onRecheck: () => void;
 }
 
-export function Home({ pose, onPose, onChoose, settings, onSettings, speech, coach }: Props) {
+export function Home({ pose, onPose, onChoose, settings, onSettings, speech, health, onRecheck }: Props) {
   const best = parseBest(use(PlatformContext).store.getItem(BEST_KEY)).round;
   return (
     <div className="tutor-home">
@@ -81,7 +82,7 @@ export function Home({ pose, onPose, onChoose, settings, onSettings, speech, coa
         <PosePicker pose={pose} onPose={onPose} />
       </div>
       <aside className="tutor-home-side">
-        <Settings settings={settings} onSettings={onSettings} speech={speech} coach={coach} />
+        <Settings settings={settings} onSettings={onSettings} speech={speech} health={health} onRecheck={onRecheck} />
       </aside>
     </div>
   );

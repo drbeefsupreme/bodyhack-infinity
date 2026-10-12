@@ -1,32 +1,37 @@
-// Camera loops on Android: npm run android:e2e [-- --build | --no-build] [-- --only=learn,hold,judge,mirror,bridge]
+// Camera loops on Android: npm run android:e2e [-- --build | --no-build] [-- --only=learn,hold,judge,mirror,device]
 // (--only drives some phases, for work on one mode; the report marks such a run as partial.)
 // Renders one camera clip of the figure per mode and makes the clip of the current mode the front camera of
 // emulator-5564 (camera-video.sh). When the camera stays closed for a few seconds, the emulator reads the clip file
 // again at the next camera start and plays it from its start, so the driver puts a mode's clip in place, waits, and then
 // starts that mode. It installs the APK and drives tutor.html over CDP:
 // - Learn a pose to a hit: a photo in app storage (adb run-as) and a voice command handed to the Android voice input
-//   (window.__bodyhackVoice) that moves the build-up on (keywords, as the app is not paired yet).
+//   (window.__bodyhackVoice) that moves the build-up on (keywords, as no TypeSafe key is stored yet).
 // - Hold drill, 10 s on front double biceps: it completes with a mean score and steadiness, with no reset.
 // - Judge's calls: the first 3 calls (relaxed front, quarter turn, relaxed back) each reach a hit.
 // - Mirror: the figure's upper arms follow the clip.
-// - Paired bridge: `npm run dev` on a free port, paired by the `bodyhack://pair` link of `npm run bridge`. A free phrase
-//   is decided by the jev intent (one real jev call) and acts; a real coach note arrives at a hit (one real coach call);
-//   after unpairing in Settings, a hit shows "coach offline".
-// Then: the emulator stayed up, and the native TTS finished at least one spoken line (window.__bodyhackSpeech, fed by
-// the plugin's done callbacks; logcat kept as evidence). Exits 1 when a check fails.
+// - Phone only: Settings shows the on-device coach as unavailable (the emulator has no AICore) and its self-test says so.
+//   The real TypeSafe key of this computer (server/secrets.ts lookup) goes into BodyhackSecrets through the test hook
+//   window.__bodyhackSetup; Settings then shows it as saved, never the key. A free phrase is decided by jev from the
+//   phone (one real jev call) and acts, and a hit shows the "not available on this phone" coach note, not an error.
+// Then: the emulator stayed up, the native TTS finished at least one spoken line (window.__bodyhackSpeech, fed by the
+// plugin's done callbacks; logcat kept as evidence), and the network checks: the WebView requested only its own origin
+// (CDP Network log), every CapacitorHttp call went to the jev host (Capacitor.toNative watched), the app's sockets
+// (/proc/net, sampled for the whole run) reached only that host's addresses, the page had no CSP violation, and the key
+// is not in logcat. Exits 1 when a check fails.
 // Writes docs/android/e2e-report.md; the clips, screenshots, the photo and logs go to docs/android/shots/e2e/.
 import { appendFileSync, copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import type { FrameSpec } from '../../src/posing/gate/androidGate.ts';
 import type { ModeId, Stage } from '../../src/posing/modes/mode.ts';
-import type { BridgeStatus } from '../../src/posing/platform/types.ts';
 import type { PhotoMeta } from '../../src/posing/progress/types.ts';
 import type { PoseId } from '../../src/posing/types.ts';
 import type { Snapshot } from '../../src/posing/ui/engine.ts';
-import { startBridgeServer } from './lib/bridge.ts';
-import { bootEmulator, EMULATOR_LOG, emulatorRunning, ensureApk, installApp, lockHarness, screenshot, startApp, type BuildMode } from './lib/device.ts';
+import { typesafeKey } from '../../server/secrets.ts';
+import { JEV_ENDPOINT } from '../../src/posing/intent/jev.ts';
+import { APP_ORIGIN, bootEmulator, EMULATOR_LOG, emulatorRunning, ensureApk, installApp, lockHarness, screenshot, startApp, type BuildMode } from './lib/device.ts';
 import { renderFrames } from './lib/frames.ts';
+import { appUid, hostAddresses, isGoogleAddress, watchSockets } from './lib/network.ts';
 import { adb, adbBytes, APP_ID, AVD, main, median, ROOT, runVisible, SERIAL, sleep, waitFor } from './lib/tools.ts';
 
 const REPORT = join(ROOT, 'docs/android/e2e-report.md');
@@ -42,10 +47,54 @@ const SECONDS_PER_FRAME = 0.25;
 const TRANSITION_FRAMES = 6;
 const SETTINGS = { voiceCommands: true, debrief: false, coachModel: '', holdGoal: 10 };
 const VOICE_PHRASE = 'next one please';
-/** A phrase for the jev intent; the paired check passes only when jev, not the keywords, decides it. */
+/** A phrase for the jev intent; the check passes only when jev, not the keywords, decides it. */
 const FREE_PHRASE = 'could you go to the next one';
 const MIRROR_MIN_CHANGE_DEG = 30;
+const COACH_UNAVAILABLE = 'On-device coach is not available on this phone:';
+const JEV_HOST = new URL(JEV_ENDPOINT).host;
+/**
+ * Hosts that Google's SDKs in the app (ML Kit GenAI) send usage metrics to, with no image and no prompt. They are
+ * disclosed in Settings and the README and reported as their own category; the app's own requests go only to JEV_HOST.
+ */
+const TELEMETRY_HOSTS = ['firebaselogging.googleapis.com'];
+/** The page's own origin; data: URLs never leave the WebView. */
+const PAGE_ORIGINS = [APP_ORIGIN, 'data:'];
 
+/**
+ * Runs in every page the app loads, before the page's scripts: reports CSP violations, and wraps Capacitor.toNative,
+ * which every plugin call goes through, to report the plugin, the method and, for CapacitorHttp, only the URL's host
+ * (never the options: they hold the key).
+ */
+const PAGE_WATCH = `(() => {
+  console.debug('[watch] page');
+  document.addEventListener('securitypolicyviolation', (e) => console.warn('[csp] ' + e.effectiveDirective + ' ' + e.blockedURI));
+  const wrap = () => {
+    const cap = window.Capacitor;
+    if (!cap || typeof cap.toNative !== 'function') return false;
+    if (cap.__e2eWatched) return true;
+    const toNative = cap.toNative;
+    cap.toNative = (plugin, method, options, callback) => {
+      let host = '';
+      if (plugin === 'CapacitorHttp') {
+        try { host = new URL(options.url).host; } catch { host = 'unparsable URL'; }
+      }
+      console.debug('[native] ' + JSON.stringify({ plugin, method, host }));
+      return toNative(plugin, method, options, callback);
+    };
+    cap.__e2eWatched = true;
+    console.debug('[watch] capacitor');
+    return true;
+  };
+  if (!wrap()) {
+    const timer = setInterval(() => { if (wrap()) clearInterval(timer); }, 1);
+  }
+})()`;
+
+interface NativeCall {
+  readonly plugin: string;
+  readonly method: string;
+  readonly host: string;
+}
 type ClipId = 'learn' | 'hold' | 'judge' | 'mirror';
 
 interface Hold {
@@ -273,8 +322,8 @@ interface Check {
   readonly seconds: number;
 }
 
-type PhaseId = 'learn' | 'hold' | 'judge' | 'mirror' | 'bridge';
-const PHASE_IDS: readonly PhaseId[] = ['learn', 'hold', 'judge', 'mirror', 'bridge'];
+type PhaseId = 'learn' | 'hold' | 'judge' | 'mirror' | 'device';
+const PHASE_IDS: readonly PhaseId[] = ['learn', 'hold', 'judge', 'mirror', 'device'];
 
 interface PhaseRecord {
   readonly name: string;
@@ -310,7 +359,6 @@ interface ReportInput {
   readonly history: readonly HistoryEntry[];
   readonly logcatLines: number;
   readonly device: string;
-  readonly bridge: string;
   /** The phases this run drove: all of PHASE_IDS, or the --only subset. */
   readonly only: readonly PhaseId[];
   readonly seconds: number;
@@ -333,7 +381,6 @@ function report(o: ReportInput): string {
     `- Front camera: one clip per mode (camera-video.sh, ${SECONDS_PER_FRAME} s per frame, ${TRANSITION_FRAMES} in-between frames (${MOVE_SECONDS} s) from each pose to the next and from the last back to the first). The emulator loops a clip. After the camera is closed for ${CAMERA_IDLE_MS / 1000} s, it reads the file again and plays it from the start when the app starts the camera; so the driver puts a mode's clip in place and waits ${CAMERA_IDLE_MS / 1000} s before it starts the mode.`,
     ...CLIP_IDS.map((id) => `  - \`${relative(ROOT, clipVideo(id))}\`: ${describeClip(id)}.`),
     '- Driver: CDP into the app WebView through `adb forward`. Each mode starts with its `button[data-mode]` on the home screen and ends with the Exit button. Learn ends its build-up with the Space key, Judge\'s calls stop with Escape after call 3.',
-    `- Bridge: ${o.bridge}.`,
     '',
     '## Checks',
     '',
@@ -378,9 +425,9 @@ function report(o: ReportInput): string {
     '',
     '## Files (git-ignored)',
     '',
-    `\`${relative(ROOT, SHOTS)}/\`: the clips camera-<clip>.mp4, the screenshots (01-learn-live.png to 10-coach-offline.png, zz-*`,
-    'on a failure), the saved photo and its sidecar, dev-server.log, logcat-tts.txt, logcat-pose.txt, history.jsonl and run.json (all',
-    'states the checks read, and the page samples of each phase).',
+    `\`${relative(ROOT, SHOTS)}/\`: the clips camera-<clip>.mp4, the screenshots (01-learn-live.png to 11-coach-unavailable.png, zz-*`,
+    'on a failure), the saved photo and its sidecar, logcat-tts.txt, logcat-pose.txt, history.jsonl and run.json (all states the',
+    'checks read, the page samples of each phase, and the network records).',
     '',
   );
   return lines.join('\n');
@@ -413,10 +460,25 @@ main(async (cleanup) => {
   const device = `${SERIAL} (AVD ${AVD}, Android ${adb('shell', 'getprop', 'ro.build.version.release').trim()}, -gpu host)`;
   adb('logcat', '-c');
   cleanup(() => void adb('shell', 'am', 'force-stop', APP_ID));
+  const nativeCalls: NativeCall[] = [];
+  const cspViolations: string[] = [];
+  const pageRequests: string[] = [];
+  /** How many pages ran PAGE_WATCH, and in how many it wrapped Capacitor: the CSP and plugin checks count only then. */
+  const watched = { page: 0, capacitor: 0 };
   const app = await startApp((type, text) => {
+    if (text === '[watch] page') watched.page++;
+    else if (text === '[watch] capacitor') watched.capacitor++;
+    else if (text.startsWith('[native] ')) nativeCalls.push(JSON.parse(text.slice('[native] '.length)) as NativeCall);
+    else if (text.startsWith('[csp] ')) cspViolations.push(text.slice('[csp] '.length));
     if (type === 'error' || type === 'warning') console.log(`[app ${type}] ${text}`);
   });
   cleanup(() => app.close());
+  const stopSockets = watchSockets(appUid());
+  cleanup(async () => void (await stopSockets()));
+  app.cdp.on('Network.requestWillBeSent', (params) => pageRequests.push((params as { request: { url: string } }).request.url));
+  await app.cdp.send('Network.enable');
+  await app.cdp.send('Page.enable');
+  await app.cdp.send('Page.addScriptToEvaluateOnNewDocument', { source: PAGE_WATCH });
   await app.cdp.evaluate(`localStorage.setItem('posing-tutor-settings', ${JSON.stringify(JSON.stringify(SETTINGS))})`);
   await app.open('tutor.html');
 
@@ -466,7 +528,6 @@ main(async (cleanup) => {
   let phaseName = '';
   let phaseStart = runStart;
   let mark = runStart;
-  let bridgeNote = 'not started';
   /** Records a check. `at` (Date.now()) is when the run saw the result, if that was before this call. */
   const check = (name: string, ok: boolean, detail: string, at = Date.now()) => {
     const now = Math.max(at, mark);
@@ -675,96 +736,89 @@ main(async (cleanup) => {
     );
   });
 
-  await phase('bridge', 'Paired bridge', 'learn', async () => {
-    const server = await startBridgeServer(join(SHOTS, 'dev-server.log'), join(WORK, 'data'));
-    cleanup(() => server.stop());
-    bridgeNote = `${server.url} (\`npm run dev -- --port ${server.port} --strictPort\`, values from \`npm run bridge -- --port ${server.port}\`)`;
-    event(`dev server on port ${server.port}, bridge ${server.url} answers /api/health`);
-    try {
-      const link = `bodyhack://pair?${new URLSearchParams({ url: server.url, token: server.token })}`;
-      adb('shell', `am start -a android.intent.action.VIEW -d '${link}' ${APP_ID}`);
-      await waitFor('the pair dialog', 15_000, async () => ((await ev<boolean>(`!!document.querySelector('[data-testid="pair-dialog"][open]')`)) ? true : undefined));
-      await click('[data-testid="pair-dialog"] .btn', 'Pair');
-      const step = await waitFor('the pairing', 20_000, async () => {
-        const s = await ev<string>(`document.querySelector('[data-testid="pair-dialog"]')?.dataset.step ?? ''`);
-        return s === 'paired' || s === 'failed' ? s : undefined;
+  /** Whether the real key went onto the device, for the logcat check. */
+  let keyStored = false;
+  await phase('device', 'Phone only: on-device coach and jev', 'learn', async () => {
+    const stateOf = (section: string) =>
+      waitFor(`the ${section} state`, 15_000, async () => {
+        const state = await ev<string>(`document.querySelector('[data-testid="${section}"] .tutor-device-state')?.dataset.state ?? ''`);
+        return state !== '' && state !== 'checking' ? state : undefined;
       });
-      await click('[data-testid="pair-dialog"] .btn', 'Done');
-      const status = await ev<BridgeStatus>('window.__bodyhackBridge.status()', 15_000);
-      event(`pair dialog ${step}, status ${JSON.stringify(status)}`);
-      check(
-        'Pairing by the bodyhack://pair link',
-        step === 'paired' && status.state === 'online' && status.url === server.url && status.health.jev && status.health.omp,
-        status.state === 'online' ? `dialog ${step}; online ${status.url}; desktop jev ${status.health.jev}, omp ${status.health.omp}, coach model ${status.health.coachModel ?? '-'}` : `dialog ${step}; ${JSON.stringify(status)}`,
-      );
+    const coachState = await stateOf('device-coach');
+    const coachText = await ev<string>(`document.querySelector('[data-testid="device-coach"] .tutor-device-state').textContent`);
+    check('Settings shows the on-device coach as unavailable on the emulator', coachState === 'unavailable', `data-state ${coachState}: ${coachText}`);
 
-      const debriefBox = `[...document.querySelectorAll('label.tutor-check')].find((l) => l.textContent.includes('Coach debrief'))?.querySelector('input')`;
-      if (!(await ev<boolean>(`${debriefBox}.checked`))) await ev(`${debriefBox}.click()`);
-      if (!(await ev<boolean>(`${debriefBox}.checked`))) throw new Error('the coach debrief setting did not turn on');
+    await click('[data-testid="device-coach"] .pill', 'Self-test');
+    const selfTest = await waitFor('the self-test', 30_000, async () =>
+      (await ev<{ state: string; text: string } | null>(
+        `(() => { const el = document.querySelector('[data-testid="coach-self-test"]'); return el && el.dataset.state !== 'running' ? { state: el.dataset.state, text: el.querySelector('p').textContent } : null; })()`,
+      )) ?? undefined,
+    );
+    await ev(`document.querySelector('[data-testid="device-coach"]').scrollIntoView({ block: 'start' })`);
+    await sleep(1500);
+    screenshot(join(SHOTS, '08-coach-self-test.png'));
+    check('The self-test reports the coach unavailable', selfTest.state === 'done' && selfTest.text.startsWith(COACH_UNAVAILABLE), `${selfTest.state}: ${selfTest.text}`);
 
-      await startMode('learn');
-      await cameraLive();
-      const step0 = await until('the first build-up step', 90_000, (s) => s.calibration.kind === 'ready' && s.stage?.kind === 'step');
-      const before = step0.stage?.kind === 'step' ? step0.stage.index : -1;
-      const accepted = (await ev(`window.__bodyhackVoice(${JSON.stringify(FREE_PHRASE)})`)) === true;
-      const after = await until('the free phrase', 20_000, (s) => s.heard?.text === FREE_PHRASE).catch(() => undefined);
-      const heard = after?.heard;
-      const moved = after !== undefined && (after.stage?.kind !== 'step' || after.stage.index > before);
-      event(`voice "${FREE_PHRASE}": accepted ${accepted}, heard ${JSON.stringify(heard)}, stage ${JSON.stringify(after?.stage)}`, after);
-      check(
-        'A free phrase is decided by the jev intent and acts',
-        accepted && heard?.via === 'jev' && heard.command === 'next' && moved,
-        `"${FREE_PHRASE}": command ${heard?.command ?? 'none'} via ${heard?.via ?? '-'}${heard?.confidence === undefined ? '' : `, confidence ${heard.confidence.toFixed(2)}`}; step ${before} -> ${after?.stage?.kind === 'step' ? after.stage.index : (after?.stage?.kind ?? '-')}`,
-      );
+    const key = typesafeKey(ROOT);
+    if (key === null) throw new Error('No TypeSafe key on this computer: set TYPESAFE_API_KEY in .env.local or ~/git/crispy/.env.local.');
+    const keyBefore = await stateOf('device-key');
+    // The key travels only inside this one CDP message; no error or log line repeats the expression.
+    const stored = (await app.cdp.send('Runtime.evaluate', {
+      expression: `window.__bodyhackSetup.saveKey(${JSON.stringify(key)}).then(() => true, () => false)`,
+      awaitPromise: true,
+      returnByValue: true,
+    })) as { result?: { value?: unknown } };
+    if (stored.result?.value !== true) throw new Error('Storing the TypeSafe key through window.__bodyhackSetup.saveKey failed.');
+    keyStored = true;
+    cleanup(() => void adb('shell', 'pm', 'clear', APP_ID));
+    event('the TypeSafe key of this computer went into BodyhackSecrets through window.__bodyhackSetup.saveKey');
+    await app.open('tutor.html');
+    await waitFor('the home screen', 30_000, atHome);
+    const keyAfter = await stateOf('device-key');
+    const page = await ev<string>(`document.documentElement.outerHTML + [...document.querySelectorAll('input')].map((i) => i.value).join(' ')`);
+    await ev(`document.querySelector('[data-testid="device-key"]').scrollIntoView({ block: 'start' })`);
+    await sleep(1500);
+    screenshot(join(SHOTS, '09-key-saved.png'));
+    check(
+      'Settings shows the key as saved, and never the key',
+      keyBefore === 'not-saved' && keyAfter === 'saved' && !page.includes(key),
+      `before ${keyBefore}, after ${keyAfter}; key text on the page: ${page.includes(key) ? 'yes' : 'no'}`,
+    );
 
-      await endBuildUp();
-      const hit = await until('the hit', 180_000, (s) => s.stage?.kind === 'done');
-      event(`done, debrief ${hit.debrief.kind}`, hit);
-      const noted = await until('the coach note', 150_000, (s) => s.debrief.kind === 'note' || (s.debrief.kind === 'idle' && (s.notice?.includes('Coach debrief failed') ?? false))).catch(() => undefined);
-      await sleep(1500);
-      screenshot(join(SHOTS, '08-coach-note.png'));
-      const note = noted?.debrief.kind === 'note' ? noted.debrief : undefined;
-      event(`debrief ${JSON.stringify(noted?.debrief)}, notice ${noted?.notice ?? '-'}`, noted);
-      check(
-        'A real coach note arrives at a hit',
-        note !== undefined && note.note.trim().length > 0,
-        note ? `${note.model}, ${(note.ms / 1000).toFixed(1)} s: "${note.note.slice(0, 140)}${note.note.length > 140 ? '…' : ''}" (${note.cues.length} cues)` : `debrief ${noted?.debrief.kind ?? 'timeout'}, notice ${noted?.notice ?? '-'}`,
-      );
+    const debriefBox = `[...document.querySelectorAll('label.tutor-check')].find((l) => l.textContent.includes('Coach debrief'))?.querySelector('input')`;
+    if (!(await ev<boolean>(`${debriefBox}.checked`))) await ev(`${debriefBox}.click()`);
+    if (!(await ev<boolean>(`${debriefBox}.checked`))) throw new Error('the coach debrief setting did not turn on');
 
-      await ev(`document.querySelector('.tutor-run-bar .pill').click()`);
-      await waitFor('the home screen', 30_000, atHome);
-      await click('.tutor-bridge-actions button', 'Unpair');
-      const shown = await waitFor('the unpaired state', 15_000, async () => {
-        const state = await ev<string>(`document.querySelector('.tutor-bridge-state')?.dataset.state ?? ''`);
-        return state === 'unpaired' ? state : undefined;
-      }).catch(() => 'not unpaired');
-      const unpaired = await ev<BridgeStatus>('window.__bodyhackBridge.status()', 15_000);
-      check('Unpairing in Settings', shown === 'unpaired' && unpaired.state === 'unpaired', `Settings shows ${shown}; status ${unpaired.state}`);
+    await startMode('learn');
+    await cameraLive();
+    const step0 = await until('the first build-up step', 90_000, (s) => s.calibration.kind === 'ready' && s.stage?.kind === 'step');
+    const before = step0.stage?.kind === 'step' ? step0.stage.index : -1;
+    const accepted = (await ev(`window.__bodyhackVoice(${JSON.stringify(FREE_PHRASE)})`)) === true;
+    const after = await until('the free phrase', 20_000, (s) => s.heard?.text === FREE_PHRASE).catch(() => undefined);
+    const heard = after?.heard;
+    const moved = after !== undefined && (after.stage?.kind !== 'step' || after.stage.index > before);
+    event(`voice "${FREE_PHRASE}": accepted ${accepted}, heard ${JSON.stringify(heard)}, stage ${JSON.stringify(after?.stage)}`, after);
+    check(
+      'A free phrase is decided by jev from the phone and acts',
+      accepted && heard?.via === 'jev' && heard.command === 'next' && moved,
+      `"${FREE_PHRASE}": command ${heard?.command ?? 'none'} via ${heard?.via ?? '-'}${heard?.confidence === undefined ? '' : `, confidence ${heard.confidence.toFixed(2)}`}; step ${before} -> ${after?.stage?.kind === 'step' ? after.stage.index : (after?.stage?.kind ?? '-')}`,
+    );
 
-      await startMode('learn');
-      await cameraLive();
-      await until('the first build-up step', 90_000, (s) => s.stage?.kind === 'step');
-      await endBuildUp();
-      const unpairedHit = await until('the hit', 180_000, (s) => s.stage?.kind === 'done');
-      const summary = unpairedHit.stage?.kind === 'done' ? unpairedHit.stage.summary : undefined;
-      event(`done, summary ${JSON.stringify(summary)}`, unpairedHit);
-      const offline = await waitFor('"coach offline" on the screen', 30_000, async () => {
-        const text = await ev<string>(`document.querySelector('.tutor-notice')?.textContent ?? ''`);
-        return text.includes('coach offline') ? text : undefined;
-      }).catch(() => undefined);
-      await sleep(1000);
-      screenshot(join(SHOTS, '10-coach-offline.png'));
-      const after2 = await seen();
-      event(`notice ${after2?.notice ?? '-'}, debrief ${JSON.stringify(after2?.debrief)}`, after2);
-      check(
-        'After unpairing, a hit shows "coach offline"',
-        summary?.mode === 'learn' && summary.result !== undefined && offline !== undefined,
-        `hit ${summary?.mode === 'learn' && summary.result ? summary.result.score.toFixed(1) : 'none'}; .tutor-notice: ${offline ?? after2?.notice ?? 'none'}`,
-      );
-    } finally {
-      await server.stop();
-      event('dev server stopped');
-    }
+    await endBuildUp();
+    const hit = await until('the hit', 180_000, (s) => s.stage?.kind === 'done');
+    event(`done, debrief ${hit.debrief.kind}`, hit);
+    const noted = await until('the coach note', 30_000, (s) => s.debrief.kind === 'note' || (s.debrief.kind === 'idle' && (s.notice?.includes('Coach debrief failed') ?? false))).catch(() => undefined);
+    await sleep(1500);
+    screenshot(join(SHOTS, '10-coach-unavailable.png'));
+    const note = noted?.debrief.kind === 'note' ? noted.debrief : undefined;
+    event(`debrief ${JSON.stringify(noted?.debrief)}, notice ${noted?.notice ?? '-'}`, noted);
+    check(
+      'A hit shows the "not available on this phone" coach note, not an error',
+      note !== undefined && note.note.startsWith(COACH_UNAVAILABLE) && note.cues.length === 0 && !(noted?.notice?.includes('Coach debrief failed') ?? false),
+      note ? `"${note.note}" (${note.model}, ${note.ms} ms); notice ${noted?.notice ?? 'none'}` : `debrief ${noted?.debrief.kind ?? 'timeout'}, notice ${noted?.notice ?? '-'}`,
+    );
+    await sleep(2000);
+    screenshot(join(SHOTS, '11-coach-unavailable-note.png'));
   });
 
   phaseName = 'Run';
@@ -786,7 +840,48 @@ main(async (cleanup) => {
     : [];
   writeFileSync(join(SHOTS, 'logcat-tts.txt'), logcat.join('\n'));
   if (up) writeFileSync(join(SHOTS, 'logcat-pose.txt'), adb('logcat', '-d', '-v', 'time', '-s', 'BodyhackPose:*'));
-  writeFileSync(join(SHOTS, 'run.json'), JSON.stringify({ checks, phases, states, speech, samples }, null, 1));
+
+  const foreign = [...new Set(pageRequests.filter((url) => !PAGE_ORIGINS.some((origin) => url.startsWith(origin))))];
+  check(
+    'The WebView requests only its own origin',
+    pageRequests.length > 0 && foreign.length === 0,
+    `${pageRequests.length} requests (CDP Network log)${foreign.length > 0 ? `; other hosts: ${foreign.slice(0, 5).join(', ')}` : `, all from ${APP_ORIGIN} or data:`}`,
+  );
+  const httpHosts = [...new Set(nativeCalls.filter((c) => c.plugin === 'CapacitorHttp').map((c) => c.host))];
+  const plugins = [...new Set(nativeCalls.map((c) => c.plugin))].sort();
+  check(
+    `Every CapacitorHttp call goes to ${JEV_HOST}`,
+    watched.capacitor > 0 && (only.includes('device') ? httpHosts.length === 1 && httpHosts[0] === JEV_HOST : httpHosts.length === 0),
+    `Capacitor.toNative watched in ${watched.capacitor} page loads; ${nativeCalls.filter((c) => c.plugin === 'CapacitorHttp').length} CapacitorHttp calls to ${httpHosts.join(', ') || 'no host'}; plugins called: ${plugins.join(', ')}`,
+  );
+  const remotes = [...(await stopSockets())];
+  const jevAddresses = await hostAddresses(JEV_HOST);
+  const telemetryAddresses = new Set((await Promise.all(TELEMETRY_HOSTS.map(hostAddresses))).flatMap((set) => [...set]));
+  const sorted: Record<'jev' | 'telemetry' | 'other', string[]> = { jev: [], telemetry: [], other: [] };
+  for (const ip of remotes) {
+    const kind = jevAddresses.has(ip) ? 'jev' : telemetryAddresses.has(ip) || (await isGoogleAddress(ip)) ? 'telemetry' : 'other';
+    sorted[kind].push(ip);
+  }
+  check(
+    `The app's sockets reach only ${JEV_HOST}, plus Google SDK telemetry`,
+    sorted.other.length === 0 && (only.includes('device') ? sorted.jev.length > 0 : true),
+    `uid ${appUid()}, /proc/net every 0.5 s. ${JEV_HOST}: ${sorted.jev.join(', ') || 'none'}. Google SDK telemetry (${TELEMETRY_HOSTS.join(', ')} or a Google 1e100.net address): ${sorted.telemetry.join(', ') || 'none'}. Other: ${sorted.other.join(', ') || 'none'}`,
+  );
+  const appViolations = [...cspViolations];
+  // A control: an inline script, which the CSP blocks without any network request, must be reported.
+  await ev(`(() => { const s = document.createElement('script'); s.textContent = '0'; document.head.append(s); s.remove(); })()`).catch(() => undefined);
+  await sleep(500);
+  const control = cspViolations.slice(appViolations.length);
+  check(
+    'No CSP violation in the page',
+    watched.page > 0 && control.some((v) => v.endsWith(' inline')) && appViolations.length === 0,
+    `listener in ${watched.page} page loads; control inline script reported as: ${control.join('; ') || 'nothing'}; app violations: ${[...new Set(appViolations)].join('; ') || 'none'}`,
+  );
+  if (keyStored) {
+    const leaked = up && adb('logcat', '-d').includes(typesafeKey(ROOT) ?? '\0');
+    check('The TypeSafe key is not in logcat', up && !leaked, up ? `key text in logcat -d: ${leaked ? 'yes' : 'no'}` : 'no logcat: the emulator is gone');
+  }
+  writeFileSync(join(SHOTS, 'run.json'), JSON.stringify({ checks, phases, states, speech, samples, network: { pageRequests, nativeCalls, sockets: sorted, cspViolations } }, null, 1));
 
   const passed = checks.every((c) => c.ok);
   const seconds = (Date.now() - runStart) / 1000;
@@ -798,7 +893,7 @@ main(async (cleanup) => {
     checks: checks.map(({ name, ok, seconds: s }) => ({ name, ok, seconds: s })),
   };
   appendFileSync(HISTORY, `${JSON.stringify(entry)}\n`);
-  writeFileSync(REPORT, report({ passed, checks, phases, events, speech, history: readHistory(), logcatLines: logcat.length, device, bridge: bridgeNote, only, seconds }));
+  writeFileSync(REPORT, report({ passed, checks, phases, events, speech, history: readHistory(), logcatLines: logcat.length, device, only, seconds }));
   console.log(`Wrote ${relative(ROOT, REPORT)}.`);
   console.log(passed ? `Android e2e: PASS (${checks.length} checks)` : `Android e2e: FAIL (${checks.filter((c) => !c.ok).length} of ${checks.length} checks)`);
   return passed ? 0 : 1;

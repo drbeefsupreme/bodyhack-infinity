@@ -62,27 +62,20 @@
 .tutor-privacy ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); }
 .tutor-privacy b { color: var(--fg); font-weight: 600; }
 
-.tutor-bridge { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
-.tutor-bridge h4 { margin: 0; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
-.tutor-bridge-state { position: relative; margin: 0; padding-left: 18px; font-size: 0.88rem; overflow-wrap: anywhere; }
-.tutor-bridge-state p { margin: 0 0 4px; }
-.tutor-bridge-state::before { content: ""; position: absolute; left: 2px; top: 0.45em; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
-.tutor-bridge-state[data-state="online"]::before { background: var(--good); box-shadow: 0 0 8px var(--good); }
-.tutor-bridge-state[data-state="offline"]::before { background: var(--bad); }
-.tutor-bridge-state[data-state="unpaired"]::before { background: var(--warn); }
-.tutor-bridge-form { display: flex; flex-direction: column; gap: 8px; }
-.tutor-bridge-form .hint { margin: 0; }
-.tutor-bridge-form .btn { align-self: flex-start; }
-.tutor-bridge-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-
-.tutor-dialog {
-  max-width: min(440px, calc(100vw - 32px)); padding: 22px 24px; border: 1px solid var(--border); border-radius: var(--radius);
-  background: var(--panel); color: var(--fg); box-shadow: 0 6px 0 #05070c, 0 0 40px rgba(56, 189, 248, 0.18);
-}
-.tutor-dialog::backdrop { background: rgba(5, 7, 12, 0.7); backdrop-filter: blur(3px); }
-.tutor-dialog p { margin: 12px 0 0; color: var(--muted); overflow-wrap: anywhere; }
-.tutor-dialog p b { color: var(--fg); }
-.tutor-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+.tutor-device { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.tutor-device h4 { margin: 0; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.tutor-device .hint, .tutor-device-result p { margin: 0; }
+.tutor-device-state { position: relative; margin: 0; padding-left: 18px; font-size: 0.88rem; overflow-wrap: anywhere; }
+.tutor-device-state::before { content: ""; position: absolute; left: 2px; top: 0.45em; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.tutor-device-state[data-tone="good"]::before { background: var(--good); box-shadow: 0 0 8px var(--good); }
+.tutor-device-state[data-tone="warn"]::before { background: var(--warn); }
+.tutor-device-state[data-tone="bad"]::before { background: var(--bad); }
+.tutor-device-progress { display: flex; flex-direction: column; gap: 4px; }
+.tutor-device-progress progress { width: 100%; accent-color: var(--accent); }
+.tutor-device-result { display: grid; gap: 6px; padding: 8px 10px; border-left: 3px solid var(--accent); font-size: 0.88rem; }
+.tutor-device-result ul { margin: 0; padding-left: 18px; }
+.tutor-device-form { display: flex; flex-direction: column; gap: 8px; }
+.tutor-device-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 
 /* run */
 .tutor-run { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; background: var(--bg); }
@@ -219,7 +212,7 @@
   .tutor-check { min-height: 48px; align-items: center; font-size: 0.98rem; }
   .tutor-check input { flex: none; width: 24px; height: 24px; margin: 0; }
   .tutor-privacy summary { min-height: 44px; display: flex; align-items: center; }
-  .tutor-bridge .btn, .tutor-bridge .pill, .tutor-dialog-actions .btn, .tutor-dialog-actions .pill { min-height: 48px; padding-inline: 18px; }
+  .tutor-device .btn, .tutor-device .pill { min-height: 48px; padding-inline: 18px; }
 
   .tutor-progress { padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
   .tutor-back { position: static; align-self: flex-start; min-height: 48px; margin: 10px 12px 0; padding: 0 16px; font-size: 0.95rem; }

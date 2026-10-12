@@ -1,21 +1,24 @@
 // The Android Platform: the native pose plugin (./posePlugin.ts) for the camera and tracking, Android TextToSpeech,
-// the native voice plugin (./voicePlugin.ts) for voice commands, app-private files for the photos, the paired desktop
-// bridge for the coach and the intent, and the KeepAwake plugin. The WebView's localStorage is the store; it
-// persists in the app's data like any app storage.
+// the native voice plugin (./voicePlugin.ts) for voice commands, app-private files for the photos, Gemini Nano on the
+// phone for the coach and jev for the intent (./androidCoach.ts), and the KeepAwake plugin. The WebView's localStorage
+// is the store; it persists in the app's data like any app storage.
 
 import { KeepAwake as KeepAwakePlugin } from '@capacitor-community/keep-awake';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
-import { App } from '@capacitor/app';
 import { Capacitor, CapacitorException, CapacitorHttp, registerPlugin, type PluginListenerHandle } from '@capacitor/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { poseLandmarks } from '../landmarks';
 import type { SpeechEngine } from '../speech';
-import { bridgeCoach, parsePairLink, storedPairing, type BridgeHttp } from './androidBridge';
+import type { PostJson } from '../intent/jev';
+import { deviceCoach } from './androidCoach';
 import { folderPhotoStore, type PhotoFolder } from './androidPhotos';
 import { nativeSpeech, type SpeechLogEntry } from './androidSpeech';
 import { NativeVoiceInput } from './androidVoice';
+import type { BodyhackCoachPlugin } from './coachPlugin';
 import type { BodyhackPosePlugin, NativePoseFrame, PreviewRect } from './posePlugin';
-import type { CameraFailure, Delegate, DesktopBridge, Platform, PoseFrame, PoseSource, PoseSourceStart } from './types';
+import selfTestImage from './probe-sideChest.png?inline';
+import type { BodyhackSecretsPlugin } from './secretsPlugin';
+import type { CameraFailure, Delegate, DeviceSetup, Platform, PoseFrame, PoseSource, PoseSourceStart } from './types';
 import type { BodyhackVoicePlugin } from './voicePlugin';
 
 declare global {
@@ -24,8 +27,8 @@ declare global {
     __bodyhackVoice?: (text: string) => boolean;
     /** Test hook: every line the speech engine was given, with how it ended. */
     __bodyhackSpeech?: SpeechLogEntry[];
-    /** Test hook: the desktop bridge pairing. */
-    __bodyhackBridge?: DesktopBridge;
+    /** Test hook: the on-device coach and the TypeSafe key, as Settings drives them. */
+    __bodyhackSetup?: DeviceSetup;
   }
 }
 
@@ -161,45 +164,22 @@ function dataFolder(path: string): PhotoFolder {
   };
 }
 
-/** Native HTTP, so the WebView's mixed-content and CORS rules do not apply to the plain-HTTP Tailscale bridge. */
-const capacitorHttp: BridgeHttp = async ({ method, url, token, body, timeoutMs }) => {
-  const headers: Record<string, string> = { authorization: `Bearer ${token}` };
-  if (body) headers['content-type'] = 'application/json';
-  const res = await CapacitorHttp.request({ method, url, headers, data: body, connectTimeout: timeoutMs, readTimeout: timeoutMs, responseType: 'json' });
+/** Native HTTP: the page's CSP (tutor.html) allows no connection to another host. */
+const nativePost: PostJson = async (url, headers, body, timeoutMs) => {
+  const res = await CapacitorHttp.request({ method: 'POST', url, headers, data: body, connectTimeout: timeoutMs, readTimeout: timeoutMs, responseType: 'json' });
   return { status: res.status, body: res.data };
 };
 
-const store = localStorage;
-const coach = bridgeCoach(store, capacitorHttp);
+const { client: coach, setup } = deviceCoach({
+  coach: registerPlugin<BodyhackCoachPlugin>('BodyhackCoach'),
+  secrets: registerPlugin<BodyhackSecretsPlugin>('BodyhackSecrets'),
+  post: nativePost,
+  selfTestImage,
+});
 const speechLog: SpeechLogEntry[] = [];
 let speech: SpeechEngine | undefined;
 /** The voice input of the running drill; a disposed one ignores injected phrases. */
 let liveVoice: NativeVoiceInput | undefined;
-
-const bridge: DesktopBridge = {
-  status: coach.status,
-  pair: coach.pair,
-  unpair: coach.unpair,
-  onPairLink(listener) {
-    let live = true;
-    const opened = (url: string | undefined): void => {
-      const link = url === undefined ? undefined : parsePairLink(url);
-      if (!live || !link) return;
-      const stored = storedPairing(store);
-      if (link.ok && stored?.url === link.url && stored.token === link.token) return;
-      listener(link);
-    };
-    App.getLaunchUrl().then(
-      (launch) => opened(launch?.url),
-      (err: unknown) => console.warn('Reading the launch link failed.', err),
-    );
-    const handle = App.addListener('appUrlOpen', ({ url }) => opened(url));
-    return () => {
-      live = false;
-      handle.then((h) => h.remove()).catch((err: unknown) => console.warn('Removing the link listener failed.', err));
-    };
-  },
-};
 
 export const androidPlatform: Platform = {
   kind: 'android',
@@ -212,11 +192,11 @@ export const androidPlatform: Platform = {
   },
   photos: folderPhotoStore(dataFolder('photos')),
   coach,
-  bridge,
+  setup,
   keepAwake: { acquire: () => KeepAwakePlugin.keepAwake(), release: () => KeepAwakePlugin.allowSleep() },
-  store,
+  store: localStorage,
 };
 
 window.__bodyhackVoice = (text) => liveVoice?.inject(text) ?? false;
 window.__bodyhackSpeech = speechLog;
-window.__bodyhackBridge = bridge;
+window.__bodyhackSetup = setup;
