@@ -82,9 +82,11 @@ with Gemini Nano; voice-command intent calls jev directly from the phone; the de
 
 Definition of done (adds to the list above; item 5 is replaced):
 
-5. **No desktop.** With this computer off, every tutor feature works on the phone. The only network traffic is the
-   jev intent call to `https://api.typesafe.ai` (transcript text only) and, if Android has no on-device recognizer for
-   the language, Android's own speech service. Photos and the coach's input never leave the phone.
+5. **No desktop.** With this computer off, every tutor feature works on the phone. The app's own network traffic is
+   the jev intent call to `https://api.typesafe.ai` (transcript text only) and, if Android has no on-device recognizer
+   for the language, Android's own speech service. Google's SDKs also send small usage-metric events (ML Kit GenAI to
+   `firebaselogging.googleapis.com`, with no image or prompt). The terms require that the app tells the user, so
+   Settings and the README name them. Photos and the coach's input never leave the phone.
 8. **On-device coach.** `BodyhackCoach` (contract `src/posing/platform/coachPlugin.ts`) runs Gemini Nano through the
    ML Kit GenAI Prompt API with the hit photo and the score summary, and returns cues and a note. Settings shows the
    model status (available, download with progress, unavailable with the reason) and a self-test that runs a bundled

@@ -85,6 +85,8 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$cameraxVersion"
     implementation "androidx.camera:camera-view:$cameraxVersion"
     implementation "com.google.mediapipe:tasks-vision:$mediapipeVersion"
+    implementation "com.google.mlkit:genai-prompt:$mlkitGenaiPromptVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion"
     implementation project(':capacitor-cordova-android-plugins')
 }
 
