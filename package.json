@@ -18,7 +18,8 @@
     "android:install": "scripts/android/install.sh",
     "android:emulator": "scripts/android/emulator.sh",
     "android:gate": "node scripts/android/gate.ts",
-    "android:e2e": "node scripts/android/e2e.ts"
+    "android:e2e": "node scripts/android/e2e.ts",
+    "android:native-check": "node scripts/android/native-check.ts"
   },
   "dependencies": {
     "@capacitor-community/keep-awake": "8.0.1",
