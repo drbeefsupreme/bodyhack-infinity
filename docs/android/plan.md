@@ -74,3 +74,30 @@ Only the operator can check speed and the GPU path on the real Pixel. The emulat
 8. Docs, README Android section, debug-signed APK, final verification.
 
 Fan-out: units 1, 2 and 3 touch disjoint files and run in parallel. Units 4-7 follow, one owner at a time.
+
+## Change 2: no desktop at all
+
+Operator decision: the app must work with no desktop. Phone: Pixel 10. Choices: the coach debrief runs on the phone
+with Gemini Nano; voice-command intent calls jev directly from the phone; the desktop bridge is removed.
+
+Definition of done (adds to the list above; item 5 is replaced):
+
+5. **No desktop.** With this computer off, every tutor feature works on the phone. The only network traffic is the
+   jev intent call to `https://api.typesafe.ai` (transcript text only) and, if Android has no on-device recognizer for
+   the language, Android's own speech service. Photos and the coach's input never leave the phone.
+8. **On-device coach.** `BodyhackCoach` (contract `src/posing/platform/coachPlugin.ts`) runs Gemini Nano through the
+   ML Kit GenAI Prompt API with the hit photo and the score summary, and returns cues and a note. Settings shows the
+   model status (available, download with progress, unavailable with the reason) and a self-test that runs a bundled
+   figure render through the coach and shows the reply and its time. Where Nano is unavailable (the emulator, older
+   phones), the debrief says so and nothing else breaks.
+9. **Intent on the phone.** The TypeSafe key is pasted once in Settings and kept in `BodyhackSecrets` (Android Keystore,
+   contract `src/posing/platform/secretsPlugin.ts`). Free phrases go to jev with the same request as the desktop
+   (one shared module); without a key or offline, the keyword fallback decides.
+10. **Bridge removed.** No bridge code, routes, pairing UI, deep link or cleartext permission remain; the web app keeps
+    its loopback-only local API.
+
+Verification limits: the emulator has no AICore, so Gemini Nano itself runs only on the Pixel. The emulator proves the
+unavailable path, the plugin wiring, jev with a real key from the Keystore, and that no request goes anywhere else.
+
+Units: (C1) shared prompt and jev modules, bridge removal, Android adapters for coach, intent and secrets, Settings,
+docs, e2e; (C2) the Kotlin `BodyhackCoach` and `BodyhackSecrets` plugins. C1 and C2 run in parallel on disjoint files.
