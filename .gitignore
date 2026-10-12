@@ -9,3 +9,5 @@ dist/
 prototypes/
 docs/posing-tutor/shots/
 public/mediapipe/
+dist-android/
+docs/android/shots/

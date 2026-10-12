@@ -1,9 +1,10 @@
-import type { ComponentType, CSSProperties } from 'react';
+import { use, type ComponentType, type CSSProperties } from 'react';
 import { IconBook, IconFlame, IconFrame, IconSwap, IconTrophy } from '../../components/Icons';
 import { HOLD_GOALS_S } from '../modes/hold';
 import type { ModeId } from '../modes/mode';
 import { BEST_KEY, parseBest } from '../modes/records';
 import type { TutorSettings } from '../modes/settings';
+import { PlatformContext } from '../platform/context';
 import { POSE_LABELS } from '../progress/format';
 import type { Speech } from '../speech';
 import type { PoseId } from '../types';
@@ -39,10 +40,11 @@ interface Props {
   readonly onSettings: (settings: TutorSettings) => void;
   readonly speech: Speech;
   readonly health: Health | undefined;
+  readonly onRecheck: () => void;
 }
 
-export function Home({ pose, onPose, onChoose, settings, onSettings, speech, health }: Props) {
-  const best = parseBest(localStorage.getItem(BEST_KEY)).round;
+export function Home({ pose, onPose, onChoose, settings, onSettings, speech, health, onRecheck }: Props) {
+  const best = parseBest(use(PlatformContext).store.getItem(BEST_KEY)).round;
   return (
     <div className="tutor-home">
       <div className="tutor-home-main">
@@ -80,7 +82,7 @@ export function Home({ pose, onPose, onChoose, settings, onSettings, speech, hea
         <PosePicker pose={pose} onPose={onPose} />
       </div>
       <aside className="tutor-home-side">
-        <Settings settings={settings} onSettings={onSettings} speech={speech} health={health} />
+        <Settings settings={settings} onSettings={onSettings} speech={speech} health={health} onRecheck={onRecheck} />
       </aside>
     </div>
   );

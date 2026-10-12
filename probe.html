@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Pose plugin probe</title>
+<style>
+  :root { color-scheme: dark; font: 14px/1.35 system-ui, sans-serif; color: #e4e4e4; }
+  html, body { margin: 0; background: transparent; }
+  .panel { background: #15171c; padding: 8px 12px; }
+  .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0; }
+  button { font: inherit; background: #262a31; color: inherit; border: 1px solid #3a3f48; border-radius: 4px; padding: 6px 10px; }
+  #box { position: relative; height: 56vh; outline: 2px solid #3a8fd9; outline-offset: -2px; }
+  #box canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  #side { min-height: 44vh; box-sizing: border-box; }
+  #stats { font-variant-numeric: tabular-nums; white-space: pre-line; }
+  #error { color: #ff8a80; }
+  img, #still { display: block; max-width: 100%; margin-top: 6px; }
+  #detect { font-variant-numeric: tabular-nums; white-space: pre-line; }
+  @media (orientation: landscape) {
+    body { display: grid; grid-template-columns: 1fr 1fr; }
+    #box { height: 100vh; }
+    #side { height: 100vh; overflow-y: auto; box-sizing: border-box; }
+  }
+</style>
+</head>
+<body>
+  <div id="box"><canvas id="overlay"></canvas></div>
+  <div id="side" class="panel">
+    <div class="row">
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+      <button id="reset">Reset</button>
+      <button id="capture">Capture photo</button>
+      <button id="detectButton">Detect image</button>
+    </div>
+    <div id="stats">Not started.</div>
+    <div id="error"></div>
+    <img id="photo" alt="" hidden />
+    <div id="detect"></div>
+    <canvas id="still" hidden></canvas>
+  </div>
+  <script type="module" src="/src/posing/platform/probe.ts"></script>
+</body>
+</html>

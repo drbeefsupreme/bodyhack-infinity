@@ -207,6 +207,11 @@ src/                 React app, Three.js viewer, shader, content
   posing/            pose domain, tracker, smoothing, facing hysteresis, cue scheduler, speech, debug page
     modes/           practice modes as pure reducers (Learn, Hold, Judge's calls, Mirror), voice commands, settings
     ui/              tutor screens: home, live drill engine, figure view, settings
+    coach/           the coach debrief prompt (omp and Gemini Nano variants) and its reply parser
+    intent/          the jev request and answer for voice commands, shared by the server and the app
+    platform/        device seam: web (browser + local API) and Android (native plugins, Gemini Nano, jev)
+android/             Capacitor Android app; native pose, voice, coach (Gemini Nano) and secrets plugins in Kotlin
+scripts/android/     toolchain setup, build, install, emulator, Android gate, e2e and phone screenshot drivers
 scripts/model/       SDF anatomy, field, mesher, morph baking (Bun)
 scripts/content/     source extraction from research reports
 research/            research reports, asset survey, region screenshots from the modeling agents
@@ -215,6 +220,7 @@ public/model*        baked models; public/fallback: no-WebGL images
 public/mediapipe/    MediaPipe WASM and pose model (npm run mediapipe, git-ignored)
 shot.html            render harness used for verification
 posing-debug.html    tracking and cue debug page
+tutor.html           Android entry: the Posing Tutor alone
 ```
 
 ## Posing Tutor
@@ -292,3 +298,79 @@ directory and needs the dev server and `npm run mediapipe`:
 BODYHACK_DATA_DIR=/tmp/bodyhack-seed npm run dev -- --port 5351
 BODYHACK_DATA_DIR=/tmp/bodyhack-seed bun scripts/seed-progress.ts --app http://localhost:5351
 ```
+
+## Android app
+
+The Android app is the Posing Tutor alone, for a phone that stands upright with its screen facing you, 2 to 3 m
+away. It has the same poses, modes, scoring, spoken corrections, voice commands, photos and coach debrief as the web
+tutor. The tutor code is the same TypeScript. It runs in a Capacitor WebView behind the device seam in
+`src/posing/platform/`. The phone does these parts natively:
+
+- **Tracking.** A Kotlin plugin (`android/.../pose/`) opens the front camera with CameraX. It shows the mirrored
+  preview behind the transparent page and runs MediaPipe Pose Landmarker for Android (GPU, with a fall back to the
+  CPU). It sends the landmarks to the page.
+- **Voice.** Android text-to-speech speaks the cues, with a local voice when one is installed. A Kotlin plugin
+  (`android/.../voice/`) recognizes commands, on the device when Android can.
+- **Photos.** Photos are stored in the app's private storage. Android backup and device transfer are turned off, so
+  the photos stay on the phone. Uninstalling the app deletes them.
+- **Screen.** The screen stays on during a session.
+
+- **Coach debrief.** Gemini Nano runs on the phone through the ML Kit GenAI Prompt API (Android AICore). A Kotlin
+  plugin (`android/.../coach/`) gives it the photo of the hit and the score summary, with a shorter prompt for the
+  small model (`src/posing/coach/prompt.ts`). Where Gemini Nano is not available (the emulator, phones before the
+  Pixel 9), the debrief says "On-device coach is not available on this phone" and the reason.
+- **Voice-command intent.** The app asks jev (`https://api.typesafe.ai`) directly, with the same request as the local
+  server (`src/posing/intent/jev.ts`), through native HTTP. The TypeSafe key is pasted once in Settings and kept by a
+  Kotlin plugin (`android/.../secrets/`), encrypted with a key in the Android Keystore. Without a key, or offline,
+  the keyword table decides.
+
+The app needs no computer. The page may load only its own files (`tutor.html` sets a strict Content-Security-Policy),
+and Android allows HTTPS only. The app's only own network request is the jev call, with the recognized text only.
+Google's on-device libraries in the app (MediaPipe Tasks for tracking, ML Kit GenAI for the coach) also send usage
+statistics to Google at `firebaselogging.googleapis.com`: library name and version, app package name, a random ID,
+and device metadata (model, manufacturer, Android build, country, locale, time zone offset, mobile network code,
+network type). They send no photo, prompt, coach reply, landmarks, scores or TypeSafe key. On the emulator, a pose
+session queued 5 MediaPipe events of 41 to 57 bytes (upload at the earliest 30 s later, when online), and the first
+coach call queued 5 ML Kit events of 114 bytes (upload at most once a day, when the phone is idle and online). The
+uploads themselves and long sessions on a real Pixel were not measured. Settings shows the same facts.
+
+### Build and install
+
+```sh
+scripts/android/setup-toolchain.sh   # once: JDK 21 and the Android SDK in user space, plus an emulator image
+npm run mediapipe                    # once: the pose model
+npm run android:build                # debug APKs in android/app/build/outputs/apk/debug/
+```
+
+For a Pixel, install `app-arm64-v8a-debug.apk`. You can install it over USB with
+`adb install -r android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk`, or copy the file to the phone and
+open it (allow "install unknown apps" for the file app). The APK is debug-signed, so it is for sideloading only.
+
+### Set up the coach and voice commands
+
+1. Open Settings > On-device coach. If the status says the model is not downloaded, tap "Download the model" and keep
+   the app open until the progress bar is full. Tap "Self-test": the coach looks at a bundled side chest render and
+   shows its note and its time.
+2. Open Settings > Voice commands, paste your TypeSafe API key and tap "Save the key". The app shows only whether a
+   key is saved, never the key. "Clear the key" removes it.
+
+### Checks
+
+| Command | What it checks |
+|---|---|
+| `npm run android:gate` | Renders every pose in the app's WebView, runs the frames through the native tracker and the TypeScript scoring, and compares with the desktop gate (pass: no failures, scores within 5 points) |
+| `npm run android:e2e` | Emulator with one video of posed figure renders per mode as the front camera: Learn a pose to a hit (photo in app storage, a voice command acted), a 10 s Hold drill with no reset, the first 3 Judge's calls hit, Mirror follows the arms, native speech spoke. Then, with no computer involved: Settings and the self-test show the coach as unavailable, the TypeSafe key of this computer goes into the Keystore through a test hook, jev decides a free phrase from the phone (one real jev call), and a hit shows the "not available on this phone" note. Network: the WebView requests only its own origin, CapacitorHttp calls only `api.typesafe.ai`, and the app's sockets reach only that host plus Google SDK telemetry (a separate, named category); no CSP violation; the key is not in logcat |
+| `node scripts/android/phone-shots.ts` | Phone screens in portrait and landscape, the On-device coach and Voice commands settings (a dummy key saved, kept across a restart, cleared), delete on the device, keep-awake |
+
+The emulator runs the figure and the camera together only with `-gpu host` (llvmpipe on this machine). The scripts
+start it without a window. Reports: `docs/android/android-gate-report.md`, `docs/android/e2e-report.md`,
+`docs/android/phone-report.md`.
+
+### Known limits
+
+- Only the emulator was tested. On the emulator, tracking runs on the CPU (about 29 frames per second, 48 ms per
+  still frame). The Pixel's GPU path, its speed, legibility at 2 to 3 m and real speech recognition need the real
+  phone.
+- The emulator has no audio input, so voice recognition was checked only through a test hook and its error handling.
+- The emulator has no AICore, so Gemini Nano itself (download, debrief quality, speed) was not tested; only the
+  "not available" path and the plugin wiring were. That needs the Pixel.

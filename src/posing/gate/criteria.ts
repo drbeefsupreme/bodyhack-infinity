@@ -1,6 +1,6 @@
 import type { PoseLandmarks } from '../landmarks';
 import type { Calibration } from '../metrics';
-import type { Delegate } from '../tracker';
+import type { Delegate } from '../platform/types';
 import { SCHEDULER } from '../session';
 import { POSE_SPECS } from '../spec';
 import type { Facing, PoseId } from '../types';

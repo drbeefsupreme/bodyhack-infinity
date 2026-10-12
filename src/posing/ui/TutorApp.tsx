@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { use, useCallback, useEffect, useRef, useState } from 'react';
 import type { Calibration } from '../metrics';
 import { parseSettings, SETTINGS_KEY, type TutorSettings } from '../modes/settings';
+import { PlatformContext } from '../platform/context';
 import { ProgressView } from '../progress/ProgressView';
 import { Speech } from '../speech';
 import type { PoseId } from '../types';
-import { health, type Health } from './api';
+import type { Health } from './api';
 import type { RunSpec, SessionCalibration } from './engine';
 import { Home, type HomeChoice } from './Home';
 import { TutorRun } from './TutorRun';
@@ -17,22 +18,29 @@ type Screen =
 
 /** The Posing Tutor module: home (modes, pose, settings), a running drill, or the progress photos. */
 export function TutorApp() {
-  const [speech] = useState(() => new Speech());
-  const [settings, setSettings] = useState<TutorSettings>(() => parseSettings(localStorage.getItem(SETTINGS_KEY)));
+  const platform = use(PlatformContext);
+  const [speech] = useState(() => new Speech(platform.speechEngine(), platform.store));
+  const [settings, setSettings] = useState<TutorSettings>(() => parseSettings(platform.store.getItem(SETTINGS_KEY)));
   const [calibration, setCalibration] = useState<SessionCalibration>(undefined);
   const [pose, setPose] = useState<PoseId>('frontDoubleBiceps');
   const [screen, setScreen] = useState<Screen>({ kind: 'home' });
-  const [server, setServer] = useState<Health | undefined>();
+  const [health, setHealth] = useState<Health | undefined>();
+  const latestCheck = useRef(0);
+
+  /** Asks the coach client for its health; a newer check always wins over an older one. */
+  const recheck = useCallback(() => {
+    const check = ++latestCheck.current;
+    platform.coach.health().then(
+      (next) => check === latestCheck.current && setHealth(next),
+      (err: unknown) => console.warn('The coach did not answer the health check.', err),
+    );
+  }, [platform]);
+
+  useEffect(recheck, [recheck]);
 
   useEffect(() => {
-    health()
-      .then(setServer)
-      .catch((err: unknown) => console.warn('The local API did not answer /api/health.', err));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
-  }, [settings]);
+    platform.store.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }, [platform, settings]);
 
   const choose = (choice: HomeChoice) => {
     if (choice === 'progress') setScreen({ kind: 'progress' });
@@ -42,7 +50,7 @@ export function TutorApp() {
 
   switch (screen.kind) {
     case 'home':
-      return <Home pose={pose} onPose={setPose} onChoose={choose} settings={settings} onSettings={setSettings} speech={speech} health={server} />;
+      return <Home pose={pose} onPose={setPose} onChoose={choose} settings={settings} onSettings={setSettings} speech={speech} health={health} onRecheck={recheck} />;
     case 'progress':
       return (
         <div className="tutor-progress">

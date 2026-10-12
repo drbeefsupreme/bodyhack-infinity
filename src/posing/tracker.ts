@@ -1,11 +1,10 @@
 import { FilesetResolver, PoseLandmarker } from '@mediapipe/tasks-vision';
 import { poseLandmarks, type PoseLandmarks } from './landmarks';
+import type { CameraFailure, Delegate } from './platform/types';
 
 // Self-hosted assets written by `npm run mediapipe`. Relative to the page, like the figure's model files.
 const WASM_DIR = 'mediapipe/wasm';
 const MODEL_URL = 'mediapipe/pose_landmarker_full.task';
-
-export type Delegate = 'GPU' | 'CPU';
 
 export interface Tracker {
   /** Where inference runs. */
@@ -85,9 +84,6 @@ export async function createTracker(): Promise<Tracker> {
     close: () => landmarker.close(),
   };
 }
-
-/** Camera failures a user can act on. `unsupported`: no camera API here, as on a plain-http page. */
-export type CameraFailure = 'denied' | 'noDevice' | 'busy' | 'unsupported';
 
 const CAMERA_MESSAGES: { readonly [F in CameraFailure]: string } = {
   denied: 'Camera access is blocked. Allow the camera for this page and try again.',

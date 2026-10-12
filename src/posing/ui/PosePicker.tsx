@@ -1,22 +1,24 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { JUDGE_ORDER } from '../modes/judge';
 import { POSE_LABELS } from '../progress/format';
+import { PlatformContext } from '../platform/context';
 import type { PoseId } from '../types';
 import { poseThumbnails, type Thumbnails } from './thumbnails';
 
 /** The 12 NPC poses as figure thumbnails, in prejudging order. */
 export function PosePicker({ pose, onPose }: { pose: PoseId; onPose: (pose: PoseId) => void }) {
+  const { modelBase } = use(PlatformContext);
   const [thumbs, setThumbs] = useState<Thumbnails | undefined>();
 
   useEffect(() => {
     let live = true;
-    poseThumbnails()
+    poseThumbnails(modelBase)
       .then((t) => live && setThumbs(t))
       .catch((err: unknown) => console.warn('Pose thumbnails failed to render.', err));
     return () => {
       live = false;
     };
-  }, []);
+  }, [modelBase]);
 
   return (
     <ul className="tutor-poses" aria-label="Pose">

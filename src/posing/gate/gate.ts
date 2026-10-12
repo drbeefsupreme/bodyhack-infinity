@@ -1,5 +1,6 @@
 // Tracking gate harness (gate.html), driven by scripts/gate.ts: renders the figure in every pose and fault from the
 // judges' view, runs the frames through the live tracking pipeline and returns the run, the report and a contact sheet.
+// The Android app runs the same harness with its native detector (androidGate.ts).
 import { PoseLandmarker } from '@mediapipe/tasks-vision';
 import { Viewer } from '../../three/Viewer';
 import { DEFAULT_PRESENTATION } from '../../three/skin';
@@ -11,7 +12,8 @@ import { calibrate, classifyFacing, measure, type Calibration } from '../metrics
 import { faultCue, scoreCall } from '../score';
 import { LandmarkSmoother } from '../smoothing';
 import { POSE_SPECS } from '../spec';
-import { createTracker, type Tracker } from '../tracker';
+import type { Delegate } from '../platform/types';
+import { createTracker } from '../tracker';
 import type { Facing, FigurePose, PoseId } from '../types';
 import { FAULTS } from './cases';
 import {
@@ -21,6 +23,7 @@ import {
   mostCommon,
   type Backend,
   type CaseResult,
+  type FaultResult,
   type GateInput,
   type GateOutput,
   type GateRun,
@@ -111,27 +114,60 @@ function referenceScores(): RefScore[] {
   });
 }
 
-async function run({ snapshots }: GateInput): Promise<GateOutput> {
+/** What the gate needs from a pose detector: the web tracker, or the native plugin in the Android app. */
+export interface GateTracker {
+  readonly delegate: Delegate;
+  /** As `Tracker.detect`; the native detector answers asynchronously. */
+  detect(frame: HTMLCanvasElement, timestampMs: number): PoseLandmarks | undefined | Promise<PoseLandmarks | undefined>;
+  close(): void;
+}
+
+export interface GateRig {
+  /** Where the figure's model files are, relative to the page. */
+  readonly modelBase: string;
+  readonly tracker: GateTracker;
+}
+
+/** The figure in front of a plain wall, drawn into a W x H canvas as the gate's camera sees it. */
+export interface Stage {
+  /** What the last `show` drew. */
+  readonly frame: HTMLCanvasElement;
+  /** The WebGL renderer's name. */
+  readonly renderer: string;
+  show(figure: FigurePose): void;
+  dispose(): void;
+}
+
+/** Loads the figure into the page's <div id="v">. */
+export async function openStage(modelBase: string): Promise<Stage> {
   const host = document.getElementById('v');
-  if (!(host instanceof HTMLDivElement)) throw new Error('gate.html needs <div id="v">');
+  if (!(host instanceof HTMLDivElement)) throw new Error('The gate page needs <div id="v">');
   host.style.width = `${W}px`;
   host.style.height = `${H}px`;
   const [frame, frameCtx] = canvas2d(W, H);
-  const viewer = new Viewer(host, { reducedMotion: true, modelBase: 'model' });
-  const tracker: Tracker = await createTracker();
+  const viewer = new Viewer(host, { reducedMotion: true, modelBase });
   await viewer.load();
   viewer.setPresentation(DEFAULT_PRESENTATION);
   viewer.setLighting('neutral');
   viewer.setView('front', 'full');
-  let clock = 0;
-
-  const show = (figure: FigurePose): void => {
-    viewer.setPose('A', figure, { instant: true });
-    viewer.render();
-    frameCtx.fillStyle = BACKGROUND;
-    frameCtx.fillRect(0, 0, W, H);
-    frameCtx.drawImage(viewer.renderer.domElement, 0, 0, W, H);
+  return {
+    frame,
+    renderer: rendererName(viewer),
+    show(figure) {
+      viewer.setPose('A', figure, { instant: true });
+      viewer.render();
+      frameCtx.fillStyle = BACKGROUND;
+      frameCtx.fillRect(0, 0, W, H);
+      frameCtx.drawImage(viewer.renderer.domElement, 0, 0, W, H);
+    },
+    dispose: () => viewer.dispose(),
   };
+}
+
+export async function runGate({ snapshots }: GateInput, { modelBase, tracker }: GateRig): Promise<GateOutput> {
+  const stage = await openStage(modelBase);
+  const { frame, show } = stage;
+  let clock = 0;
 
   const [empty, emptyCtx] = canvas2d(W, H);
   emptyCtx.fillStyle = BACKGROUND;
@@ -143,10 +179,10 @@ async function run({ snapshots }: GateInput): Promise<GateOutput> {
    * for FRAMES frames. Without the lead-in, the detector misplaces the trunk of a figure with the hands behind the
    * head (abs and thighs read 35).
    */
-  const track = (figure: FigurePose, pose: PoseId, calibration: Calibration | undefined): { frames: Frame[]; last: PoseLandmarks | undefined } => {
-    for (let i = 0; i < LEAD_IN; i++) tracker.detect(empty, (clock += FRAME_MS));
+  const track = async (figure: FigurePose, pose: PoseId, calibration: Calibration | undefined): Promise<{ frames: Frame[]; last: PoseLandmarks | undefined }> => {
+    for (let i = 0; i < LEAD_IN; i++) await tracker.detect(empty, (clock += FRAME_MS));
     show(FIGURE_POSES[RELAXED[POSE_SPECS[pose][0].facing]]);
-    for (let i = 0; i < LEAD_IN; i++) tracker.detect(frame, (clock += FRAME_MS));
+    for (let i = 0; i < LEAD_IN; i++) await tracker.detect(frame, (clock += FRAME_MS));
     show(figure);
     const smoother = new LandmarkSmoother();
     let filter: FacingFilter = NO_FACING;
@@ -154,7 +190,7 @@ async function run({ snapshots }: GateInput): Promise<GateOutput> {
     let last: PoseLandmarks | undefined;
     for (let i = 0; i < FRAMES; i++) {
       clock += FRAME_MS;
-      const raw = tracker.detect(frame, clock);
+      const raw = await tracker.detect(frame, clock);
       const lm = smoother.next(raw, clock);
       last = lm;
       const metrics = lm && measure(lm, { calibration });
@@ -182,32 +218,34 @@ async function run({ snapshots }: GateInput): Promise<GateOutput> {
     topCue: mostCommon(frames.map((f) => f.topCue)) ?? null,
   });
 
-  const relaxed = track(FIGURE_POSES.relaxedFront, 'relaxedFront', undefined).last;
+  const relaxed = (await track(FIGURE_POSES.relaxedFront, 'relaxedFront', undefined)).last;
   const calibration = relaxed && calibrate(relaxed);
   const landmarks: Record<string, PoseLandmarks | null> = {};
 
   const [sheet, sheetCtx] = sheetCanvas(POSE_IDS.length);
-  const poses = POSE_IDS.map((pose, i) => {
-    const { frames, last } = track(FIGURE_POSES[pose], pose, calibration);
+  const poses: CaseResult[] = [];
+  for (const [i, pose] of POSE_IDS.entries()) {
+    const { frames, last } = await track(FIGURE_POSES[pose], pose, calibration);
     const result = summarize(pose, pose, frames);
     drawTile(sheetCtx, i, frame, last, `${pose} ${result.scores[pose]?.toFixed(0) ?? '–'}`);
     landmarks[pose] = last ?? null;
-    return result;
-  });
+    poses.push(result);
+  }
 
   const [faultSheet, faultCtx] = sheetCanvas(FAULTS.length);
-  const faults = FAULTS.map((f, i) => {
-    const { frames, last } = track(f.figure, f.pose, calibration);
+  const faults: FaultResult[] = [];
+  for (const [i, f] of FAULTS.entries()) {
+    const { frames, last } = await track(f.figure, f.pose, calibration);
     const result = { ...summarize(f.id, f.pose, frames), label: f.label, expectedCue: f.expectedCue };
     drawTile(faultCtx, i, frame, last, `${f.id} ${result.scores[f.pose]?.toFixed(0) ?? '–'}`);
     landmarks[f.id] = last ?? null;
-    return result;
-  });
+    faults.push(result);
+  }
 
-  const renderer = rendererName(viewer);
+  const { renderer } = stage;
   const backend: Backend = { renderer, software: SOFTWARE_GL.test(renderer), delegate: tracker.delegate };
   tracker.close();
-  viewer.dispose();
+  stage.dispose();
   const gateRun: GateRun = {
     at: new Date().toISOString(),
     backend,
@@ -228,4 +266,4 @@ async function run({ snapshots }: GateInput): Promise<GateOutput> {
   };
 }
 
-window.gate = { run };
+window.gate = { run: async (input) => runGate(input, { modelBase: 'model', tracker: await createTracker() }) };

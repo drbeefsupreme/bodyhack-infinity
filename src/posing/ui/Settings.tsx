@@ -1,13 +1,18 @@
-import { useCallback, useSyncExternalStore } from 'react';
+import { use, useCallback, useSyncExternalStore, type ComponentType } from 'react';
 import { MODEL_PATTERN, type TutorSettings } from '../modes/settings';
+import { PlatformContext } from '../platform/context';
+import type { Platform } from '../platform/types';
 import type { Speech } from '../speech';
 import type { Health } from './api';
+import { DeviceSettings } from './DeviceSettings';
 
 interface Props {
   readonly settings: TutorSettings;
   readonly onSettings: (settings: TutorSettings) => void;
   readonly speech: Speech;
   readonly health: Health | undefined;
+  /** Checks the coach and the intent again, after a change in the device setup. */
+  readonly onRecheck: () => void;
 }
 
 /** Re-renders when the voice list, the chosen voice or mute changes. */
@@ -16,13 +21,79 @@ function useSpeechVersion(speech: Speech): string {
   return useSyncExternalStore(subscribe, () => `${speech.muted}|${speech.voice ?? ''}|${speech.voices().length}`);
 }
 
-export function Settings({ settings, onSettings, speech, health }: Props) {
+const DEFAULT_VOICE: Record<Platform['kind'], string> = { web: 'Browser default (English)', android: 'System default (English)' };
+
+function WebPrivacy({ network }: { network: boolean }) {
+  return (
+    <details className="tutor-privacy" open>
+      <summary>Privacy: what leaves this computer</summary>
+      <ul>
+        <li>
+          <b>Coach debrief:</b> the photo of each hit pose and its scores go to the coach model through omp.
+        </li>
+        <li>
+          <b>Voice commands:</b> Chrome sends your speech to Google for recognition. The recognized text goes to jev to
+          pick the command.
+        </li>
+        <li>
+          <b>Spoken cues:</b> {network ? 'the chosen voice is a network voice, so' : 'with a network voice,'} the cue text
+          goes to Google to be spoken.
+        </li>
+        <li>
+          <b>Stays here:</b> the camera video and the tracked landmarks. Your progress photos are stored only here, but
+          with the coach debrief on, each hit photo is also sent to the coach. The page cannot send data to any other
+          server.
+        </li>
+      </ul>
+    </details>
+  );
+}
+
+function AndroidPrivacy({ network }: { network: boolean }) {
+  return (
+    <details className="tutor-privacy" open>
+      <summary>Privacy: what leaves this phone</summary>
+      <ul>
+        <li>
+          <b>Coach debrief:</b> Gemini Nano reads the photo of each hit pose and its scores on this phone. They do not go
+          to any server.
+        </li>
+        <li>
+          <b>Voice commands:</b> the phone recognizes your speech on the device when it can (the on-device recognizer, or
+          an installed offline language pack). If not, Android's speech service can send the audio to Google. With a
+          TypeSafe key saved, only the recognized text goes to jev (api.typesafe.ai) to pick the command.
+        </li>
+        <li>
+          <b>Spoken cues:</b> {network ? 'the chosen voice is a network voice, so' : 'with a network voice,'} the cue text
+          goes to Google to be spoken. A local voice speaks on the phone.
+        </li>
+        <li>
+          <b>Google usage statistics:</b> Google's on-device libraries (MediaPipe for tracking, ML Kit for the coach) send
+          usage statistics to Google (firebaselogging.googleapis.com): library version, app name, device model and
+          Android version, country and language, and a random ID. They send no photos, no prompts, no coach replies and
+          no scores.
+        </li>
+        <li>
+          <b>Stays on this phone:</b> the camera video, the tracked landmarks, the coach's input and your progress
+          photos, in the app's private storage with no cloud backup. Uninstalling the app deletes the photos.
+        </li>
+      </ul>
+    </details>
+  );
+}
+
+const PRIVACY: Record<Platform['kind'], ComponentType<{ network: boolean }>> = { web: WebPrivacy, android: AndroidPrivacy };
+
+export function Settings({ settings, onSettings, speech, health, onRecheck }: Props) {
   useSpeechVersion(speech);
+  const { kind, setup } = use(PlatformContext);
   const set = (patch: Partial<TutorSettings>) => onSettings({ ...settings, ...patch });
   const voices = speech.voices();
   const chosen = voices.find((v) => v.voiceURI === speech.voice);
   const network = chosen !== undefined && 'localService' in chosen && chosen.localService === false;
   const modelValid = settings.coachModel === '' || MODEL_PATTERN.test(settings.coachModel);
+  const server = health?.kind === 'server' ? health : undefined;
+  const Privacy = PRIVACY[kind];
 
   return (
     <section className="tutor-settings" aria-labelledby="tutor-settings-title">
@@ -31,7 +102,7 @@ export function Settings({ settings, onSettings, speech, health }: Props) {
       <label className="tutor-field">
         <span>Voice</span>
         <select value={speech.voice ?? ''} onChange={(e) => speech.setVoice(e.target.value || undefined)} disabled={!speech.available}>
-          <option value="">Browser default (English)</option>
+          <option value="">{DEFAULT_VOICE[kind]}</option>
           {voices.map((v) => (
             <option key={v.voiceURI} value={v.voiceURI}>
               {v.name} ({v.lang})
@@ -51,42 +122,29 @@ export function Settings({ settings, onSettings, speech, health }: Props) {
         <input type="checkbox" checked={settings.debrief} onChange={(e) => set({ debrief: e.target.checked })} />
         Coach debrief after every hit pose
       </label>
-      <label className="tutor-field">
-        <span>Coach model</span>
-        <input
-          type="text"
-          value={settings.coachModel}
-          placeholder={health?.coachModel ?? 'server default'}
-          aria-invalid={!modelValid}
-          spellCheck={false}
-          onChange={(e) => set({ coachModel: e.target.value.trim() })}
-        />
-      </label>
-      {!modelValid && <p className="tutor-field-error">Use a model id such as anthropic/claude-sonnet-5.</p>}
-      {health && !health.omp && <p className="tutor-field-error">omp is not on the server's PATH: the coach debrief is off.</p>}
-      {health && !health.jev && <p className="hint">Jev is not configured: voice commands use keywords only.</p>}
+      {setup ? (
+        <DeviceSettings setup={setup} health={health?.kind === 'device' ? health : undefined} onRecheck={onRecheck} />
+      ) : (
+        <>
+          <label className="tutor-field">
+            <span>Coach model</span>
+            <input
+              type="text"
+              value={settings.coachModel}
+              placeholder={server?.coachModel ?? 'server default'}
+              aria-invalid={!modelValid}
+              spellCheck={false}
+              autoCapitalize="off"
+              onChange={(e) => set({ coachModel: e.target.value.trim() })}
+            />
+          </label>
+          {!modelValid && <p className="tutor-field-error">Use a model id such as anthropic/claude-sonnet-5.</p>}
+          {server && !server.omp && <p className="tutor-field-error">omp is not on the server's PATH: the coach debrief is off.</p>}
+          {server && !server.jev && <p className="hint">Jev is not configured: voice commands use keywords only.</p>}
+        </>
+      )}
 
-      <details className="tutor-privacy" open>
-        <summary>Privacy: what leaves this computer</summary>
-        <ul>
-          <li>
-            <b>Coach debrief:</b> the photo of each hit pose and its scores go to the coach model through omp.
-          </li>
-          <li>
-            <b>Voice commands:</b> Chrome sends your speech to Google for recognition. The recognized text goes to jev to
-            pick the command.
-          </li>
-          <li>
-            <b>Spoken cues:</b> {network ? 'the chosen voice is a network voice, so' : 'with a network voice,'} the cue text
-            goes to Google to be spoken.
-          </li>
-          <li>
-            <b>Stays here:</b> the camera video and the tracked landmarks. Your progress photos are stored only here, but
-            with the coach debrief on, each hit photo is also sent to the coach. The page cannot send data to any other
-            server.
-          </li>
-        </ul>
-      </details>
+      <Privacy network={network} />
     </section>
   );
 }

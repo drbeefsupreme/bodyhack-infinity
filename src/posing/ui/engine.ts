@@ -14,20 +14,17 @@ import { BEST_KEY, mergeBest, parseBest, type NewBests } from '../modes/records'
 import type { Effect, ModeId, Stage } from '../modes/mode';
 import { startDrill, type Drill, type DrillView, type StartedDrill } from '../modes/runner';
 import { MODEL_PATTERN, type TutorSettings } from '../modes/settings';
-import { savePhoto } from '../progress/api';
 import type { PhotoMeta } from '../progress/types';
 import { faultCue, scoreCall } from '../score';
 import { inView, SCHEDULER, type Sighting } from '../session';
 import { LandmarkSmoother } from '../smoothing';
 import type { Speech } from '../speech';
 import { POSE_SPECS } from '../spec';
-import { CameraError, createTracker, openCamera, type CameraFailure, type Delegate, type Tracker } from '../tracker';
 import type { Facing, PoseId, PoseScore } from '../types';
-import { askCoach, askIntent } from './api';
-import { VoiceListener, type ListenState } from './listener';
+import type { CameraFailure, Delegate, ListenState, Platform, PoseFrame, PoseSource, PoseSourceStart, VoiceInput } from '../platform/types';
 
-// The tutor's live loop: camera → tracker → smoother → score → drill, and the drill's effects → speech, photos and
-// the coach. Everything that decides what happens lives in src/posing/modes; this shell wires it to the browser.
+// The tutor's live loop: pose source → smoother → score → drill, and the drill's effects → speech, photos and the
+// coach. Everything that decides what happens lives in src/posing/modes; this shell wires it to the Platform.
 
 export interface RunSpec {
   readonly mode: ModeId;
@@ -95,17 +92,6 @@ const STAGE_COLORS: Record<Stage['kind'] | 'calibrating', string> = {
   done: 'rgba(74, 222, 128, 0.95)',
 };
 
-let trackerLoad: Promise<Tracker> | undefined;
-
-/** One tracker per page: loading MediaPipe takes seconds, and every run reuses it. */
-function sharedTracker(): Promise<Tracker> {
-  trackerLoad ??= createTracker().catch((err: unknown) => {
-    trackerLoad = undefined;
-    throw err;
-  });
-  return trackerLoad;
-}
-
 function startRun(spec: RunSpec, now: number): StartedDrill {
   switch (spec.mode) {
     case 'learn':
@@ -125,11 +111,13 @@ export interface EngineOptions {
   readonly settings: TutorSettings;
   readonly calibration: SessionCalibration;
   readonly onCalibration: (calibration: Calibration | 'skipped') => void;
+  readonly platform: Platform;
 }
 
 export class TutorEngine {
   private readonly listeners = new Set<() => void>();
-  private readonly listener: VoiceListener;
+  private readonly listener: VoiceInput;
+  private readonly source: PoseSource;
   private readonly unsubscribeSpeech: () => void;
   private snap: Snapshot;
   private settings: TutorSettings;
@@ -140,11 +128,10 @@ export class TutorEngine {
   /** The facing of the last pose the drill scored; a call with another facing starts a fresh detection. */
   private expected: Facing | undefined;
   private drill: Drill | undefined;
-  private tracker: Tracker | undefined;
-  private stream: MediaStream | undefined;
-  private video: HTMLVideoElement | undefined;
   private overlay: HTMLCanvasElement | undefined;
-  private frameHandle: number | undefined;
+  /** Page clock minus platform clock: the smallest delivery delay seen so far. */
+  private clockOffset = Infinity;
+  private awake = false;
   private disposed = false;
   private lastScore: PoseScore | undefined;
   private lastLm: PoseLandmarks | undefined;
@@ -156,10 +143,11 @@ export class TutorEngine {
   constructor(private readonly options: EngineOptions) {
     this.settings = options.settings;
     this.calibration = options.spec.mode === 'mirror' ? (options.calibration ?? 'skipped') : options.calibration;
-    this.listener = new VoiceListener(
+    this.listener = options.platform.voiceInput(
       (text) => void this.heard(text),
       (listening) => this.update({ listening, listenError: this.listener.error }),
     );
+    this.source = options.platform.poseSource();
     this.snap = {
       camera: { kind: 'starting' },
       calibration: this.calibration === undefined ? { kind: 'capturing', progress: 0 } : { kind: 'ready', calibrated: this.calibration !== 'skipped' },
@@ -195,47 +183,34 @@ export class TutorEngine {
 
   // ------------------------------------------------------------------ lifecycle
 
-  /** Opens the camera into `video` and starts the loop; the skeleton is drawn on `overlay`. Later calls do nothing. */
-  async start(video: HTMLVideoElement, overlay: HTMLCanvasElement): Promise<void> {
-    if (this.video) return;
-    this.video = video;
+  /** Starts the pose source with its camera view in `pane` and the skeleton drawn on `overlay`. Later calls do nothing. */
+  async start(pane: HTMLElement, overlay: HTMLCanvasElement): Promise<void> {
+    if (this.overlay) return;
     this.overlay = overlay;
     this.update({ camera: { kind: 'starting' } });
+    let started: PoseSourceStart;
     try {
-      const [tracker, stream] = await Promise.all([sharedTracker(), openCamera()]);
-      if (this.disposed) {
-        for (const track of stream.getTracks()) track.stop();
-        return;
-      }
-      this.tracker = tracker;
-      this.stream = stream;
-      video.srcObject = stream;
-      await video.play();
+      started = await this.source.start(pane, (frame) => this.onFrame(frame));
     } catch (err) {
-      if (this.disposed) return;
-      const camera: CameraState =
-        err instanceof CameraError
-          ? { kind: 'failed', failure: err.reason, message: err.message }
-          : { kind: 'failed', failure: 'tracker', message: err instanceof Error ? err.message : String(err) };
-      this.update({ camera });
+      if (!this.disposed) this.update({ camera: { kind: 'failed', failure: 'tracker', message: err instanceof Error ? err.message : String(err) } });
       return;
     }
-    this.update({ camera: { kind: 'live', delegate: this.tracker.delegate } });
+    if (this.disposed) return;
+    if (!started.ok) {
+      this.update({ camera: { kind: 'failed', failure: started.failure, message: started.message } });
+      return;
+    }
+    this.update({ camera: { kind: 'live', delegate: started.delegate } });
+    this.awake = true;
+    this.options.platform.keepAwake.acquire().catch((err: unknown) => console.warn('Could not keep the screen on.', err));
     if (this.calibration === undefined) this.say(CALIBRATE_SAY, true);
     else this.begin(performance.now());
-    const tick = (now: number) => {
-      if (this.disposed || this.video !== video) return;
-      this.onFrame(video, now);
-      this.frameHandle = video.requestVideoFrameCallback(tick);
-    };
-    this.frameHandle = video.requestVideoFrameCallback(tick);
   }
 
   dispose(): void {
     this.disposed = true;
-    if (this.video && this.frameHandle !== undefined) this.video.cancelVideoFrameCallback(this.frameHandle);
-    for (const track of this.stream?.getTracks() ?? []) track.stop();
-    if (this.video) this.video.srcObject = null;
+    this.source.stop();
+    if (this.awake) this.options.platform.keepAwake.release().catch((err: unknown) => console.warn('Could not release the screen.', err));
     this.listener.dispose();
     this.unsubscribeSpeech();
     this.options.speech.cancel();
@@ -266,7 +241,7 @@ export class TutorEngine {
   /** A phrase from speech recognition (or the test hook): jev picks the command; keywords decide when it cannot. */
   async heard(text: string): Promise<Heard> {
     const seq = ++this.heardSeq;
-    const decision = decide(text, await askIntent(text));
+    const decision = decide(text, await this.options.platform.coach.askIntent(text));
     const heard: Heard = { text, ...decision, at: performance.now() };
     if (this.disposed || seq !== this.heardSeq) return heard;
     this.update({ heard });
@@ -283,15 +258,24 @@ export class TutorEngine {
     this.publish(true);
   }
 
-  private onFrame(video: HTMLVideoElement, now: number): void {
-    const tracker = this.tracker;
-    if (!tracker) return;
-    const lm = this.smoother.next(tracker.detect(video, now), now);
+  /**
+   * The frame's time on the page clock. The platform clock (uptime on Android) has another origin; adding the smallest
+   * delivery delay seen keeps the camera's frame spacing and never puts a frame after the moment it arrived.
+   */
+  private frameTime(timestampMs: number): number {
+    this.clockOffset = Math.min(this.clockOffset, performance.now() - timestampMs);
+    return timestampMs + this.clockOffset;
+  }
+
+  private onFrame(frame: PoseFrame): void {
+    if (this.disposed || this.snap.camera.kind !== 'live') return;
+    const now = this.frameTime(frame.timestampMs);
+    const lm = this.smoother.next(frame.landmarks, now);
     this.lastLm = lm;
     this.facing = lm ? filterFacing(this.facing, classifyFacing(lm), now) : NO_FACING;
     if (this.calibration === undefined) {
       this.calibrating(lm, now);
-      this.draw(lm, 'calibrating');
+      this.draw(frame, lm, 'calibrating');
       return;
     }
     const drill = this.drill;
@@ -300,7 +284,7 @@ export class TutorEngine {
     const sighting = pose === undefined ? undefined : this.sight(pose, lm);
     this.apply(drill.frame(now, sighting, lm));
     const view = drill.view(now);
-    this.draw(lm, view.stage.kind);
+    this.draw(frame, lm, view.stage.kind);
     if (view.stage.kind === 'done' && !this.finished) this.finish(view);
     this.publish(false, view);
     const expected = view.scoring && POSE_SPECS[view.scoring][0].facing;
@@ -309,7 +293,7 @@ export class TutorEngine {
     // After a turn, VIDEO mode keeps tracking from the old body region and can hold a stale left/right reading for
     // seconds; a blank frame makes the next frame a fresh detection, and a new smoother does not blend the two.
     if (called) {
-      tracker.reset(now + 1);
+      this.source.reset();
       this.smoother = new LandmarkSmoother();
     }
   }
@@ -375,40 +359,38 @@ export class TutorEngine {
 
   private hit(pose: PoseId, result: Hit['result']): void {
     const hit: Hit = { mode: this.options.spec.mode, pose, result, score: this.lastScore, landmarks: this.lastLm };
-    const image = this.snapshotImage();
+    this.source.capturePhoto(PHOTO_WIDTH).then(
+      (image) => this.keep(hit, image),
+      (err: unknown) => {
+        console.warn('The photo capture failed.', err);
+        this.keep(hit, undefined);
+      },
+    );
+  }
+
+  /** Saves the photo of a hit and queues it for the coach. */
+  private keep(hit: Hit, image: string | undefined): void {
     if (!image) {
       this.update({ notice: 'Could not capture the camera frame for the photo.' });
       return;
     }
-    savePhoto(photoRequest(hit, image))
+    this.options.platform.photos
+      .save(photoRequest(hit, image))
       .then((photo) => this.update({ photo }))
       .catch((err: unknown) => this.update({ notice: `Photo not saved: ${err instanceof Error ? err.message : String(err)}` }));
     if (!this.settings.debrief) return;
     const step = enqueue(this.queue, { hit, image });
     this.queue = step.queue;
     if (step.start) this.debrief(step.start);
-    else this.update({ debrief: { kind: 'looking', pose: this.queue.running?.hit.pose ?? pose, waiting: true } });
-  }
-
-  /** The current camera frame, unmirrored, as a JPEG at most 1280 px wide. */
-  private snapshotImage(): string | undefined {
-    const video = this.video;
-    if (!video || video.videoWidth === 0) return undefined;
-    const scale = Math.min(1, PHOTO_WIDTH / video.videoWidth);
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(video.videoWidth * scale);
-    canvas.height = Math.round(video.videoHeight * scale);
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return undefined;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL('image/jpeg', 0.88);
+    else this.update({ debrief: { kind: 'looking', pose: this.queue.running?.hit.pose ?? hit.pose, waiting: true } });
   }
 
   private debrief(job: DebriefJob): void {
     const { pose } = job.hit;
     this.update({ debrief: { kind: 'looking', pose, waiting: this.queue.waiting !== undefined } });
     const model = MODEL_PATTERN.test(this.settings.coachModel) ? this.settings.coachModel : undefined;
-    askCoach({ pose: POSE_SPECS[pose][0].name, summary: coachSummary(job.hit), imageDataUrl: job.image, model })
+    this.options.platform.coach
+      .askCoach({ pose: POSE_SPECS[pose][0].name, summary: coachSummary(job.hit), imageDataUrl: job.image, model })
       .then((note) => {
         if (this.disposed) return;
         this.update({ debrief: { kind: 'note', pose, ...note } });
@@ -426,24 +408,25 @@ export class TutorEngine {
       });
   }
 
-  /** At the end of a Judge's calls round: updates the personal bests in localStorage. */
+  /** At the end of a Judge's calls round: updates the personal bests in the platform store. */
   private finish(view: DrillView): void {
     this.finished = true;
     if (view.stage.kind !== 'done' || view.stage.summary.mode !== 'judge') return;
-    const { best, news } = mergeBest(parseBest(localStorage.getItem(BEST_KEY)), view.stage.summary, new Date().toISOString());
-    localStorage.setItem(BEST_KEY, JSON.stringify(best));
+    const { store } = this.options.platform;
+    const { best, news } = mergeBest(parseBest(store.getItem(BEST_KEY)), view.stage.summary, new Date().toISOString());
+    store.setItem(BEST_KEY, JSON.stringify(best));
     this.update({ bests: news });
   }
 
   // ------------------------------------------------------------------ overlay
 
-  private draw(lm: PoseLandmarks | undefined, stage: keyof typeof STAGE_COLORS): void {
+  /** Draws on the overlay at the camera frame's size, so it lines up with any platform's camera view. */
+  private draw(frame: PoseFrame, lm: PoseLandmarks | undefined, stage: keyof typeof STAGE_COLORS): void {
     const canvas = this.overlay;
-    const video = this.video;
-    if (!canvas || !video) return;
-    if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight) {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+    if (!canvas) return;
+    if (canvas.width !== frame.width || canvas.height !== frame.height) {
+      canvas.width = frame.width;
+      canvas.height = frame.height;
     }
     const ctx = canvas.getContext('2d');
     if (!ctx) return;

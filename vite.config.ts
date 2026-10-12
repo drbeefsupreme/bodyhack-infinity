@@ -14,6 +14,7 @@ export default defineConfig({
         main: resolve(root, 'index.html'),
         shot: resolve(root, 'shot.html'),
         posingDebug: resolve(root, 'posing-debug.html'),
+        probe: resolve(root, 'probe.html'),
       },
     },
     chunkSizeWarningLimit: 1500,

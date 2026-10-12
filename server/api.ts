@@ -2,10 +2,10 @@ import { accessSync, constants } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { delimiter, join } from 'node:path';
 import type { Connect, Plugin } from 'vite';
+import { chooseIntent, type PostJson } from '../src/posing/intent/jev.ts';
 import type { PhotoImageType } from '../src/posing/progress/types.ts';
 import { apiRefusal } from './access.ts';
 import { coachModel, runCoach } from './coach.ts';
-import { chooseIntent } from './jev.ts';
 import { CONTENT_TYPE, deletePhoto, deletePhotos, listPhotos, photosDir, readPhotoImage, savePhoto } from './photos.ts';
 import { typesafeKey } from './secrets.ts';
 import { parseCoachRequest, parseIntentRequest, parsePhotoId, parsePhotoRequest, parsePoseId } from './validate.ts';
@@ -80,7 +80,7 @@ async function handle(root: string, photos: string, route: string, query: URLSea
       const key = typesafeKey(root);
       if (!key) return { status: 503, body: { error: 'jev is not configured: set TYPESAFE_API_KEY' } };
       try {
-        return { status: 200, body: await chooseIntent(key, parsed.value.heard, parsed.value.options) };
+        return { status: 200, body: await chooseIntent(postJson, key, parsed.value.heard, parsed.value.options) };
       } catch (err) {
         return failure(503, route, err);
       }
@@ -144,6 +144,16 @@ function failure(status: number, route: string, err: unknown): Reply {
   console.warn(`[api] ${route}: ${error}`);
   return { status, body: { error } };
 }
+
+const postJson: PostJson = async (url, headers, body, timeoutMs) => {
+  try {
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body), signal: AbortSignal.timeout(timeoutMs) });
+    return { status: res.status, body: await res.json().catch(() => undefined) };
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'TimeoutError') throw new Error(`timed out after ${timeoutMs} ms`);
+    throw err;
+  }
+};
 
 /** Reads and parses a JSON body of at most 8 MB; returns the error reply when it cannot. */
 async function readJson(req: IncomingMessage): Promise<{ json: unknown } | Reply> {
