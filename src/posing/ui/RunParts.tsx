@@ -1,3 +1,5 @@
+import { IconX } from '../../components/Icons';
+import type { Command } from '../modes/commands';
 import { SCHEDULER, type FramingReason } from '../session';
 import type { Stage, Summary } from '../modes/mode';
 import type { CallResult } from '../modes/judge';
@@ -74,7 +76,7 @@ export function FramingGuide({ reason }: { reason: FramingReason }) {
   );
 }
 
-export function DebriefCard({ debrief }: { debrief: DebriefState }) {
+export function DebriefCard({ debrief, onDismiss }: { debrief: DebriefState; onDismiss: () => void }) {
   if (debrief.kind === 'idle') return null;
   if (debrief.kind === 'looking') {
     return (
@@ -86,6 +88,9 @@ export function DebriefCard({ debrief }: { debrief: DebriefState }) {
   }
   return (
     <div className="tutor-debrief" role="status" data-testid="debrief">
+      <button type="button" className="icon-btn tutor-debrief-close" aria-label="Dismiss the coach note" onClick={onDismiss}>
+        <IconX size={16} />
+      </button>
       <h4>Coach · {POSE_LABELS[debrief.pose]}</h4>
       <p>{debrief.note}</p>
       {debrief.cues.length > 0 && (
@@ -99,6 +104,29 @@ export function DebriefCard({ debrief }: { debrief: DebriefState }) {
         {debrief.model} · {seconds(debrief.ms)}
       </p>
     </div>
+  );
+}
+
+const CONTROLS: readonly (readonly [Command, string])[] = [
+  ['next', 'Next'],
+  ['skip', 'Skip'],
+  ['repeat', 'Repeat'],
+  ['whatsWrong', "What's wrong"],
+];
+
+/** The voice commands as buttons, for a screen without a keyboard. */
+export function RunControls({ paused, disabled, onCommand }: { paused: boolean; disabled: boolean; onCommand: (command: Command) => void }) {
+  return (
+    <nav className="tutor-controls" aria-label="Drill commands">
+      {CONTROLS.map(([command, label]) => (
+        <button key={command} type="button" className="pill" disabled={disabled} onClick={() => onCommand(command)}>
+          {label}
+        </button>
+      ))}
+      <button type="button" className="pill" disabled={disabled} aria-pressed={paused} onClick={() => onCommand(paused ? 'resume' : 'pause')}>
+        {paused ? 'Resume' : 'Pause'}
+      </button>
+    </nav>
   );
 }
 

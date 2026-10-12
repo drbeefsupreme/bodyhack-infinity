@@ -1,5 +1,14 @@
 /* ---------- Posing Tutor (src/posing/ui) ---------- */
 
+/* The system bars and the display cutout: CSS env() where the WebView passes them through, else the values the
+   Capacitor SystemBars plugin sets on <html>; zero in a desktop browser. */
+:root {
+  --safe-top: max(env(safe-area-inset-top, 0px), var(--safe-area-inset-top, 0px));
+  --safe-right: max(env(safe-area-inset-right, 0px), var(--safe-area-inset-right, 0px));
+  --safe-bottom: max(env(safe-area-inset-bottom, 0px), var(--safe-area-inset-bottom, 0px));
+  --safe-left: max(env(safe-area-inset-left, 0px), var(--safe-area-inset-left, 0px));
+}
+
 /* home */
 .tutor-home {
   display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 0; overflow: auto;
@@ -52,6 +61,28 @@
 .tutor-privacy summary { cursor: pointer; font-weight: 600; }
 .tutor-privacy ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; color: var(--muted); }
 .tutor-privacy b { color: var(--fg); font-weight: 600; }
+
+.tutor-bridge { display: flex; flex-direction: column; gap: 8px; padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+.tutor-bridge h4 { margin: 0; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.tutor-bridge-state { position: relative; margin: 0; padding-left: 18px; font-size: 0.88rem; overflow-wrap: anywhere; }
+.tutor-bridge-state p { margin: 0 0 4px; }
+.tutor-bridge-state::before { content: ""; position: absolute; left: 2px; top: 0.45em; width: 9px; height: 9px; border-radius: 50%; background: var(--muted); }
+.tutor-bridge-state[data-state="online"]::before { background: var(--good); box-shadow: 0 0 8px var(--good); }
+.tutor-bridge-state[data-state="offline"]::before { background: var(--bad); }
+.tutor-bridge-state[data-state="unpaired"]::before { background: var(--warn); }
+.tutor-bridge-form { display: flex; flex-direction: column; gap: 8px; }
+.tutor-bridge-form .hint { margin: 0; }
+.tutor-bridge-form .btn { align-self: flex-start; }
+.tutor-bridge-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tutor-dialog {
+  max-width: min(440px, calc(100vw - 32px)); padding: 22px 24px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--panel); color: var(--fg); box-shadow: 0 6px 0 #05070c, 0 0 40px rgba(56, 189, 248, 0.18);
+}
+.tutor-dialog::backdrop { background: rgba(5, 7, 12, 0.7); backdrop-filter: blur(3px); }
+.tutor-dialog p { margin: 12px 0 0; color: var(--muted); overflow-wrap: anywhere; }
+.tutor-dialog p b { color: var(--fg); }
+.tutor-dialog-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 /* run */
 .tutor-run { position: relative; display: grid; grid-template-rows: auto minmax(0, 1fr); min-height: 0; background: var(--bg); }
@@ -128,8 +159,9 @@
 .tutor-cue { margin: 0; font-size: 1.25rem; font-weight: 600; line-height: 1.3; }
 .tutor-faults { margin: 0; padding-left: 20px; display: grid; gap: 4px; color: var(--muted); font-size: 0.9rem; }
 .tutor-faults li:first-child { color: var(--fg); }
-.tutor-debrief { padding: 12px 14px; border-radius: 12px; background: rgba(192, 132, 252, 0.08); border: 1px solid rgba(192, 132, 252, 0.45); }
-.tutor-debrief h4 { margin: 0 0 6px; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: #c084fc; }
+.tutor-debrief { position: relative; padding: 12px 14px; border-radius: 12px; background: rgba(192, 132, 252, 0.08); border: 1px solid rgba(192, 132, 252, 0.45); }
+.tutor-debrief-close { position: absolute; top: 6px; right: 6px; }
+.tutor-debrief h4 { margin: 0 0 6px; padding-right: 32px; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: #c084fc; }
 .tutor-debrief p { margin: 0; }
 .tutor-debrief ul { margin: 8px 0; padding-left: 18px; }
 .tutor-debrief.looking { display: flex; align-items: center; gap: 10px; color: #d8b4fe; }
@@ -157,9 +189,139 @@
 .tutor-progress > .progress { flex: 1; min-height: 0; }
 .tutor-back { position: absolute; top: 14px; right: 22px; z-index: 2; }
 
+/* Phone parts that a desktop with a keyboard does without. */
+.tutor-swap, .tutor-controls { display: none; }
+
 @media (max-width: 1100px) {
   .tutor-home { grid-template-columns: 1fr; }
   .tutor-home-side { border-left: 0; border-top: 1px solid var(--border); }
   .tutor-stage { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
   .tutor-side { grid-column: 1 / -1; }
+}
+
+/* ---------- phone: portrait and landscape ----------
+   The run screen is one view: the big pane (camera, or the figure after a swap) with the other as a corner inset,
+   and the score, phase and cue on top, readable from 2-3 m. The commands are buttons under it. */
+@media (max-width: 760px), (max-height: 540px) {
+  .tutor-home { padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+  .tutor-home-main { padding: 14px 14px 18px; gap: 12px; }
+  .tutor-home-main > h3 { order: 1; }
+  .tutor-poses { order: 2; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 2px 2px 8px; overscroll-behavior-x: contain; }
+  .tutor-poses li { flex: none; width: 96px; scroll-snap-align: start; }
+  .tutor-pose:hover { transform: none; }
+  .tutor-modes { order: 3; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .tutor-mode { padding: 12px 12px 12px 16px; gap: 8px; }
+  .tutor-mode .btn { align-self: stretch; min-height: 52px; }
+  .tutor-mode .seg button { min-height: 44px; min-width: 60px; justify-content: center; font-size: 0.9rem; }
+  .tutor-home-side { padding: 14px 14px 24px; overflow: visible; }
+
+  .tutor-field select, .tutor-field input { min-height: 48px; font-size: 1rem; }
+  .tutor-check { min-height: 48px; align-items: center; font-size: 0.98rem; }
+  .tutor-check input { flex: none; width: 24px; height: 24px; margin: 0; }
+  .tutor-privacy summary { min-height: 44px; display: flex; align-items: center; }
+  .tutor-bridge .btn, .tutor-bridge .pill, .tutor-dialog-actions .btn, .tutor-dialog-actions .pill { min-height: 48px; padding-inline: 18px; }
+
+  .tutor-progress { padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+  .tutor-back { position: static; align-self: flex-start; min-height: 48px; margin: 10px 12px 0; padding: 0 16px; font-size: 0.95rem; }
+
+  .tutor-run {
+    --inset-gap: 10px;
+    --inset-w: 30vw;
+    --inset-h: calc(var(--inset-w) * 4 / 3);
+    grid-template-columns: minmax(0, 1fr);
+    /* The app's page fills the screen; in a scrolling browser page the view still gets most of the height. */
+    grid-template-rows: auto minmax(55vh, 1fr) auto;
+    grid-template-areas: "bar" "view" "controls";
+    padding: 0 var(--safe-right) 0 var(--safe-left);
+  }
+  .tutor-run-bar { grid-area: bar; flex-wrap: nowrap; gap: 8px; padding: calc(6px + var(--safe-top)) 10px 6px; }
+  .tutor-run-bar > .pill { flex: none; min-height: 48px; padding: 0 14px; font-size: 0.95rem; }
+  .tutor-run-title { flex: 1; overflow: hidden; }
+  .tutor-run-title h2 { font-size: 1.35rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tutor-run-title .hint, .tutor-keys { display: none; }
+  .tutor-clock { flex: none; font-size: 1.7rem; }
+  .tutor-mic { flex: none; max-width: 28vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+  .tutor-stage { display: contents; }
+  .tutor-figure, .tutor-camera { grid-area: view; z-index: 0; border: 0; border-radius: 0; }
+  /* After the drill the summary in the camera pane is the view and says the score; the coach note stays beside it. */
+  .tutor-stage:has(.tutor-summary) :is(.tutor-figure, .tutor-swap) { display: none; }
+  .tutor-stage:has(.tutor-summary) .tutor-side > :is(.tutor-score, .tutor-phase, .tutor-cue) { display: none; }
+  .tutor-summary { place-items: start center; }
+  .tutor-stage:not([data-swapped]) .tutor-figure,
+  .tutor-stage[data-swapped] .tutor-camera {
+    z-index: 2; justify-self: end; align-self: start; width: var(--inset-w); height: var(--inset-h); margin: var(--inset-gap);
+    border: 2px solid rgba(255, 255, 255, 0.4); border-radius: 12px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  }
+  .tutor-figure figcaption, .tutor-camera-label { top: auto; bottom: 6px; left: 6px; font-size: 0.8rem; padding: 1px 6px; }
+  .tutor-stage[data-swapped] .tutor-figure figcaption, .tutor-stage:not([data-swapped]) .tutor-camera-label { display: none; }
+  .tutor-swap {
+    display: grid; place-items: start end; grid-area: view; z-index: 4; justify-self: end; align-self: start;
+    width: var(--inset-w); height: var(--inset-h); margin: var(--inset-gap); padding: 6px; border: 0; background: transparent; color: #fff;
+  }
+  .tutor-swap svg { box-sizing: content-box; padding: 7px; border-radius: 50%; background: rgba(8, 10, 16, 0.75); }
+
+  .tutor-side {
+    grid-area: view; z-index: 3; position: relative; display: flex; flex-direction: column; gap: 8px; padding: 10px 10px 18px;
+    overflow: hidden; pointer-events: none;
+  }
+  .tutor-score, .tutor-phase { align-self: flex-start; max-width: calc(100% - var(--inset-w) - 2 * var(--inset-gap)); }
+  .tutor-score { padding: 4px 14px 8px; border: 0; background: rgba(8, 10, 16, 0.62); box-shadow: none; }
+  .tutor-score-label { font-size: 0.7rem; }
+  .tutor-score-value { font-size: 19vh; line-height: 0.86; text-shadow: 0 3px 14px rgba(0, 0, 0, 0.6); }
+  .tutor-score-bar { height: 6px; margin-top: 4px; }
+  .tutor-phase { margin-bottom: auto; border: 0; background: rgba(8, 10, 16, 0.74); font-size: 1.35rem; }
+  .tutor-phase .hint { display: none; }
+  .tutor-step { font-size: 1.3rem; line-height: 1.25; }
+  .tutor-phase .tutor-hold-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; margin: 0; border-radius: 0; background: rgba(8, 10, 16, 0.6); }
+  .tutor-cue {
+    padding: 10px 14px; border-radius: 12px; background: rgba(8, 10, 16, 0.76); font-size: clamp(1.5rem, 4.4vh, 2.6rem); line-height: 1.15;
+    text-shadow: 0 2px 8px #000;
+  }
+  .tutor-faults { display: none; }
+  .tutor-debrief { flex: none; max-height: 40%; overflow-y: auto; pointer-events: auto; background: rgba(24, 14, 38, 0.94); font-size: 1.05rem; }
+  .tutor-debrief-close { width: 44px; height: 44px; top: 2px; right: 2px; }
+  .tutor-debrief h4 { padding-right: 44px; line-height: 2; }
+  .tutor-photo, .tutor-notice { align-self: flex-start; padding: 4px 10px; border-radius: 8px; background: rgba(8, 10, 16, 0.76); font-size: 0.95rem; }
+  .tutor-heard { top: auto; bottom: 34%; max-width: 92%; white-space: normal; }
+  .tutor-calibrate { width: 92%; font-size: 1.1rem; }
+  .tutor-calibrate .pill, .tutor-problem-actions .btn, .tutor-problem-actions .pill { min-height: 48px; padding-inline: 18px; }
+  .tutor-framing p { font-size: 1.2rem; }
+  .tutor-problem, .tutor-summary { padding: 12px; }
+  .tutor-problem .tutor-card, .tutor-summary .tutor-card { padding: 18px 16px; }
+
+  .tutor-controls {
+    grid-area: controls; display: flex; gap: 6px; padding: 8px 8px calc(8px + var(--safe-bottom));
+    border-top: 1px solid var(--border); background: #0d1019;
+  }
+  .tutor-controls .pill { flex: 1; min-width: 0; min-height: 52px; padding: 0 4px; font-size: 0.92rem; line-height: 1.1; }
+  .tutor-controls .pill[aria-pressed="true"] { border-color: var(--warn); color: var(--warn); }
+}
+
+@media (max-height: 540px) and (orientation: landscape) {
+  .tutor-modes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .tutor-run {
+    --inset-h: 40vh;
+    --inset-w: calc(var(--inset-h) * 3 / 4);
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    grid-template-areas: "bar bar" "view side" "view controls";
+  }
+  .tutor-side { grid-area: side; padding: 8px 10px; overflow-y: auto; pointer-events: auto; }
+  .tutor-score, .tutor-phase { align-self: stretch; max-width: none; }
+  .tutor-score-value { font-size: 22vh; }
+  .tutor-phase { margin-bottom: 0; }
+  .tutor-phase .tutor-hold-bar { position: static; height: 10px; margin-top: 6px; border-radius: 5px; }
+  .tutor-cue { font-size: clamp(1.2rem, 6vh, 2rem); }
+  .tutor-controls { padding: 4px 10px calc(6px + var(--safe-bottom)); border-top: 0; background: transparent; }
+  .tutor-controls .pill { min-height: 48px; font-size: 0.8rem; }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+  /* The spoken cue already says the step, larger. */
+  .tutor-side:has(.tutor-cue) .tutor-step { display: none; }
+  /* The phase line says why; the guide's own text would sit under the cue. */
+  .tutor-framing p { display: none; }
+  .tutor-stage:has(.tutor-summary) .tutor-side { justify-content: flex-end; }
 }

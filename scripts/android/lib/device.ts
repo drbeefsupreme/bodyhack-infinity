@@ -189,6 +189,14 @@ export interface AppPage {
 export async function startApp(onConsole?: (type: string, text: string) => void): Promise<AppPage> {
   adb('shell', 'am', 'force-stop', APP_ID);
   adb('shell', 'am', 'start', '-W', '-n', `${APP_ID}/.MainActivity`);
+  return attachApp(onConsole);
+}
+
+/**
+ * Connects to the running app's WebView. While a DevTools client is attached, the WebView sets KEEP_SCREEN_ON on the
+ * app's window, so a check of the screen timeout closes the page first and attaches again afterwards.
+ */
+export async function attachApp(onConsole?: (type: string, text: string) => void): Promise<AppPage> {
   const pid = await waitFor('the app process', 30_000, () => adb('shell', 'pidof', APP_ID).trim() || undefined);
   const socket = `webview_devtools_remote_${pid}`;
   await waitFor('the WebView DevTools socket', 30_000, () => (adb('shell', 'cat', '/proc/net/unix').includes(`@${socket}`) ? true : undefined));

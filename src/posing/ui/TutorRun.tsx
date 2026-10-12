@@ -1,14 +1,14 @@
 import { use, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { IconX } from '../../components/Icons';
+import { IconSwap, IconX } from '../../components/Icons';
 import type { Calibration } from '../metrics';
 import type { Command } from '../modes/commands';
 import type { FigureTarget } from '../modes/mode';
 import type { TutorSettings } from '../modes/settings';
 import { PlatformContext } from '../platform/context';
 import type { Speech } from '../speech';
-import { TutorEngine, type Heard, type RunSpec, type SessionCalibration, type Snapshot } from './engine';
+import { TutorEngine, type DebriefState, type Heard, type RunSpec, type SessionCalibration, type Snapshot } from './engine';
 import { FigureView } from './FigureView';
-import { CameraProblem, DebriefCard, FramingGuide, HeardToast, PhaseLine, ScoreMeter, SummaryPanel } from './RunParts';
+import { CameraProblem, DebriefCard, FramingGuide, HeardToast, PhaseLine, RunControls, ScoreMeter, SummaryPanel } from './RunParts';
 
 declare global {
   interface Window {
@@ -69,6 +69,8 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
   const pane = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLCanvasElement>(null);
   const [now, setNow] = useState(() => performance.now());
+  const [figureBig, setFigureBig] = useState(false);
+  const [dismissed, setDismissed] = useState<DebriefState>();
 
   useEffect(() => {
     if (pane.current && overlay.current) void engine.start(pane.current, overlay.current);
@@ -104,6 +106,8 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
   const stage = view?.stage;
   const scored = view?.scoring !== undefined;
   const showHeard = snap.heard && now - snap.heard.at < HEARD_SHOW_MS;
+  // The camera pane holds the calibration and the summary, so it is big for those.
+  const swapped = figureBig && calibration.kind === 'ready' && stage?.kind !== 'done';
 
   return (
     <section className="tutor-run" data-mode={view ? undefined : 'loading'}>
@@ -129,7 +133,7 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
         <span className="tutor-keys hint">Space next · S skip · R repeat · W what's wrong · P pause · Esc stop</span>
       </header>
 
-      <div className="tutor-stage">
+      <div className="tutor-stage" data-swapped={swapped || undefined}>
         <figure className="tutor-figure">
           <FigureView figure={view?.figure ?? RELAXED} />
           <figcaption>Target</figcaption>
@@ -156,6 +160,10 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
           {stage?.kind === 'done' && <SummaryPanel summary={stage.summary} bests={snap.bests} onAgain={onAgain} onHome={onHome} />}
         </div>
 
+        <button type="button" className="tutor-swap" aria-pressed={swapped} aria-label={swapped ? 'Show the camera big' : 'Show the target figure big'} onClick={() => setFigureBig(!swapped)}>
+          <IconSwap size={18} />
+        </button>
+
         <aside className="tutor-side">
           <ScoreMeter score={snap.score} scored={scored} />
           {stage && <PhaseLine stage={stage} paused={paused} />}
@@ -171,7 +179,7 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
               ))}
             </ol>
           )}
-          <DebriefCard debrief={snap.debrief} />
+          {snap.debrief !== dismissed && <DebriefCard debrief={snap.debrief} onDismiss={() => setDismissed(snap.debrief)} />}
           {snap.photo && (
             <p className="tutor-photo" data-testid="photo">
               Photo saved · {Math.round(snap.photo.score)}
@@ -180,6 +188,8 @@ function RunView({ engine, onAgain, onHome }: Props & { engine: TutorEngine }) {
           {snap.notice && <p className="tutor-notice">{snap.notice}</p>}
         </aside>
       </div>
+
+      <RunControls paused={paused} disabled={!view || stage?.kind === 'done'} onCommand={(command) => engine.command(command)} />
 
       {camera.kind === 'failed' && <CameraProblem failure={camera.failure} message={camera.message} onRetry={onAgain} onHome={onHome} />}
     </section>

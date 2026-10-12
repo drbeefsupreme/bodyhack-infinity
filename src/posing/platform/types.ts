@@ -73,6 +73,27 @@ export interface KeepAwake {
   release(): Promise<void>;
 }
 
+export type BridgeStatus =
+  | { readonly state: 'unpaired' }
+  | { readonly state: 'offline'; readonly url: string; readonly error: string }
+  | { readonly state: 'online'; readonly url: string; readonly health: Health };
+
+/** A `bodyhack://pair?url=…&token=…` link the app was opened with, checked like a typed pairing. */
+export type PairLink = { readonly ok: true; readonly url: string; readonly token: string } | { readonly ok: false; readonly error: string };
+
+/** The pairing with the desktop bridge (`npm run bridge`) that the coach and the intent go through. */
+export interface DesktopBridge {
+  status(): Promise<BridgeStatus>;
+  /** Stores the pairing, then checks it. Throws with the reason when the URL or the token cannot be a bridge. */
+  pair(url: string, token: string): Promise<BridgeStatus>;
+  unpair(): void;
+  /**
+   * Calls `listener` with each pairing link the app is opened with, the launch link included, except a link for the
+   * stored pairing. Returns the unsubscribe call.
+   */
+  onPairLink(listener: (link: PairLink) => void): () => void;
+}
+
 export interface Platform {
   readonly kind: 'web' | 'android';
   /** Folder of the baked figure model the tutor's 3D views load: the detailed mesh on web, the lite mesh in the app. */
@@ -82,6 +103,8 @@ export interface Platform {
   voiceInput(onPhrase: (text: string) => void, onState: (state: ListenState) => void): VoiceInput;
   readonly photos: PhotoStore;
   readonly coach: CoachClient;
+  /** Undefined on web, where the coach is the local server. */
+  readonly bridge: DesktopBridge | undefined;
   readonly keepAwake: KeepAwake;
   readonly store: SpeechStore;
 }

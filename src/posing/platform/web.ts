@@ -202,6 +202,7 @@ export const webPlatform: Platform = {
   voiceInput: (onPhrase, onState) => new VoiceListener(onPhrase, onState),
   photos: webPhotos,
   coach: webCoach,
+  bridge: undefined,
   keepAwake: webKeepAwake(),
   store: localStorage,
 };

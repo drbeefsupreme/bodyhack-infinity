@@ -7,7 +7,7 @@ import { field, storedObject } from '../modes/stored';
 import type { SpeechStore } from '../speech';
 import type { CoachAsk, CoachNote, Health } from '../ui/api';
 import { parseCoach, parseHealth, parseIntent } from './replies';
-import type { CoachClient } from './types';
+import type { BridgeStatus, CoachClient, DesktopBridge, PairLink } from './types';
 
 export const PAIRING_KEY = 'bodyhack-bridge';
 
@@ -28,14 +28,7 @@ export interface BridgeRequest {
 /** One HTTP exchange with the bridge. Rejects when the bridge cannot be reached. */
 export type BridgeHttp = (request: BridgeRequest) => Promise<{ readonly status: number; readonly body: unknown }>;
 
-export type BridgeStatus =
-  | { readonly state: 'unpaired' }
-  | { readonly state: 'offline'; readonly url: string; readonly error: string }
-  | { readonly state: 'online'; readonly url: string; readonly health: Health };
-
-export interface BridgeCoach extends CoachClient {
-  status(): Promise<BridgeStatus>;
-}
+export type BridgeCoach = CoachClient & Omit<DesktopBridge, 'onPairLink'>;
 
 const OFFLINE: Health = { omp: false, jev: false, coachModel: undefined };
 const HEALTH_MS = 4000;
@@ -68,6 +61,21 @@ export function parsePairingInput(url: string, token: string): Pairing {
   return { url: parsed.origin, token: cleanToken };
 }
 
+/**
+ * The link that `npm run bridge` prints and shows as a QR code, checked. Undefined when `link` is no pairing link.
+ * Read by hand: WebViews before Chrome 130 give a custom-scheme URL no host.
+ */
+export function parsePairLink(link: string): PairLink | undefined {
+  const query = /^bodyhack:\/\/pair\/?\?(.*)$/i.exec(link.trim())?.[1];
+  if (query === undefined) return undefined;
+  const params = new URLSearchParams(query);
+  try {
+    return { ok: true, ...parsePairingInput(params.get('url') ?? '', params.get('token') ?? '') };
+  } catch (err) {
+    return { ok: false, error: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 /** The stored pairing, or undefined when none is stored or it is not valid. */
 export function storedPairing(store: SpeechStore): Pairing | undefined {
   const obj = storedObject(store.getItem(PAIRING_KEY));
@@ -97,6 +105,15 @@ export function bridgeCoach(store: SpeechStore, http: BridgeHttp): BridgeCoach {
 
   return {
     status,
+
+    async pair(url: string, token: string): Promise<BridgeStatus> {
+      store.setItem(PAIRING_KEY, JSON.stringify(parsePairingInput(url, token)));
+      return status();
+    },
+
+    unpair(): void {
+      store.removeItem(PAIRING_KEY);
+    },
 
     async health(): Promise<Health> {
       const now = await status();

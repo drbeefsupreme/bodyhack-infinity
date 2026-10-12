@@ -5,16 +5,17 @@
 
 import { KeepAwake as KeepAwakePlugin } from '@capacitor-community/keep-awake';
 import { TextToSpeech } from '@capacitor-community/text-to-speech';
+import { App } from '@capacitor/app';
 import { Capacitor, CapacitorException, CapacitorHttp, registerPlugin, type PluginListenerHandle } from '@capacitor/core';
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { poseLandmarks } from '../landmarks';
 import type { SpeechEngine } from '../speech';
-import { bridgeCoach, PAIRING_KEY, parsePairingInput, type BridgeHttp, type BridgeStatus } from './androidBridge';
+import { bridgeCoach, parsePairLink, storedPairing, type BridgeHttp } from './androidBridge';
 import { folderPhotoStore, type PhotoFolder } from './androidPhotos';
 import { nativeSpeech, type SpeechLogEntry } from './androidSpeech';
 import { NativeVoiceInput } from './androidVoice';
 import type { BodyhackPosePlugin, NativePoseFrame, PreviewRect } from './posePlugin';
-import type { CameraFailure, Delegate, Platform, PoseFrame, PoseSource, PoseSourceStart } from './types';
+import type { CameraFailure, Delegate, DesktopBridge, Platform, PoseFrame, PoseSource, PoseSourceStart } from './types';
 import type { BodyhackVoicePlugin } from './voicePlugin';
 
 declare global {
@@ -23,8 +24,8 @@ declare global {
     __bodyhackVoice?: (text: string) => boolean;
     /** Test hook: every line the speech engine was given, with how it ended. */
     __bodyhackSpeech?: SpeechLogEntry[];
-    /** Test hook: the bridge pairing calls. */
-    __bodyhackBridge?: { pair: typeof pairBridge; status: typeof bridgeStatus; unpair: typeof unpairBridge };
+    /** Test hook: the desktop bridge pairing. */
+    __bodyhackBridge?: DesktopBridge;
   }
 }
 
@@ -175,20 +176,30 @@ let speech: SpeechEngine | undefined;
 /** The voice input of the running drill; a disposed one ignores injected phrases. */
 let liveVoice: NativeVoiceInput | undefined;
 
-/** Stores the bridge pairing (URL and token from `npm run bridge`) and checks it. Throws when they cannot be valid. */
-export async function pairBridge(url: string, token: string): Promise<BridgeStatus> {
-  store.setItem(PAIRING_KEY, JSON.stringify(parsePairingInput(url, token)));
-  return coach.status();
-}
-
-/** Whether the app is paired, and whether the bridge answers now. */
-export function bridgeStatus(): Promise<BridgeStatus> {
-  return coach.status();
-}
-
-export function unpairBridge(): void {
-  store.removeItem(PAIRING_KEY);
-}
+const bridge: DesktopBridge = {
+  status: coach.status,
+  pair: coach.pair,
+  unpair: coach.unpair,
+  onPairLink(listener) {
+    let live = true;
+    const opened = (url: string | undefined): void => {
+      const link = url === undefined ? undefined : parsePairLink(url);
+      if (!live || !link) return;
+      const stored = storedPairing(store);
+      if (link.ok && stored?.url === link.url && stored.token === link.token) return;
+      listener(link);
+    };
+    App.getLaunchUrl().then(
+      (launch) => opened(launch?.url),
+      (err: unknown) => console.warn('Reading the launch link failed.', err),
+    );
+    const handle = App.addListener('appUrlOpen', ({ url }) => opened(url));
+    return () => {
+      live = false;
+      handle.then((h) => h.remove()).catch((err: unknown) => console.warn('Removing the link listener failed.', err));
+    };
+  },
+};
 
 export const androidPlatform: Platform = {
   kind: 'android',
@@ -201,10 +212,11 @@ export const androidPlatform: Platform = {
   },
   photos: folderPhotoStore(dataFolder('photos')),
   coach,
+  bridge,
   keepAwake: { acquire: () => KeepAwakePlugin.keepAwake(), release: () => KeepAwakePlugin.allowSleep() },
   store,
 };
 
 window.__bodyhackVoice = (text) => liveVoice?.inject(text) ?? false;
 window.__bodyhackSpeech = speechLog;
-window.__bodyhackBridge = { pair: pairBridge, status: bridgeStatus, unpair: unpairBridge };
+window.__bodyhackBridge = bridge;

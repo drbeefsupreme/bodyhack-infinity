@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { SpeechStore } from '../speech';
-import { bridgeCoach, PAIRING_KEY, parsePairingInput, type BridgeHttp, type BridgeRequest } from './androidBridge';
+import { bridgeCoach, PAIRING_KEY, parsePairingInput, parsePairLink, type BridgeHttp, type BridgeRequest } from './androidBridge';
+
+/** The link format of pairingLink in server/bridge.ts (the src tests do not load server code). */
+const pairingLink = (url: string, token: string) => `bodyhack://pair?${new URLSearchParams({ url, token })}`;
 
 const TOKEN = 'Zm9vYmFyYmF6cXV4Zm9vYmFyYmF6cXV4Zm9vYmFyYmF6';
 const URL_ = 'http://100.101.102.103:5173';
@@ -43,6 +46,20 @@ describe('parsePairingInput', () => {
   });
 });
 
+describe('parsePairLink', () => {
+  it('reads the link that npm run bridge prints', () => {
+    expect(parsePairLink(pairingLink(URL_, TOKEN))).toEqual({ ok: true, url: URL_, token: TOKEN });
+  });
+
+  it('reports a pairing link that cannot be a bridge, and ignores other links', () => {
+    expect(parsePairLink(pairingLink('http://192.168.1.20:5173', TOKEN))).toEqual({ ok: false, error: '192.168.1.20 is not a Tailscale address (100.64.0.0/10 or *.ts.net)' });
+    expect(parsePairLink('bodyhack://pair?url=http%3A%2F%2F100.101.102.103%3A5173')).toMatchObject({ ok: false });
+    expect(parsePairLink('https://example.com/pair?url=x')).toBeUndefined();
+    expect(parsePairLink('bodyhack://other?url=x')).toBeUndefined();
+    expect(parsePairLink('not a link')).toBeUndefined();
+  });
+});
+
 describe('bridgeCoach', () => {
   it('reports unpaired and offline cleanly', async () => {
     const { http, requests } = fakeHttp({ '/api/health': 'unreachable' });
@@ -51,6 +68,18 @@ describe('bridgeCoach', () => {
     const coach = bridgeCoach(paired, http);
     expect(await coach.status()).toEqual({ state: 'offline', url: URL_, error: 'connect timed out' });
     expect(await coach.health()).toEqual({ omp: false, jev: false, coachModel: undefined });
+  });
+
+  it('stores a valid pairing, refuses an invalid one, and forgets it on unpair', async () => {
+    const store = memoryStore();
+    const { http } = fakeHttp({ '/api/health': { status: 200, body: { omp: true, jev: false, coachModel: 'm' } } });
+    const coach = bridgeCoach(store, http);
+    await expect(coach.pair('http://10.0.0.2:5173', TOKEN)).rejects.toThrow('not a Tailscale address');
+    expect(await coach.status()).toEqual({ state: 'unpaired' });
+    expect(await coach.pair(`${URL_}/`, TOKEN)).toEqual({ state: 'online', url: URL_, health: { omp: true, jev: false, coachModel: 'm' } });
+    expect(JSON.parse(store.getItem(PAIRING_KEY) ?? '')).toEqual({ url: URL_, token: TOKEN });
+    coach.unpair();
+    expect(await coach.status()).toEqual({ state: 'unpaired' });
   });
 
   it('sends the token and reads the health of an online bridge', async () => {

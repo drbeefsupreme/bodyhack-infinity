@@ -145,3 +145,27 @@
   .progress-side { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .progress-thumb-pick { width: 104px; }
 }
+
+/* Phone: one thumb, 48 px touch targets, no hover. */
+@media (max-width: 760px), (max-height: 540px) {
+  .progress-head .pill, .progress-timeline-head .pill, .progress-dialog-actions .btn, .progress-dialog-actions .pill { min-height: 48px; padding-inline: 16px; }
+  .progress-poses { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; overscroll-behavior-x: contain; }
+  .progress-pose { flex: none; min-height: 48px; white-space: nowrap; }
+  .progress-pose:hover, .progress-thumb-pick:hover { transform: none; }
+  .progress-timeline-head { flex-wrap: wrap; }
+  .progress-thumb-pick { width: 116px; }
+  /* A 48 px target around the small delete button. */
+  .progress-thumb-delete { top: 0; right: 0; width: 48px; height: 48px; border: 0; background: transparent; opacity: 1; }
+  .progress-thumb-delete svg { box-sizing: content-box; padding: 6px; border-radius: 50%; border: 1px solid var(--border); background: rgba(9, 11, 18, 0.85); }
+  .progress-compare-bar { gap: 8px; }
+  .progress-diff { margin-right: 0; }
+  .progress-slot, .progress-compare-bar .seg button, .progress-compare-bar .icon-toggle { min-height: 48px; }
+  .progress-onion { max-width: none; }
+  .progress-blend input { height: 48px; }
+  .progress-trend { max-width: none; padding: 10px 8px 4px; }
+  .progress-dialog { max-width: calc(100vw - 32px); padding: 18px; }
+}
+
+@media (max-width: 760px) and (orientation: portrait) {
+  .progress-side { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}

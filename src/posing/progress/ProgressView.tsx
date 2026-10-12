@@ -1,6 +1,7 @@
 import { use, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { IconFrame, IconX } from '../../components/Icons';
 import { PlatformContext } from '../platform/context';
+import type { Platform } from '../platform/types';
 import type { PoseId } from '../types';
 import { formatDate, POSE_LABELS, scoreTone } from './format';
 import { ProgressCompare, type Slot } from './ProgressCompare';
@@ -9,6 +10,8 @@ import type { PhotoId, PhotoMeta } from './types';
 import './progress.css';
 
 const POSES = Object.keys(POSE_LABELS) as PoseId[];
+/** Where the photos are stored. */
+const DEVICE: Record<Platform['kind'], string> = { web: 'this computer', android: 'this phone' };
 
 interface Confirm {
   title: string;
@@ -53,7 +56,7 @@ function ConfirmDialog({ confirm, onClose }: { confirm: Confirm | null; onClose:
   );
 }
 
-function Empty() {
+function Empty({ device }: { device: string }) {
   return (
     <div className="progress-empty">
       <div className="tutor-card">
@@ -63,7 +66,7 @@ function Empty() {
           Every time you hit a pose in the tutor, a photo is saved here automatically, with the date, your score and the
           corrections you got. Come back after a few sessions to compare your first photo with your latest one.
         </p>
-        <p className="hint">Photos stay on this computer. You can delete one photo or all of them at any time.</p>
+        <p className="hint">Photos stay on {device}. You can delete one photo or all of them at any time.</p>
       </div>
     </div>
   );
@@ -71,7 +74,8 @@ function Empty() {
 
 /** Timeline, compare and score trend of the saved progress photos, per pose. */
 export function ProgressView() {
-  const { photos: store } = use(PlatformContext);
+  const { photos: store, kind } = use(PlatformContext);
+  const device = DEVICE[kind];
   const [load, setLoad] = useState<Load>({ kind: 'loading' });
   const [pose, setPose] = useState<PoseId | null>(null);
   const [picked, setPicked] = useState<{ before?: PhotoId; after?: PhotoId }>({});
@@ -131,7 +135,7 @@ export function ProgressView() {
           <h2 id="progress-title" className="display big">Progress</h2>
           {all.length > 0 && (
             <p className="hint">
-              {all.length} {all.length === 1 ? 'photo' : 'photos'}, saved on this computer only
+              {all.length} {all.length === 1 ? 'photo' : 'photos'}, saved on {device} only
             </p>
           )}
         </div>
@@ -142,7 +146,7 @@ export function ProgressView() {
             onClick={() =>
               ask({
                 title: 'Delete every photo?',
-                body: `This deletes all ${all.length} progress photos of every pose from this computer. You cannot undo it.`,
+                body: `This deletes all ${all.length} progress photos of every pose from ${device}. You cannot undo it.`,
                 action: 'Delete everything',
                 run: () => store.removeAll('all'),
               })
@@ -154,7 +158,7 @@ export function ProgressView() {
       </header>
 
       {all.length === 0 ? (
-        <Empty />
+        <Empty device={device} />
       ) : (
         <>
           <nav className="progress-poses" aria-label="Pose">
@@ -180,7 +184,7 @@ export function ProgressView() {
                   onClick={() =>
                     ask({
                       title: `Delete all ${POSE_LABELS[current]} photos?`,
-                      body: `This deletes ${photos.length} ${photos.length === 1 ? 'photo' : 'photos'} of ${POSE_LABELS[current]} from this computer. Other poses keep their photos.`,
+                      body: `This deletes ${photos.length} ${photos.length === 1 ? 'photo' : 'photos'} of ${POSE_LABELS[current]} from ${device}. Other poses keep their photos.`,
                       action: `Delete ${photos.length}`,
                       run: () => store.removeAll({ pose: current }),
                     })
@@ -210,7 +214,7 @@ export function ProgressView() {
                         onClick={() =>
                           ask({
                             title: 'Delete this photo?',
-                            body: `This deletes the ${POSE_LABELS[current]} photo of ${formatDate(photo.takenAt)} (score ${Math.round(photo.score)}) from this computer. You cannot undo it.`,
+                            body: `This deletes the ${POSE_LABELS[current]} photo of ${formatDate(photo.takenAt)} (score ${Math.round(photo.score)}) from ${device}. You cannot undo it.`,
                             action: 'Delete photo',
                             run: () => store.remove(photo.id),
                           })
