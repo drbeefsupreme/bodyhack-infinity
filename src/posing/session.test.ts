@@ -196,6 +196,42 @@ describe('cue scheduler', () => {
     ).toEqual(['holding', 'framing', 'cue']);
   });
 
+  it('keeps the hold through a 100 ms dip under the line and counts the dip in the mean and steadiness', () => {
+    expect(
+      run([
+        [0, body(90)],
+        [1000, body(90)],
+        [1100, body(76)],
+        [1200, body(90)],
+        [3000, body(90)],
+      ]),
+    ).toEqual([
+      { kind: 'holding', at: 0, say: { text: 'Hold it.', interrupt: true } },
+      {
+        kind: 'hit',
+        at: 3000,
+        say: { text: 'Pose hit. Relax.', interrupt: true },
+        result: { score: 90, timeToHitMs: 0, meanScore: 87.2, scoreSd: expect.closeTo(5.6, 9) },
+      },
+    ]);
+  });
+
+  it('ends the hold after a 400 ms dip under the line', () => {
+    expect(
+      run([
+        [0, body(90)],
+        [1000, body(90)],
+        [1100, body(76)],
+        [1400, body(76)],
+        [1500, body(90)],
+      ]),
+    ).toEqual([
+      { kind: 'holding', at: 0, say: { text: 'Hold it.', interrupt: true } },
+      { kind: 'correcting', at: 1400 },
+      { kind: 'holding', at: 1500, say: { text: 'Hold it.', interrupt: true } },
+    ]);
+  });
+
   it('starts the hold with the session when the athlete is already in the pose on a frame older than the session', () => {
     let state = startSession(5000);
     const events: SessionEvent[] = [];
