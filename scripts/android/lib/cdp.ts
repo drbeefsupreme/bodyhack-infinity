@@ -12,6 +12,13 @@ interface CdpMessage {
 interface RemoteObject {
   readonly value?: unknown;
   readonly description?: string;
+  readonly preview?: { readonly properties: readonly { readonly name: string; readonly value?: string }[] };
+}
+
+function describe(a: RemoteObject): string {
+  if (a.value !== undefined) return String(a.value);
+  const props = a.preview?.properties.map((p) => `${p.name}: ${p.value ?? '?'}`).join(', ');
+  return props ? `${a.description ?? 'Object'} { ${props} }` : (a.description ?? '');
 }
 
 interface EvaluateResult {
@@ -60,7 +67,7 @@ export async function connect(wsUrl: string, onConsole?: (type: string, text: st
       else call?.resolve(msg.result);
     } else if (msg.method === 'Runtime.consoleAPICalled' && onConsole) {
       const { type, args } = msg.params as ConsoleEvent;
-      onConsole(type, args.map((a) => (a.value === undefined ? a.description : String(a.value))).join(' '));
+      onConsole(type, args.map(describe).join(' '));
     }
   };
   ws.onclose = () => {

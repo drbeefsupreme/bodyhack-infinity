@@ -207,6 +207,9 @@ src/                 React app, Three.js viewer, shader, content
   posing/            pose domain, tracker, smoothing, facing hysteresis, cue scheduler, speech, debug page
     modes/           practice modes as pure reducers (Learn, Hold, Judge's calls, Mirror), voice commands, settings
     ui/              tutor screens: home, live drill engine, figure view, settings
+    platform/        device seam: web (browser + local API) and Android (native plugins + bridge)
+android/             Capacitor Android app; native pose (CameraX + MediaPipe) and voice plugins in Kotlin
+scripts/android/     toolchain setup, build, install, emulator, Android gate, e2e and phone screenshot drivers
 scripts/model/       SDF anatomy, field, mesher, morph baking (Bun)
 scripts/content/     source extraction from research reports
 research/            research reports, asset survey, region screenshots from the modeling agents
@@ -215,6 +218,7 @@ public/model*        baked models; public/fallback: no-WebGL images
 public/mediapipe/    MediaPipe WASM and pose model (npm run mediapipe, git-ignored)
 shot.html            render harness used for verification
 posing-debug.html    tracking and cue debug page
+tutor.html           Android entry: the Posing Tutor alone
 ```
 
 ## Posing Tutor
@@ -343,3 +347,62 @@ Check the bridge from this computer (the request then comes from its own Tailsca
 curl -H "Authorization: Bearer $(node -p "require('$HOME/.config/bodyhack-infinity/bridge.json').token")" \
   http://$(tailscale ip -4):5173/api/health
 ```
+
+## Android app
+
+The Android app is the Posing Tutor alone, for a phone that stands upright with its screen facing you, 2 to 3 m
+away. It has the same poses, modes, scoring, spoken corrections, voice commands, photos and coach debrief as the web
+tutor. The tutor code is the same TypeScript. It runs in a Capacitor WebView behind the device seam in
+`src/posing/platform/`. The phone does these parts natively:
+
+- **Tracking.** A Kotlin plugin (`android/.../pose/`) opens the front camera with CameraX. It shows the mirrored
+  preview behind the transparent page and runs MediaPipe Pose Landmarker for Android (GPU, with a fall back to the
+  CPU). It sends the landmarks to the page.
+- **Voice.** Android text-to-speech speaks the cues, with a local voice when one is installed. A Kotlin plugin
+  (`android/.../voice/`) recognizes commands, on the device when Android can.
+- **Photos.** Photos are stored in the app's private storage. Android backup and device transfer are turned off, so
+  the photos stay on the phone. Uninstalling the app deletes them.
+- **Screen.** The screen stays on during a session.
+
+The coach debrief and the voice-command intent go to this computer through the [Phone bridge](#phone-bridge). Without
+the bridge, voice commands use the keyword fallback and the debrief shows "coach offline".
+
+### Build and install
+
+```sh
+scripts/android/setup-toolchain.sh   # once: JDK 21 and the Android SDK in user space, plus an emulator image
+npm run mediapipe                    # once: the pose model
+npm run android:build                # debug APKs in android/app/build/outputs/apk/debug/
+```
+
+For a Pixel, install `app-arm64-v8a-debug.apk`. You can install it over USB with
+`adb install -r android/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk`, or copy the file to the phone and
+open it (allow "install unknown apps" for the file app). The APK is debug-signed, so it is for sideloading only.
+
+### Pair the phone with the desktop coach
+
+1. On this computer, start the server (`npm run dev`) and run `npm run bridge`.
+2. On the phone, turn on Tailscale. Scan the QR code with the camera app; it opens the app's pairing dialog. Or, in
+   the app, open Settings > Desktop coach and paste the URL and the token.
+3. Settings shows "online" and the coach model. The pairing survives an app restart. Unpair it in Settings.
+
+### Checks
+
+| Command | What it checks |
+|---|---|
+| `npm run android:gate` | Renders every pose in the app's WebView, runs the frames through the native tracker and the TypeScript scoring, and compares with the desktop gate (pass: no failures, scores within 5 points) |
+| `npm run android:e2e` | Emulator with a video of posed figure renders as the front camera: Learn a pose to a hit, photo saved in app storage, native speech spoke, a voice command acted |
+| `node scripts/android/phone-shots.ts` | Phone screens in portrait and landscape, pairing by link, delete on the device, keep-awake |
+
+The emulator runs the figure and the camera together only with `-gpu host` (llvmpipe on this machine). The scripts
+start it without a window. Reports: `docs/android/android-gate-report.md`, `docs/android/e2e-report.md`,
+`docs/android/phone-report.md`.
+
+### Known limits
+
+- Only the emulator was tested. On the emulator, tracking runs on the CPU (about 29 frames per second, 48 ms per
+  still frame). The Pixel's GPU path, its speed, legibility at 2 to 3 m and real speech recognition need the real
+  phone.
+- The emulator has no audio input, so voice recognition was checked only through a test hook and its error handling.
+- Android lets the app use plain HTTP, so it can reach the bridge. The app accepts only Tailscale addresses for the
+  bridge, and the bridge needs the token.
