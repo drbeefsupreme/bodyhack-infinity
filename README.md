@@ -391,7 +391,7 @@ open it (allow "install unknown apps" for the file app). The APK is debug-signed
 | Command | What it checks |
 |---|---|
 | `npm run android:gate` | Renders every pose in the app's WebView, runs the frames through the native tracker and the TypeScript scoring, and compares with the desktop gate (pass: no failures, scores within 5 points) |
-| `npm run android:e2e` | Emulator with a video of posed figure renders as the front camera: Learn a pose to a hit, photo saved in app storage, native speech spoke, a voice command acted |
+| `npm run android:e2e` | Emulator with one video of posed figure renders per mode as the front camera: Learn a pose to a hit (photo in app storage, a voice command acted), a 10 s Hold drill with no reset, the first 3 Judge's calls hit, Mirror follows the arms, native speech spoke. Then it starts `npm run dev` on a free port and pairs by the `bodyhack://pair` link: jev decides a free phrase, a coach note arrives, and after unpairing a hit shows "coach offline". It makes one real jev call and one real coach call |
 | `node scripts/android/phone-shots.ts` | Phone screens in portrait and landscape, pairing by link, delete on the device, keep-awake |
 
 The emulator runs the figure and the camera together only with `-gpu host` (llvmpipe on this machine). The scripts

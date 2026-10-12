@@ -7,25 +7,7 @@ import { join } from 'node:path';
 import { createServer } from 'vite';
 import type { FrameSpec } from '../../../src/posing/gate/androidGate.ts';
 import { connect, targets, type Cdp } from './cdp.ts';
-import { ROOT, sleep, waitFor } from './tools.ts';
-
-const groupAlive = (pid: number): boolean => {
-  try {
-    process.kill(-pid, 0);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-/** Stops Chrome with its GPU, renderer and utility processes. */
-async function stopGroup(pid: number): Promise<void> {
-  for (const signal of ['SIGTERM', 'SIGKILL'] as const) {
-    if (!groupAlive(pid)) return;
-    process.kill(-pid, signal);
-    for (let waited = 0; waited < 5000 && groupAlive(pid); waited += 100) await sleep(100);
-  }
-}
+import { ROOT, stopGroup, waitFor } from './tools.ts';
 
 /** PNGs (1280x720) of the full figure model, one per spec. */
 export async function renderFrames(specs: readonly FrameSpec[]): Promise<Buffer[]> {

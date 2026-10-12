@@ -53,6 +53,24 @@ export function sleep(ms: number): Promise<void> {
   return promise;
 }
 
+const groupAlive = (pid: number): boolean => {
+  try {
+    process.kill(-pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+/** Stops the process group that `pid` leads (a detached child with its own children): SIGTERM, then SIGKILL. */
+export async function stopGroup(pid: number): Promise<void> {
+  for (const signal of ['SIGTERM', 'SIGKILL'] as const) {
+    if (!groupAlive(pid)) return;
+    process.kill(-pid, signal);
+    for (let waited = 0; waited < 5000 && groupAlive(pid); waited += 100) await sleep(100);
+  }
+}
+
 /** Polls `probe` until it returns a value other than undefined. */
 export async function waitFor<T>(label: string, timeoutMs: number, probe: () => T | undefined | Promise<T | undefined>, everyMs = 500): Promise<T> {
   const deadline = Date.now() + timeoutMs;

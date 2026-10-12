@@ -15,6 +15,7 @@ import { parseArgs } from 'node:util';
 import type { FrameSpec } from '../../src/posing/gate/androidGate.ts';
 import type { PoseId } from '../../src/posing/types.ts';
 import { attachApp, bootEmulator, EMULATOR_LOG, ensureApk, installApp, lockHarness, screenshot, startApp, type AppPage, type BuildMode } from './lib/device.ts';
+import { bridgeValues } from './lib/bridge.ts';
 import { renderFrames } from './lib/frames.ts';
 import { adb, APP_ID, main, ROOT, runVisible, sleep, waitFor } from './lib/tools.ts';
 
@@ -134,21 +135,12 @@ async function makeVideo(): Promise<string> {
   return video;
 }
 
-/** The URL and token that `npm run bridge` prints for a server on `port`. */
-function bridgeValues(port: string): { url: string; token: string } {
-  const out = execFileSync('node', ['scripts/bridge.ts', '--port', port], { cwd: ROOT, encoding: 'utf8' });
-  const url = /Server URL:\s+(\S+)/.exec(out)?.[1];
-  const token = /Token:\s+(\S+)/.exec(out)?.[1];
-  if (!url || !token) throw new Error(`npm run bridge printed no URL and token:\n${out}`);
-  return { url, token };
-}
-
 main(async (cleanup) => {
   const { values } = parseArgs({ options: { 'bridge-port': { type: 'string', default: '5196' }, build: { type: 'boolean' }, 'no-build': { type: 'boolean' } } });
   const build: BuildMode = values.build ? 'always' : values['no-build'] ? 'never' : 'auto';
   mkdirSync(SHOTS, { recursive: true });
   for (const file of readdirSync(SHOTS)) if (file.endsWith('.png')) rmSync(join(SHOTS, file));
-  const bridge = bridgeValues(values['bridge-port']);
+  const bridge = bridgeValues(Number(values['bridge-port']));
   const video = await makeVideo();
   const apk = ensureApk(build, ['tutor.html']);
   cleanup(lockHarness());
